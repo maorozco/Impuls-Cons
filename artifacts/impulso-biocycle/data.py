@@ -117,31 +117,43 @@ SUBTYPES = {
         "PP (tapas, empaques) — en biorreactor",
         "PS/Icopor (vasos, bandejas) — en biorreactor",
         "PVC (tuberías, cables) — en biorreactor",
+        "PU - Poliuretano (espumas, recubrimientos) — en biorreactor",
         "PLA (bioplástico) — compostaje",
         "Mezcla de plásticos — en biorreactor",
     ],
     "Hidrocarburos y petróleo": [
         "Petróleo crudo / derrames",
+        "Derrames de crudo pesado (extrapesado)",
         "Diésel y gasolina",
-        "PAHs (hidrocarburos aromáticos policíclicos)",
+        "PAHs (pireno, benzo[a]pireno, fenantreno)",
+        "Aceites lubricantes usados",
         "Aceites industriales usados",
     ],
     "Suelos agrícolas contaminados": [
         "Organofosforados (clorpirifos, malatión)",
         "Glifosato y AMPA",
         "Carbamatos (carbofurán, carbarilo)",
+        "Herbicidas triazinas (atrazina)",
+        "Mezcla de plaguicidas",
         "Metales pesados (Pb, Cd, Cr, As)",
     ],
     "Aguas residuales industriales": [
         "Colorantes textiles azo",
         "Metales pesados (Cr, Cu, Zn, Pb)",
         "Fenoles industriales",
+        "Fenoles clorados",
         "Residuos farmacéuticos",
+        "PFAS (químicos eternos)",
     ],
     "Contaminantes químicos": [
         "PFAS (químicos eternos)",
         "PCBs y dioxinas",
         "Explosivos (TNT, RDX)",
+    ],
+    "Minería y metales": [
+        "Drenaje ácido de minas",
+        "Mercurio en suelos (minería de oro)",
+        "Cromo hexavalente industrial",
     ],
 }
 
@@ -284,6 +296,66 @@ CONSORTIA_DATA = {
         {"microorganism": "Pseudomonas putida", "safety": "🟢 BSL-1", "role": "Co-degradador RDX — ring cleavage enzymes", "proportion": "20%", "optimal_range": "25-30°C, pH 6.5-7.5"},
         {"microorganism": "Phanerochaete chrysosporium", "safety": "🟢 BSL-1", "role": "Hongo: ligninasas atacan estructura TNT recalcitrante", "proportion": "15%", "optimal_range": "25-30°C, pH 4.5-5.5"},
     ],
+    "PU - Poliuretano (espumas, recubrimientos) — en biorreactor": [
+        {"microorganism": "Pseudomonas chlororaphis", "safety": "🟢 BSL-1", "role": "Degradador primario PU — esterasas y proteasas extracelulares", "proportion": "35%", "optimal_range": "25-30°C, pH 6.5-7.5"},
+        {"microorganism": "Bacillus subtilis", "safety": "🟢 GRAS", "role": "Lipasas + biosurfactante — emulsifica fragmentos PU", "proportion": "30%", "optimal_range": "30-37°C, pH 6.5-7.5"},
+        {"microorganism": "Rhodococcus ruber", "safety": "🟢 BSL-1", "role": "Co-degradador — oxida fragmentos de isocianato", "proportion": "20%", "optimal_range": "25-35°C, pH 6.0-8.0"},
+        {"microorganism": "Aspergillus niger", "safety": "🟢 BSL-1", "role": "Hongo: ureasa y esterasas atacan enlaces uretano", "proportion": "15%", "optimal_range": "25-30°C, pH 4.0-6.5"},
+    ],
+    "Derrames de crudo pesado (extrapesado)": [
+        {"microorganism": "Bacillus subtilis", "safety": "🟢 GRAS", "role": "Biosurfactante de alta actividad — emulsifica crudo extrapesado", "proportion": "30%", "optimal_range": "35-45°C, pH 6.5-7.5"},
+        {"microorganism": "Rhodococcus erythropolis", "safety": "🟢 BSL-1", "role": "Degradador alcanos de cadena larga — crudo pesado C20+", "proportion": "30%", "optimal_range": "25-35°C, pH 6.0-8.0"},
+        {"microorganism": "Pseudomonas putida", "safety": "🟢 BSL-1", "role": "Degradador aromáticos + productor ramnolípidos", "proportion": "25%", "optimal_range": "25-30°C, pH 6.5-7.5"},
+        {"microorganism": "Acinetobacter baylyi", "safety": "🟢 BSL-1", "role": "Biosurfactante acinetina + mineralización final", "proportion": "15%", "optimal_range": "25-35°C, pH 6.5-7.5"},
+    ],
+    "PAHs (pireno, benzo[a]pireno, fenantreno)": [
+        {"microorganism": "Mycobacterium vanbaalenii", "safety": "🟢 BSL-1", "role": "Degradador PAHs alto peso molecular — pireno y benzo[a]pireno", "proportion": "30%", "optimal_range": "25-30°C, pH 6.5-7.5"},
+        {"microorganism": "Sphingomonas paucimobilis", "safety": "🟢 BSL-1", "role": "Degradador fenantreno — dioxigenasa de anillo aromático", "proportion": "30%", "optimal_range": "25-30°C, pH 6.5-7.5"},
+        {"microorganism": "Phanerochaete chrysosporium", "safety": "🟢 BSL-1", "role": "Hongo: MnP y lacasa oxidan PAHs recalcitrantes de alto MW", "proportion": "25%", "optimal_range": "25-30°C, pH 4.5-5.5"},
+        {"microorganism": "Bacillus subtilis", "safety": "🟢 GRAS", "role": "Biosurfactante ituroína — aumenta biodisponibilidad de PAHs", "proportion": "15%", "optimal_range": "30-37°C, pH 6.5-7.5"},
+    ],
+    "Aceites lubricantes usados": [
+        {"microorganism": "Pseudomonas putida", "safety": "🟢 BSL-1", "role": "Degradador HC lubricantes — alcanos lineales y ramificados", "proportion": "35%", "optimal_range": "25-30°C, pH 6.5-7.5"},
+        {"microorganism": "Bacillus subtilis", "safety": "🟢 GRAS", "role": "Lipasas + biosurfactante — emulsifica aceite mineral", "proportion": "30%", "optimal_range": "30-37°C, pH 6.5-7.5"},
+        {"microorganism": "Rhodococcus erythropolis", "safety": "🟢 BSL-1", "role": "Degradador fracciones aromáticas del aceite lubricante", "proportion": "20%", "optimal_range": "20-30°C, pH 6.0-8.0"},
+        {"microorganism": "Acinetobacter baylyi", "safety": "🟢 BSL-1", "role": "Mineralización final de ácidos grasos y aditivos", "proportion": "15%", "optimal_range": "25-35°C, pH 6.5-7.5"},
+    ],
+    "Herbicidas triazinas (atrazina)": [
+        {"microorganism": "Pseudomonas putida", "safety": "🟢 BSL-1", "role": "Degradador primario atrazina — enzimas atzA/atzB/atzC", "proportion": "35%", "optimal_range": "25-30°C, pH 6.5-7.5"},
+        {"microorganism": "Bacillus subtilis", "safety": "🟢 GRAS", "role": "Co-degradador + biosurfactante para atrazina en suelo", "proportion": "30%", "optimal_range": "30-37°C, pH 6.5-7.5"},
+        {"microorganism": "Sphingomonas paucimobilis", "safety": "🟢 BSL-1", "role": "Degradador metabolitos clorados — cianamida hidrolasa", "proportion": "20%", "optimal_range": "25-30°C, pH 6.5-7.5"},
+        {"microorganism": "Trichoderma harzianum", "safety": "🟢 BSL-1", "role": "Degradación fúngica atrazina + restauración suelo", "proportion": "15%", "optimal_range": "25-30°C, pH 5.5-7.0"},
+    ],
+    "Mezcla de plaguicidas": [
+        {"microorganism": "Pseudomonas putida KT2440", "safety": "🟢 BSL-1", "role": "Degradador versátil — amplio espectro plaguicidas organofosforados", "proportion": "30%", "optimal_range": "25-30°C, pH 6.5-7.5"},
+        {"microorganism": "Bacillus subtilis", "safety": "🟢 GRAS", "role": "Degradador carbamatos + biosurfactante multiespectro", "proportion": "25%", "optimal_range": "30-37°C, pH 6.5-7.5"},
+        {"microorganism": "Sphingomonas paucimobilis", "safety": "🟢 BSL-1", "role": "Degradador triazinas y compuestos aromáticos", "proportion": "25%", "optimal_range": "25-30°C, pH 6.5-7.5"},
+        {"microorganism": "Trichoderma harzianum", "safety": "🟢 BSL-1", "role": "Hongo: amplia cobertura enzimática de diferentes clases de plaguicidas", "proportion": "20%", "optimal_range": "25-30°C, pH 5.5-7.0"},
+    ],
+    "Fenoles clorados": [
+        {"microorganism": "Rhodococcus erythropolis", "safety": "🟢 BSL-1", "role": "Degradador primario fenoles clorados — orto-monooxigenasa específica", "proportion": "35%", "optimal_range": "20-30°C, pH 6.0-8.0"},
+        {"microorganism": "Pseudomonas putida", "safety": "🟢 BSL-1", "role": "Degradador pentaclorofenol — lacasa + clorohidrolasas", "proportion": "30%", "optimal_range": "25-30°C, pH 6.5-7.5"},
+        {"microorganism": "Bacillus subtilis", "safety": "🟢 GRAS", "role": "Co-degradador + biosurfactante para mejor biodisponibilidad", "proportion": "20%", "optimal_range": "30-37°C, pH 6.5-7.5"},
+        {"microorganism": "Phanerochaete chrysosporium", "safety": "🟢 BSL-1", "role": "Hongo: lacasa y MnP oxidan fenoles policlorados persistentes", "proportion": "15%", "optimal_range": "25-30°C, pH 4.5-5.5"},
+    ],
+    "Drenaje ácido de minas": [
+        {"microorganism": "Acidithiobacillus thiooxidans", "safety": "🟢 BSL-1", "role": "Neutralización biológica de acidez — oxidación azufre reducido", "proportion": "30%", "optimal_range": "25-35°C, pH 1.5-4.0"},
+        {"microorganism": "Bacillus subtilis", "safety": "🟢 GRAS", "role": "Biosorción metales + precipitación de sulfuros metálicos", "proportion": "30%", "optimal_range": "30-37°C, pH 5.0-7.5"},
+        {"microorganism": "Chlorella vulgaris", "safety": "🟢 BSL-1", "role": "Alga: biosorción masiva Fe, Mn, Al en agua ácida", "proportion": "25%", "optimal_range": "20-28°C, pH 4.0-8.0"},
+        {"microorganism": "Aspergillus niger", "safety": "🟢 BSL-1", "role": "Biolixiviación inversa — precipita metales con ácidos orgánicos", "proportion": "15%", "optimal_range": "25-30°C, pH 3.0-6.5"},
+    ],
+    "Mercurio en suelos (minería de oro)": [
+        {"microorganism": "Bacillus subtilis", "safety": "🟢 GRAS", "role": "Detoxificación Hg++ → Hg⁰ — mercurio reductasa (merA)", "proportion": "35%", "optimal_range": "30-37°C, pH 6.5-7.5"},
+        {"microorganism": "Pseudomonas putida", "safety": "🟢 BSL-1", "role": "Volatilización Hg⁰ orgánico — merB liasa + merA reductasa", "proportion": "30%", "optimal_range": "25-30°C, pH 6.5-7.5"},
+        {"microorganism": "Aspergillus niger", "safety": "🟢 BSL-1", "role": "Bioacumulación Hg — quitina fúngica como biosorbente", "proportion": "20%", "optimal_range": "25-30°C, pH 4.0-6.5"},
+        {"microorganism": "Chlorella vulgaris", "safety": "🟢 BSL-1", "role": "Alga: biosorción superficial Hg — alta capacidad en agua", "proportion": "15%", "optimal_range": "20-28°C, pH 6.5-8.0"},
+    ],
+    "Cromo hexavalente industrial": [
+        {"microorganism": "Bacillus subtilis", "safety": "🟢 GRAS", "role": "Reducción Cr(VI)→Cr(III) — cromato reductasa intracelular", "proportion": "35%", "optimal_range": "30-37°C, pH 6.5-7.5"},
+        {"microorganism": "Pseudomonas putida", "safety": "🟢 BSL-1", "role": "Reducción Cr(VI)→Cr(III) extracelular + precipitación", "proportion": "30%", "optimal_range": "25-30°C, pH 6.5-7.5"},
+        {"microorganism": "Aspergillus niger", "safety": "🟢 BSL-1", "role": "Bioacumulación Cr(III) reducido — ácidos orgánicos estabilizan", "proportion": "20%", "optimal_range": "25-30°C, pH 4.0-6.5"},
+        {"microorganism": "Chlorella vulgaris", "safety": "🟢 BSL-1", "role": "Biosorción Cr(VI) + reducción fotocatalítica asistida", "proportion": "15%", "optimal_range": "20-28°C, pH 6.5-8.0"},
+    ],
 }
 
 SUCCESS_PROBABILITIES = {
@@ -310,6 +382,16 @@ SUCCESS_PROBABILITIES = {
     "PFAS (químicos eternos)": 22,
     "PCBs y dioxinas": 45,
     "Explosivos (TNT, RDX)": 55,
+    "PU - Poliuretano (espumas, recubrimientos) — en biorreactor": 32,
+    "Derrames de crudo pesado (extrapesado)": 55,
+    "PAHs (pireno, benzo[a]pireno, fenantreno)": 63,
+    "Aceites lubricantes usados": 68,
+    "Herbicidas triazinas (atrazina)": 74,
+    "Mezcla de plaguicidas": 65,
+    "Fenoles clorados": 72,
+    "Drenaje ácido de minas": 58,
+    "Mercurio en suelos (minería de oro)": 62,
+    "Cromo hexavalente industrial": 75,
 }
 
 PUBLICATIONS_COUNT = {
@@ -336,6 +418,16 @@ PUBLICATIONS_COUNT = {
     "PFAS (químicos eternos)": 67,
     "PCBs y dioxinas": 156,
     "Explosivos (TNT, RDX)": 88,
+    "PU - Poliuretano (espumas, recubrimientos) — en biorreactor": 34,
+    "Derrames de crudo pesado (extrapesado)": 112,
+    "PAHs (pireno, benzo[a]pireno, fenantreno)": 298,
+    "Aceites lubricantes usados": 91,
+    "Herbicidas triazinas (atrazina)": 203,
+    "Mezcla de plaguicidas": 147,
+    "Fenoles clorados": 169,
+    "Drenaje ácido de minas": 78,
+    "Mercurio en suelos (minería de oro)": 94,
+    "Cromo hexavalente industrial": 187,
 }
 
 DEGRADATION_CURVES = {
@@ -375,5 +467,7 @@ def get_category_type(category):
         return "suelo_agricola"
     elif category == "Aguas residuales industriales":
         return "agua_residual"
+    elif category == "Minería y metales":
+        return "suelo_agricola"
     else:
         return "quimico"

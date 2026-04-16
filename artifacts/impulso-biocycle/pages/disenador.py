@@ -9,6 +9,54 @@ from data import (
     SUBTYPES, CONSORTIA_DATA, SUCCESS_PROBABILITIES, PUBLICATIONS_COUNT,
     DEGRADATION_CURVES, get_category_type
 )
+from ml_model import get_predictor
+
+
+ML_CONTAMINANT_MAP = {
+    "PET": "PET",
+    "HDPE": "HDPE",
+    "LDPE": "LDPE",
+    "PP ": "PP",
+    "PS/": "PS",
+    "PU ": "mixed_plastics",
+    "PLA": "mixed_plastics",
+    "Mezcla de plásticos": "mixed_plastics",
+    "Petróleo crudo": "hydrocarbons",
+    "Derrames de crudo": "hydrocarbons",
+    "Diésel": "diesel",
+    "PAH": "hydrocarbons",
+    "Aceites lubricantes": "diesel",
+    "Aceites industriales": "diesel",
+    "Organofosforad": "organophosphates",
+    "Glifosato": "glyphosate",
+    "Carbamato": "carbamates",
+    "Herbicidas": "organochlorines",
+    "Mezcla de plaguicidas": "organophosphates",
+    "Colorantes textiles": "azo_dyes",
+    "Metales pesados": "heavy_metals",
+    "Fenoles": "phenols",
+    "Residuos farmacéuticos": "organochlorines",
+    "PFAS": "organochlorines",
+    "PCBs": "organochlorines",
+    "Explosivos": "organochlorines",
+    "Drenaje ácido": "heavy_metals",
+    "Mercurio": "heavy_metals",
+    "Cromo": "heavy_metals",
+    "PVC": "mixed_plastics",
+}
+
+
+def get_ml_contaminant(subtipo):
+    for key, val in ML_CONTAMINANT_MAP.items():
+        if key.lower() in subtipo.lower():
+            return val
+    return "hydrocarbons"
+
+
+def get_ml_mode(modo):
+    if "in situ" in modo.lower() or "compostaje" in modo.lower():
+        return "in_situ"
+    return "bioreactor"
 
 
 def get_consortium(subtype):
@@ -73,14 +121,33 @@ def render_gauge(probability):
     return fig, label, color
 
 
-def render_degradation_chart(cat_type, probability):
+def render_degradation_chart(cat_type, probability, ml_timeline=None):
     curves = DEGRADATION_CURVES.get(cat_type, DEGRADATION_CURVES["hidrocarburo"])
     weeks = list(range(17))
 
-    scale = probability / 82.0
-    biocycle = [min(100, v * scale) for v in curves["biocycle"]]
     natural = curves["natural"]
     convencional = [min(100, v * 0.95) for v in curves["convencional"]]
+
+    if ml_timeline and len(ml_timeline) > 1:
+        ml_weeks = [t[0] for t in ml_timeline]
+        ml_vals = [t[1] for t in ml_timeline]
+        biocycle = []
+        for w in weeks:
+            if w in ml_weeks:
+                biocycle.append(ml_vals[ml_weeks.index(w)])
+            else:
+                interp_done = False
+                for i in range(len(ml_weeks) - 1):
+                    if ml_weeks[i] <= w <= ml_weeks[i + 1]:
+                        ratio = (w - ml_weeks[i]) / (ml_weeks[i + 1] - ml_weeks[i])
+                        biocycle.append(ml_vals[i] + ratio * (ml_vals[i + 1] - ml_vals[i]))
+                        interp_done = True
+                        break
+                if not interp_done:
+                    biocycle.append(ml_vals[-1] if w >= ml_weeks[-1] else 0.0)
+    else:
+        scale = probability / 82.0
+        biocycle = [min(100, v * scale) for v in curves["biocycle"]]
 
     fig = go.Figure()
     fig.add_trace(go.Scatter(
@@ -481,7 +548,29 @@ def render():
         st.markdown('<div class="result-section">', unsafe_allow_html=True)
         st.subheader("📈 Predicción de Degradación")
 
-        deg_fig, biocycle_curve = render_degradation_chart(cat_type, probability)
+        ml_contaminant = get_ml_contaminant(subtipo_r)
+        ml_mode = get_ml_mode(modo)
+        pretreatment_int = 1 if pretreatment_ok_r else 0
+
+        try:
+            predictor = get_predictor()
+            ml_timeline = predictor.predict_timeline(
+                contaminant=ml_contaminant,
+                temp_C=temperatura_r,
+                pH=ph_r,
+                mode=ml_mode,
+                contamination_pct=contamination_r,
+                pretreatment=pretreatment_int,
+                max_weeks=16,
+            )
+            model_info = predictor.get_info()
+            ml_used = True
+        except Exception:
+            ml_timeline = None
+            model_info = {}
+            ml_used = False
+
+        deg_fig, biocycle_curve = render_degradation_chart(cat_type, probability, ml_timeline=ml_timeline)
         st.plotly_chart(deg_fig, use_container_width=True)
 
         deg_12 = round(biocycle_curve[12], 1) if len(biocycle_curve) > 12 else round(biocycle_curve[-1], 1)
@@ -511,6 +600,30 @@ def render():
                 <div class="big-label">Aceleración vs. atenuación natural</div>
             </div>
             """, unsafe_allow_html=True)
+
+        st.markdown("<br>", unsafe_allow_html=True)
+        with st.expander("🤖 Sobre el modelo de IA"):
+            if ml_used and model_info:
+                st.markdown(f"""
+                **Algoritmo:** {model_info.get('algorithm', 'Gradient Boosting Regressor')}
+
+                **Muestras de entrenamiento:** {model_info.get('samples', 'N/A')} puntos de datos experimentales
+
+                **Coeficiente de determinación (R²):** {model_info.get('r2', 'N/A')} — indica la proporción de varianza explicada por el modelo
+
+                **Fuentes de datos:** {model_info.get('sources', 'Literatura científica peer-reviewed')}
+
+                ---
+                *La curva "Con consorcio BioCycle" es generada por el modelo ML entrenado con datos de publicaciones peer-reviewed.
+                El modelo predice la degradación semana a semana según las condiciones que ingresaste (temperatura, pH, tipo de modo, contaminación mixta, pretratamiento).*
+                """)
+            else:
+                st.markdown("""
+                **Algoritmo:** Gradient Boosting Regressor (scikit-learn)
+
+                *El modelo ML no pudo cargarse correctamente. La predicción se muestra con curvas de referencia basadas en literatura.*
+                """)
+
         st.markdown('</div>', unsafe_allow_html=True)
 
         st.markdown('<div class="result-section">', unsafe_allow_html=True)

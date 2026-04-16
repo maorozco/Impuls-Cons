@@ -1,0 +1,38 @@
+  The "Descubrimientos" page is empty - it should show 10 research discovery cards in a 2-column grid. Each card needs: a
+   colored category badge, title, year, institution, description, key result in bold, and a "Ver paper" link. Here are   
+  the first 5 cards to add:               
+                                                                                                                         
+  1. Title: "FAST-PETase" | Category: "Enzima" | Year: 2022 | Institution: "U. Texas Austin" | Description: "Enzima      
+  diseñada por machine learning que degrada PET post-consumo a temperatura ambiente." | Result: "51 productos PET
+  degradados en 1 semana a <50°C" | Link: https://www.nature.com/articles/s41586-022-04599-z                             
+                                                                                                                         
+  2. Title: "LCC-ICCG" | Category: "Enzima" | Year: 2021 | Institution: "INRAE/Carbios" | Description: "Variante
+  cuádruple de cutinasa. El benchmark industrial para reciclaje enzimático de PET." | Result: ">90% PET degradado en 10  
+  horas a 72°C" | Link: https://www.nature.com/articles/s41586-020-2149-4
+                                                                                                                         
+  3. Title: "Consorcio HC 3 especies" | Category: "Consorcio" | Year: 2022 | Description: "Pseudomonas + Bacillus +
+  Acinetobacter con roles complementarios para hidrocarburos." | Result: ">80% degradación en 60 días vs <40% especie    
+  individual" | Link: https://www.sciencedirect.com
+                                                                                                                         
+  4. Title: "Deepwater Horizon" | Category: "Proyecto" | Year: 2010 | Institution: "DOE Lawrence Berkeley" | Description:
+   "Tras el mayor derrame, bacterias marinas nativas degradaron petróleo subsuperficial." | Result: ">90% HC degradados  
+  en ~1 semana" | Link: https://pmc.ncbi.nlm.nih.gov/articles/PMC3155281/
+                                                                                                                         
+  5. Title: "Encapsulación alginato para HC" | Category: "Consorcio" | Year: 2023 | Description: "Bacterias en alginato
+  superan células libres para degradación de crudo petrolero." | Result: "75% degradación en 7 días. 1000x mayor         
+  supervivencia bacteriana" | Link: https://link.springer.com/article/10.1007/s10532-021-09930-5
+                                                                                                                         
+  Y después le pasas los otros 5 en otro mensaje.
+                                                                                                                         
+  3. Más tipos de residuos — los principales problemas industriales
+                                                                                                                         
+  Dile al Replit Agent que agregue estos al Diseñador:
+                                                                                                                         
+  Add more contaminant subtypes to the Consortium Designer. Under each category:
+                                                                                                                         
+  Plastics: add "PU - Poliuretano (espumas, recubrimientos)", "PVC - Policloruro de vinilo (tuberías)"
+  Hydrocarbons: add "PAHs (pireno, benzo[a]pireno, fenantreno)", "Aceites lubricantes usados", "Derrames de crudo pesado"
+  Agricultural soils: add "Mezcla de plaguicidas", "Herbicidas triazinas (atrazina)"                                     
+  Industrial wastewater: add "Fenoles clorados", "Residuos farmacéuticos", "PFAS (químicos eternos)"                     
+  Add new category "Minería y metales": subtypes "Drenaje ácido de minas", "Mercurio en suelos (minería de oro)", "Cromo 
+  hexavalente industrial"  
