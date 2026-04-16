@@ -113,9 +113,10 @@ def render_gauge(probability):
         number={"suffix": "%", "font": {"size": 40, "color": color}},
     ))
     fig.update_layout(
-        height=280,
-        margin=dict(l=20, r=20, t=40, b=20),
+        height=360,
+        margin=dict(l=30, r=30, t=50, b=10),
         paper_bgcolor="white",
+        plot_bgcolor="white",
         font={"color": "#1B4332"},
     )
     return fig, label, color
@@ -173,13 +174,14 @@ def render_degradation_chart(cat_type, probability, ml_timeline=None):
         title="Predicción de Degradación Acumulada",
         xaxis_title="Semanas",
         yaxis_title="Degradación acumulada (%)",
-        yaxis=dict(range=[0, 100]),
-        height=380,
+        xaxis=dict(showgrid=True, gridcolor="#F0F0F0", zeroline=False),
+        yaxis=dict(range=[0, 100], showgrid=True, gridcolor="#F0F0F0", zeroline=False),
+        height=400,
         paper_bgcolor="white",
-        plot_bgcolor="#FAFAFA",
-        font=dict(color="#1B4332"),
+        plot_bgcolor="white",
+        font=dict(color="#1B4332", size=13),
         legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
-        margin=dict(l=40, r=20, t=60, b=40),
+        margin=dict(l=50, r=20, t=70, b=50),
     )
     return fig, biocycle
 
@@ -227,11 +229,13 @@ def render_cost_chart(category, volume):
     fig.update_layout(
         title=f"Comparación de Costos — {category}",
         xaxis_title=f"Costo ({unit})",
-        height=300,
+        xaxis=dict(showgrid=True, gridcolor="#F0F0F0", zeroline=False),
+        yaxis=dict(showgrid=False),
+        height=400,
         paper_bgcolor="white",
-        plot_bgcolor="#FAFAFA",
-        font=dict(color="#1B4332"),
-        margin=dict(l=40, r=120, t=50, b=40),
+        plot_bgcolor="white",
+        font=dict(color="#1B4332", size=13),
+        margin=dict(l=40, r=130, t=60, b=40),
     )
     return fig, savings, unit
 
@@ -307,8 +311,13 @@ CSS = """
 
 def render():
     st.markdown(CSS, unsafe_allow_html=True)
-    st.title("🧪 Diseñador de Consorcios Microbianos")
-    st.markdown("*Diseña el tratamiento biológico óptimo para tu contaminante específico*")
+    st.markdown("""
+    <div class="hero-section">
+        <div class="hero-title">🧬 Impulso BioCycle</div>
+        <div class="hero-subtitle">Biorremediación Inteligente con IA</div>
+        <span class="hero-badge">🧪 Diseñador de Consorcios Microbianos</span>
+    </div>
+    """, unsafe_allow_html=True)
 
     with st.container():
         st.markdown('<div class="result-section">', unsafe_allow_html=True)
@@ -441,13 +450,14 @@ def render():
             progress_placeholder = st.empty()
             status_placeholder = st.empty()
 
-            for step_text, duration in loading_steps:
+            for idx, (step_text, duration) in enumerate(loading_steps):
                 with status_placeholder.container():
-                    st.info(step_text)
-                with progress_placeholder.container():
-                    st.progress(
-                        (loading_steps.index((step_text, duration)) + 1) / len(loading_steps)
+                    st.markdown(
+                        f'<div class="phase-box">⏳ {step_text}</div>',
+                        unsafe_allow_html=True,
                     )
+                with progress_placeholder.container():
+                    st.progress((idx + 1) / len(loading_steps))
                 time.sleep(duration)
 
             progress_placeholder.empty()
@@ -496,7 +506,7 @@ def render():
 
         gauge_fig, gauge_label, gauge_color = render_gauge(probability)
 
-        if probability >= 60:
+        if probability >= 60:  # noqa: E501 — keep next block together
             metric_bg = "#E8F5E9"
             metric_border = "#4CAF50"
             metric_icon = "✅"
@@ -524,20 +534,24 @@ def render():
         </div>
         """, unsafe_allow_html=True)
 
-        col_gauge, col_gauge_info = st.columns([2, 1])
-        with col_gauge:
+        g_col1, g_col2, g_col3 = st.columns([1, 3, 1])
+        with g_col2:
             st.plotly_chart(gauge_fig, use_container_width=True)
-        with col_gauge_info:
-            st.markdown(f"""
-            <div style="margin-top:50px;">
-            <div style="font-size:13px; color:#555; line-height:1.7;">
-            <b>Factores evaluados:</b><br>
-            🌡️ Temperatura: {st.session_state.get('temperatura_result', 30)}°C<br>
-            🧪 pH: {st.session_state.get('ph_result', 7.0):.1f}<br>
-            🔀 Contaminación mixta: {st.session_state.get('contamination_result', 10)}%<br>
-            </div>
-            </div>
-            """, unsafe_allow_html=True)
+
+        fcol1, fcol2, fcol3 = st.columns(3)
+        for fc, label_txt, val_txt in [
+            (fcol1, "🌡️ Temperatura", f"{st.session_state.get('temperatura_result', 30)}°C"),
+            (fcol2, "🧪 pH", f"{st.session_state.get('ph_result', 7.0):.1f}"),
+            (fcol3, "🔀 Contaminación mixta", f"{st.session_state.get('contamination_result', 10)}%"),
+        ]:
+            with fc:
+                st.markdown(f"""
+                <div style="background:#F1F8E9; border-radius:10px; padding:12px; text-align:center;
+                            border:1px solid #C8E6C9;">
+                    <div style="font-size:12px; color:#666;">{label_txt}</div>
+                    <div style="font-size:20px; font-weight:800; color:#1B5E20;">{val_txt}</div>
+                </div>
+                """, unsafe_allow_html=True)
         st.markdown('</div>', unsafe_allow_html=True)
 
         st.markdown('<div class="result-section">', unsafe_allow_html=True)

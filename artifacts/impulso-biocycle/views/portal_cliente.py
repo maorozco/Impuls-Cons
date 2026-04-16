@@ -268,9 +268,10 @@ def render():
     st.markdown(CSS, unsafe_allow_html=True)
 
     st.markdown("""
-    <div class="portal-header">
-        <h2>🏭 Portal del Cliente</h2>
-        <p>Soluciones para empresas y operadores — Diseñado para Colombia 🇨🇴</p>
+    <div class="hero-section">
+        <div class="hero-title">🧬 Impulso BioCycle</div>
+        <div class="hero-subtitle">Biorremediación Inteligente con IA</div>
+        <span class="hero-badge">🏭 Portal del Cliente — Soluciones para empresas</span>
     </div>
     """, unsafe_allow_html=True)
 

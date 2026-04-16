@@ -280,9 +280,10 @@ def render():
     st.markdown(CSS, unsafe_allow_html=True)
 
     st.markdown("""
-    <div class="chat-header">
-        <h2>💬 Asesoría IA</h2>
-        <p>Consulte sobre biorremediación, costos, seguridad y soluciones BioCycle — respuestas basadas en ciencia</p>
+    <div class="hero-section">
+        <div class="hero-title">🧬 Impulso BioCycle</div>
+        <div class="hero-subtitle">Biorremediación Inteligente con IA</div>
+        <span class="hero-badge">💬 Asesoría IA — Respuestas basadas en ciencia</span>
     </div>
     """, unsafe_allow_html=True)
 

@@ -34,8 +34,13 @@ CSS = """
 
 def render():
     st.markdown(CSS, unsafe_allow_html=True)
-    st.title("🏠 Descubrimientos en Biorremediación")
-    st.markdown("Explora los avances científicos más importantes en biodegradación de contaminantes")
+    st.markdown("""
+    <div class="hero-section">
+        <div class="hero-title">🧬 Impulso BioCycle</div>
+        <div class="hero-subtitle">Biorremediación Inteligente con IA</div>
+        <span class="hero-badge">🏠 Descubrimientos Científicos</span>
+    </div>
+    """, unsafe_allow_html=True)
 
     col1, col2, col3 = st.columns(3)
     with col1:
