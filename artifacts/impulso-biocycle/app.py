@@ -107,7 +107,7 @@ with st.sidebar:
 
     pagina = st.radio(
         "Navegación",
-        ["🏠 Descubrimientos", "🧪 Diseñador de Consorcios"],
+        ["🏠 Descubrimientos", "🧪 Diseñador de Consorcios", "🏭 Portal del Cliente"],
         label_visibility="collapsed"
     )
 
@@ -123,6 +123,9 @@ with st.sidebar:
 if pagina == "🏠 Descubrimientos":
     import views.descubrimientos as desc
     desc.render()
-else:
+elif pagina == "🧪 Diseñador de Consorcios":
     import views.disenador as dis
     dis.render()
+else:
+    import views.portal_cliente as portal
+    portal.render()
