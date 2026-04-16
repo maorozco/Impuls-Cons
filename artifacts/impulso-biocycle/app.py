@@ -121,8 +121,8 @@ with st.sidebar:
     """, unsafe_allow_html=True)
 
 if pagina == "🏠 Descubrimientos":
-    import pages.descubrimientos as desc
+    import views.descubrimientos as desc
     desc.render()
 else:
-    import pages.disenador as dis
+    import views.disenador as dis
     dis.render()

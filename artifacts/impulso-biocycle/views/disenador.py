@@ -276,7 +276,37 @@ def render_compatibility_table(consortium):
     return pd.DataFrame(pairs)
 
 
+CSS = """
+<style>
+.stat-box {
+    background: linear-gradient(135deg, #1B5E20, #2E7D32); border-radius: 12px;
+    padding: 18px 24px; color: white; text-align: center;
+    font-size: 18px; font-weight: 600; margin-bottom: 10px;
+}
+.step-box {
+    background: #F1F8E9; border-radius: 10px; padding: 14px 18px; margin: 8px 0;
+    border-left: 4px solid #00C853; font-size: 15px;
+}
+.result-section {
+    background: white; border-radius: 12px; padding: 20px 24px;
+    margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+.capsule-card {
+    background: linear-gradient(135deg, #F1F8E9, #E8F5E9); border-radius: 12px;
+    padding: 18px 22px; border: 2px solid #00C853; margin-bottom: 12px;
+}
+.metric-box {
+    background: #1B5E20; color: white; border-radius: 10px;
+    padding: 14px; text-align: center;
+}
+.big-number { font-size: 32px; font-weight: 800; }
+.big-label { font-size: 13px; opacity: 0.85; }
+</style>
+"""
+
+
 def render():
+    st.markdown(CSS, unsafe_allow_html=True)
     st.title("🧪 Diseñador de Consorcios Microbianos")
     st.markdown("*Diseña el tratamiento biológico óptimo para tu contaminante específico*")
 
