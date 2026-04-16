@@ -216,9 +216,9 @@ st.markdown("""
 
 NAV_PAGES = [
     "🏠 Inicio",
-    "🔬 Descubrimientos",
-    "🧪 Diseñador de Consorcios",
-    "🏭 Portal del Cliente",
+    "📚 Descubrimientos",
+    "🧬 Construye tu Consorcio",
+    "🏭 Gestiona tus Residuos",
     "💬 Asesoría IA",
 ]
 
@@ -235,7 +235,7 @@ with st.sidebar:
     <div style="text-align:center; padding: 8px 0 16px 0;">
         <div style="font-size:32px;">🧬</div>
         <div style="font-size:18px; font-weight:900; letter-spacing:-0.3px;">Impulso BioCycle</div>
-        <div style="font-size:12px; opacity:0.85; margin-top:2px;">Biorremediación Inteligente 🇨🇴</div>
+        <div style="font-size:12px; opacity:0.85; margin-top:2px;">Biorremediación Global con IA</div>
     </div>
     """, unsafe_allow_html=True)
     st.divider()
@@ -251,7 +251,7 @@ with st.sidebar:
     st.divider()
     st.markdown("""
     <div style="font-size:11px; opacity:0.8; line-height:1.6; text-align:center;">
-    Plataforma de diseño de consorcios<br>microbianos basada en IA.<br><br>
+    Plataforma global de diseño de<br>consorcios microbianos con IA.<br><br>
     Datos de +2,000 publicaciones<br>científicas peer-reviewed.
     </div>
     """, unsafe_allow_html=True)
@@ -259,13 +259,13 @@ with st.sidebar:
 if pagina == "🏠 Inicio":
     import views.inicio as inicio
     inicio.render()
-elif pagina == "🔬 Descubrimientos":
+elif pagina == "📚 Descubrimientos":
     import views.descubrimientos as desc
     desc.render()
-elif pagina == "🧪 Diseñador de Consorcios":
+elif pagina == "🧬 Construye tu Consorcio":
     import views.disenador as dis
     dis.render()
-elif pagina == "🏭 Portal del Cliente":
+elif pagina == "🏭 Gestiona tus Residuos":
     import views.portal_cliente as portal
     portal.render()
 else:
@@ -277,7 +277,7 @@ if pagina != "🏠 Inicio":
     st.markdown("""
 <div class="app-footer">
     <b>Impulso BioCycle</b> © 2026 &nbsp;|&nbsp; Red Bull Basement &nbsp;|&nbsp;
-    Datos basados en publicaciones científicas revisadas por pares<br>
-    Todos los microorganismos son BSL-1 o GRAS · Desarrollado en Colombia 🇨🇴
+    Plataforma global de biorremediación inteligente<br>
+    Todos los microorganismos son BSL-1 o GRAS
 </div>
 """, unsafe_allow_html=True)

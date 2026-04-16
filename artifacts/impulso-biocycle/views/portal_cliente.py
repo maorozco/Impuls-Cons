@@ -102,28 +102,21 @@ RESIDUOS_POR_TIPO = {
     ],
 }
 
-CIUDADES_COLOMBIA = [
-    "Bogotá", "Medellín", "Cali", "Barranquilla", "Cartagena",
-    "Bucaramanga", "Pereira", "Manizales", "Cúcuta", "Ibagué",
-    "Santa Marta", "Villavicencio", "Montería", "Pasto", "Neiva",
-    "Armenia", "Popayán", "Valledupar", "Sincelejo", "Tunja",
-    "Riohacha", "Quibdó", "Florencia", "Yopal", "Leticia",
+PAISES = [
+    "Colombia", "México", "Brasil", "Chile", "Argentina",
+    "Perú", "España", "USA", "Otro país",
 ]
 
-CLIMA_CIUDAD = {
-    "Bogotá": "Andino-Frío", "Tunja": "Andino-Frío", "Pasto": "Andino-Frío",
-    "Popayán": "Andino-Frío",
-    "Medellín": "Andino-Templado", "Bucaramanga": "Andino-Templado",
-    "Pereira": "Eje-Cafetero", "Manizales": "Eje-Cafetero", "Armenia": "Eje-Cafetero",
-    "Cali": "Valle-Cálido", "Ibagué": "Valle-Cálido", "Neiva": "Valle-Cálido",
-    "Barranquilla": "Caribe-Cálido", "Cartagena": "Caribe-Cálido",
-    "Santa Marta": "Caribe-Cálido", "Montería": "Caribe-Cálido",
-    "Sincelejo": "Caribe-Cálido", "Valledupar": "Caribe-Cálido",
-    "Riohacha": "Caribe-Cálido",
-    "Cúcuta": "Nororiente-Cálido",
-    "Villavicencio": "Orinoquía-Cálido", "Yopal": "Orinoquía-Cálido",
-    "Florencia": "Amazónico", "Leticia": "Amazónico",
-    "Quibdó": "Pacífico-Húmedo",
+CLIMA_PAIS = {
+    "Colombia":   "Tropical",
+    "México":     "Subtropical",
+    "Brasil":     "Tropical",
+    "Chile":      "Templado",
+    "Argentina":  "Templado",
+    "Perú":       "Tropical",
+    "España":     "Mediterráneo",
+    "USA":        "Templado",
+    "Otro país":  "Tropical",
 }
 
 TIPO_CODIGO = {
@@ -219,7 +212,7 @@ DESCRIPCIONES_PRODUCTO = {
     "Planta de reciclaje": "Consorcio especializado en depolimerización y oxidación de cadenas plásticas, formulado para operar en biorreactores de flujo continuo a temperatura ambiente.",
     "Empresa petrolera": "Consorcio hidrocarbonoclástico de alta eficiencia, adaptado a condiciones de campo: suelos arcillosos, temperatura variable y presencia de salinidad.",
     "Planta textil": "Consorcio lacasa-azorreductasa para mineralización de colorantes azo y reducción de metales en efluentes textiles de alta carga orgánica.",
-    "Empresa agrícola": "Consorcio degradador de plaguicidas organofosforados y glifosato, con cepas adaptadas a suelos tropicales y subtropicales colombianos.",
+    "Empresa agrícola": "Consorcio degradador de plaguicidas organofosforados y glifosato, con cepas adaptadas a suelos tropicales y subtropicales.",
     "Consultora ambiental": "Consorcio multiusos para remediación de sitios con pasivos ambientales complejos. Formulación robusta para condiciones impredecibles de campo.",
     "Relleno sanitario": "Consorcio para tratamiento de lixiviados de alta complejidad. Reduce DBO, metales y compuestos recalcitrantes en sistemas aerobios/anaerobios.",
     "Laboratorio": "Consorcio de degradación de solventes y compuestos aromáticos. Apto para tratamiento de pequeños volúmenes de residuos en condiciones controladas.",
@@ -271,7 +264,7 @@ def render():
     <div class="hero-section">
         <div class="hero-title">🧬 Impulso BioCycle</div>
         <div class="hero-subtitle">Biorremediación Inteligente con IA</div>
-        <span class="hero-badge">🏭 Portal del Cliente — Soluciones para empresas</span>
+        <span class="hero-badge">🏭 Gestiona tus Residuos — Soluciones para empresas globales</span>
     </div>
     """, unsafe_allow_html=True)
 
@@ -294,8 +287,8 @@ def render():
 
     with col2:
         ubicacion = st.selectbox(
-            "Ubicación (ciudad)",
-            CIUDADES_COLOMBIA,
+            "País / región",
+            PAISES,
             key="portal_ciudad",
         )
         costos = COSTOS_BASE[tipo_op]
@@ -333,7 +326,7 @@ def render():
                 ("📍 Adaptando formulación al clima de " + ubicacion + "...", 1.5),
                 ("💰 Calculando métricas financieras...", 1.5),
                 ("🌿 Estimando impacto ambiental...", 1.0),
-                ("📋 Generando plan regulatorio colombiano...", 1.5),
+                ("📋 Generando marco regulatorio aplicable...", 1.5),
                 ("✅ Plan generado exitosamente", 0.8),
             ]
             ph_status = st.empty()
@@ -353,7 +346,7 @@ def render():
         ciudad_r = st.session_state.get("portal_ciudad_result", ubicacion)
         vol_r = st.session_state.get("portal_volumen_result", volumen)
 
-        clima = CLIMA_CIUDAD.get(ciudad_r, "Tropical")
+        clima = CLIMA_PAIS.get(ciudad_r, "Tropical")
         codigo = TIPO_CODIGO.get(tipo_r, "ENV")
         nombre_producto = f"BioCycle {codigo}-{clima}"
 
@@ -364,7 +357,7 @@ def render():
         ahorro_anual = ahorro_mensual * 12
         co2_reducido = CO2_REDUCCION[tipo_r] * vol_r / 1000
 
-        st.success(f"✅ Plan generado para **{tipo_r}** en **{ciudad_r}** — Formulación climática: **{clima}**")
+        st.success(f"✅ Plan generado para **{tipo_r}** en **{ciudad_r}** — Formulación climática: **{clima}**", icon="🌍")
 
         st.markdown('<div class="result-section">', unsafe_allow_html=True)
         st.subheader("🧬 Producto Recomendado")
@@ -454,7 +447,7 @@ def render():
             💡 <b>Referencia:</b> Costo convencional estimado <b>${costos_r['convencional']}{costos_r['unidad']}</b>
             vs. BioCycle <b>${costos_r['biocycle']}{costos_r['unidad']}</b>
             — Ahorro del <b>{round((1 - costos_r['biocycle']/costos_r['convencional'])*100)}%</b> por unidad tratada.
-            Costos en USD a precios de referencia de mercado colombiano 2024.
+            Costos en USD a precios de referencia de mercado internacional 2024.
         </div>
         """, unsafe_allow_html=True)
         st.markdown('</div>', unsafe_allow_html=True)
@@ -496,21 +489,35 @@ def render():
         st.markdown('</div>', unsafe_allow_html=True)
 
         st.markdown('<div class="result-section">', unsafe_allow_html=True)
-        st.subheader("⚖️ Marco Regulatorio Colombiano")
+        st.subheader("⚖️ Marco Regulatorio")
 
-        norm = NORMATIVA[tipo_r]
-        st.markdown(f"""
-        <div class="reg-box">
-            <b>📋 Normativa aplicable para {tipo_r}:</b>
-            <ul style="margin-top:10px; margin-bottom:10px; padding-left:20px; font-size:14px; color:#333;">
-                {"".join(f"<li style='margin-bottom:6px;'>{r}</li>" for r in norm['resoluciones'])}
-            </ul>
-            <b>✅ ¿Cómo ayuda BioCycle al cumplimiento?</b>
-            <div style="margin-top:8px; font-size:14px; color:#555; line-height:1.6;">
-                {norm['como_ayuda']}
+        if ciudad_r == "Colombia":
+            norm = NORMATIVA[tipo_r]
+            st.markdown(f"""
+            <div class="reg-box">
+                <b>📋 Normativa colombiana aplicable para {tipo_r}:</b>
+                <ul style="margin-top:10px; margin-bottom:10px; padding-left:20px; font-size:14px; color:#333;">
+                    {"".join(f"<li style='margin-bottom:6px;'>{r}</li>" for r in norm['resoluciones'])}
+                </ul>
+                <b>✅ ¿Cómo ayuda BioCycle al cumplimiento?</b>
+                <div style="margin-top:8px; font-size:14px; color:#555; line-height:1.6;">
+                    {norm['como_ayuda']}
+                </div>
             </div>
-        </div>
-        """, unsafe_allow_html=True)
+            """, unsafe_allow_html=True)
+        else:
+            st.markdown(f"""
+            <div class="reg-box">
+                <b>🌍 Marco regulatorio internacional para {tipo_r} en {ciudad_r}:</b>
+                <div style="margin-top:10px; font-size:14px; color:#333; line-height:1.7;">
+                    La biorremediación con consorcios microbianos BSL-1/GRAS es compatible con los marcos
+                    regulatorios de la mayoría de países. BioCycle proporciona toda la documentación técnica
+                    necesaria para tramitar permisos ambientales ante la autoridad competente de {ciudad_r}.<br><br>
+                    <b>✅ Documentación incluida:</b> ficha técnica de microorganismos, certificación BSL-1/GRAS,
+                    protocolo de seguridad, informe de eficiencia con referencias científicas indexadas.
+                </div>
+            </div>
+            """, unsafe_allow_html=True)
         st.markdown('</div>', unsafe_allow_html=True)
 
         st.markdown("---")
@@ -526,7 +533,7 @@ def render():
                     Nuestro equipo técnico lo acompaña desde el piloto hasta la operación plena.
                 </div>
                 <div style="font-size:14px; font-weight:600;">
-                    📧 contacto@impulso-biocycle.co &nbsp;|&nbsp; 📞 +57 (1) 800-BIOCYCLE
+                    📧 contacto@impulso-biocycle.com &nbsp;|&nbsp; 🌐 impulso-biocycle.com
                 </div>
             </div>
             """, unsafe_allow_html=True)

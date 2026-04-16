@@ -1,0 +1,144 @@
+                              
+  🏠 HOME — Quién es BioCycle (landing global)                                                                         
+      ├── CTA 1: "🧬 Construye tu consorcio" → Para labs/productores
+      └── CTA 2: "🏭 Gestiona tus residuos" → Para empresas/clientes
+                                                                                                                         
+  📚 DESCUBRIMIENTOS — Feed de investigaciones                                                                           
+                                                                                                                         
+  🧬 CONSTRUYE TU CONSORCIO — Diseñador técnico (labs, productores)                                                      
+      → Diseñas desde cero, seleccionas organismos, ves compatibilidad                                                   
+      → Para quien PRODUCE soluciones de biorremediación                                                                 
+                                                                                                                         
+  🏭 GESTIONA TUS RESIDUOS — Portal de soluciones (empresas)
+      → Eliges tu problema, recibes producto pre-diseñado                                                                
+      → Para quien NECESITA la solución, no la construye                                                                 
+                                                                                                                         
+  💬 ASESORÍA IA — Chatbot                                                                                               
+                                                                                                                         
+  Sobre hacerlo GLOBAL                                                                                                   
+                                                                                                                         
+  Quitamos las referencias exclusivas a Colombia del home y las páginas principales. Colombia aparece como UNA opción en 
+  el Portal del Cliente, no como el único mercado. El tono es: "plataforma global, nacida en Colombia."                  
+
+  Sobre la animación de la cápsula                                                                                       
+                                          
+  En Streamlit se puede hacer con Lottie animations (animaciones vectoriales ligeras). Pega este prompt:                 
+                                                                                                                         
+  Reorganize the entire app with this new structure. Make HOME the default landing page.
+                                                                                                                         
+  ## NEW APP STRUCTURE:                       
+                                                                                                                         
+  Sidebar navigation:                                                                                                    
+  - 🏠 Inicio (HOME - default)                                                                                           
+  - 📚 Descubrimientos                                                                                                   
+  - 🧬 Construye tu Consorcio (renamed from Diseñador)                                                                   
+  - 🏭 Gestiona tus Residuos (renamed from Portal Cliente)
+  - 💬 Asesoría IA                            
+                                                                                                                         
+  ## HOME PAGE — Complete redesign:           
+                                                                                                                         
+  ### HERO SECTION
+  Full-width with dark overlay (rgba(0,0,0,0.65)) over background image                                                  
+  (https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?w=1920).
+  Centered content:                                                                                                      
+  - "Impulso BioCycle" — white, bold, 3.5rem, font-family: system-ui
+  - "creates substances based on living organisms" — yellow #FFD600, 1.3rem, italic                                      
+  - "Plataforma global de inteligencia artificial para diseño de soluciones biológicas de biorremediación. Basada en
+  ciencia publicada en Nature, Science y 2,000+ papers revisados por pares." — white, 1.1rem                             
+  - Two buttons side by side:                                                                                            
+    Button 1 (green #00C853): "🧬 Construye tu Consorcio — Para laboratorios y productores"                              
+    Button 2 (white outline): "🏭 Gestiona tus Residuos — Para empresas y operadores"                                    
+                                                                                                                         
+  ### SECTION: "¿Qué es Impulso BioCycle?"                                                                               
+  White background, centered text:                                                                                       
+  "Impulso BioCycle es la primera plataforma de inteligencia artificial que diseña consorcios microbianos optimizados    
+  para biodegradación de contaminantes. Conectamos el conocimiento de 2,000+ publicaciones científicas con las empresas y
+   laboratorios que lo necesitan."                                                                                       
+                                                                                                                         
+  ### SECTION: "Dos caminos, un objetivo" (2 big cards side by side)                                                     
+                                          
+  Card LEFT (green background #1B5E20, white text):                                                                      
+  "🧬 CONSTRUYE TU CONSORCIO"                                                                                            
+  "Para laboratorios, investigadores y productores de soluciones"
+  "• Diseña consorcios personalizados desde cero"                                                                        
+  "• Selecciona microorganismos BSL-1/GRAS verificados"
+  "• Verifica compatibilidad entre especies"                                                                             
+  "• Obtén formulación de cápsula optimizada"                                                                            
+  "• Predicción ML de degradación"        
+  "• Protocolo de preparación paso a paso"                                                                               
+  Button: "Empezar a diseñar →"                                                                                          
+                                                                                                                         
+  Card RIGHT (dark background #263238, white text):                                                                      
+  "🏭 GESTIONA TUS RESIDUOS"
+  "Para empresas industriales, operadores y consultoras"                                                                 
+  "• Selecciona tu tipo de operación y residuo"
+  "• Recibe una solución pre-diseñada y probada"                                                                         
+  "• Plan operativo mes a mes"                                                                                           
+  "• Análisis financiero: inversión, ahorro, ROI"
+  "• Cumplimiento normativo automático"                                                                                  
+  "• Impacto ambiental cuantificado"          
+  Button: "Ver soluciones →"                                                                                             
+                                              
+  ### SECTION: "¿Qué problemas resolvemos?" (icon grid, 3 columns x 2 rows)                                              
+  Each item: emoji + title + one-line description
+  - 🛢️  "Hidrocarburos y derrames" — "60-80% eliminación in situ. Décadas de evidencia global."                           
+  - 🏭 "Aguas residuales industriales" — "Decoloración 85-99%. Tratamiento biológico más económico."                     
+  - 🌾 "Suelos agrícolas contaminados" — "Detoxificación de plaguicidas. Suelo recuperado para uso."                     
+  - ♻️  "Plásticos en biorreactor" — "PET a monómeros vendibles ($680-850/ton)."                                          
+  - ⛏️  "Contaminación minera" — "Metales pesados, drenaje ácido, mercurio."                                              
+  - 💊 "Efluentes farmacéuticos" — "Compuestos recalcitrantes en agua hospitalaria."                                     
+                                                                                                                         
+  ### SECTION: "Cómo funciona nuestra IA" — with ANIMATED CAPSULE                                                        
+                                                                                                                         
+  Use streamlit-lottie to show an animation. Install streamlit-lottie package.                                           
+  Load this Lottie animation URL: https://lottie.host/embed/4a310e6b-9e6c-4ae5-a849-3dbb632e13c7/rJRMNpKBKe.json         
+  (If that URL doesn't work, use any biology/science/molecule Lottie from https://lottiefiles.com — search "biology" or  
+  "molecule" or "cell")                                                                                                  
+                                          
+  Place the animation on the LEFT (40% width), and on the RIGHT show 3 steps:                                            
+  "Paso 1: 📋 Describe tu contaminante y condiciones"                                                                    
+  "Paso 2: 🧬 Nuestra IA consulta 847 microorganismos y diseña el consorcio óptimo"                                      
+  "Paso 3: 💊 Recibe la receta de tu cápsula con predicción de éxito y protocolo completo"                               
+                                              
+  If streamlit-lottie doesn't install, use an alternative: create a CSS animation of 4 colored circles (representing     
+  bacteria) being enclosed by a larger circle (representing the capsule). Use st.markdown with HTML/CSS:                 
+  - 4 small circles (green, blue, yellow, purple) floating/bouncing slowly                                               
+  - A larger translucent circle that "closes" around them                                                                
+  - Use CSS @keyframes animation                                                                                         
+  - This represents: "microorganismos siendo encapsulados"                                                               
+                                                                                                                         
+  ### SECTION: "Números que hablan" (dark green bar #1B5E20)                                                             
+  4 metrics in white, large font, centered:                                                                              
+  - "847+" / "Microorganismos catalogados"                                                                               
+  - "2,000+" / "Papers científicos"                                                                                      
+  - "15+" / "Tipos de contaminantes"                                                                                     
+  - "30+" / "Países con evidencia"                                                                                       
+                                          
+  ### SECTION: "Respaldados por ciencia de clase mundial"                                                                
+  Gray text, centered: "Nature | Science | ACS Catalysis | Springer | PNAS | PubMed Central | Addgene | Premio Nobel     
+  Química 2024"                               
+                                                                                                                         
+  ### SECTION: Footer
+  Dark background #0A1F0A:                                                                                               
+  "Impulso BioCycle © 2026 | Red Bull Basement"
+  "Plataforma global de biorremediación inteligente"                                                                     
+  "Todos los datos basados en publicaciones científicas revisadas por pares"
+
+  ## GLOBAL ADJUSTMENTS (apply to ALL pages):                                                                            
+  - Remove any Colombia-specific text from main pages
+  - In the "Gestiona tus Residuos" page, add location selector with: "Colombia", "México", "Brasil", "Chile",            
+  "Argentina", "Perú", "España", "USA", "Otro país"                                                                      
+  - Change all references from "Colombia" to "global" in headers
+  - Keep Colombian data (Resolution 631, ANLA, etc.) but show it conditionally only when user selects Colombia as        
+  location                                                                                                               
+  - The app language stays in Spanish but the positioning is global                                                      
+                                                                                                                         
+  ## RENAME PAGES:                                                                                                       
+  - "Diseñador de Consorcios" → "🧬 Construye tu Consorcio"                                                              
+  - "Portal del Cliente" → "🏭 Gestiona tus Residuos"                                                                    
+  - Make sure sidebar shows all 5 pages with icons
+                                                                                                                         
+  Ese prompt reorganiza todo, hace la app global, crea los dos caminos claros, y agrega la animación de la cápsula.      
+                                          
+  Sobre la animación: le di dos opciones — Lottie (la mejor) o CSS animation (backup). Si Lottie no funciona en Replit,  
+  la animación CSS de círculos encerrándose es visualmente potente y no depende de nada externo. 
