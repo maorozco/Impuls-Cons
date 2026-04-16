@@ -37,45 +37,9 @@ button[kind="secondary"] {{
 
 /* ─── HERO ─── */
 .lp-hero {{
-    min-height: 520px;
-    display: flex; align-items: center; justify-content: center;
+    min-height: 420px;
     background: url('/app/static/hero.png') center / cover no-repeat;
-    text-align: center;
-    padding: 5rem 2rem 4rem 2rem;
     margin: -1rem -1rem 0 -1rem;
-    position: relative;
-}}
-.lp-hero::after {{
-    content: "";
-    position: absolute; inset: 0;
-    background: rgba(0,30,15,0.38);
-    pointer-events: none;
-}}
-.lp-hero-inner {{
-    position: relative; z-index: 2;
-    max-width: 820px; margin: 0 auto;
-}}
-.lp-hero h1 {{
-    font-size: 3.6rem; font-weight: 900; color: {C_WHITE};
-    margin: 0 0 .2rem 0; line-height: 1.0; letter-spacing: -1.5px;
-}}
-.lp-hero h2 {{
-    font-size: 1.15rem; font-weight: 400; font-style: italic;
-    color: {C_CYAN}; margin: 0 0 1rem 0; letter-spacing: .5px;
-}}
-.lp-hero-tag {{
-    display: inline-block;
-    background: rgba({int("C4",16)},{int("FF",16)},{int("00",16)},.18);
-    border: 1px solid {C_LIME};
-    border-radius: 4px;
-    padding: 3px 14px;
-    font-size: .82rem; color: {C_LIME}; font-weight: 600;
-    letter-spacing: 1.5px; text-transform: uppercase;
-    margin-bottom: 1.4rem;
-}}
-.lp-hero p {{
-    font-size: 1.05rem; color: rgba(255,255,255,.88);
-    max-width: 660px; margin: 0 auto 2.2rem auto; line-height: 1.8;
 }}
 
 /* ─── WHAT IS ─── */
@@ -237,16 +201,17 @@ button[kind="secondary"] {{
 def render():
     _css()
 
-    # ══ HERO (full-width brand image) ══
+    # ══ HERO (imagen pura, sin texto encima) ══
+    st.markdown('<div class="lp-hero"></div>', unsafe_allow_html=True)
+
+    # Descripción debajo de la imagen
     st.markdown("""
-<div class="lp-hero">
-  <div class="lp-hero-inner">
-    <div class="lp-hero-tag">Plataforma Global de Biorremediación</div>
-    <h1>Impulso BioCycle</h1>
-    <h2>Accelerating the Natural Cycle through Intelligence</h2>
-    <p>Plataforma global de inteligencia artificial para diseño de soluciones biológicas de
-    biorremediación. Basada en ciencia publicada en Nature, Science y 2,000+ papers revisados por pares.</p>
-  </div>
+<div style="text-align:center; padding: 1.6rem 2rem 0.4rem 2rem; max-width: 780px; margin: 0 auto;">
+  <p style="font-size:1.1rem; color:#3A5A45; line-height:1.85; margin:0;">
+    Plataforma global de inteligencia artificial para diseño de soluciones biológicas de biorremediación.
+    Basada en ciencia publicada en <strong>Nature</strong>, <strong>Science</strong>
+    y 2,000+ papers revisados por pares.
+  </p>
 </div>
 """, unsafe_allow_html=True)
 
