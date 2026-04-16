@@ -214,6 +214,22 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
+NAV_PAGES = [
+    "🏠 Inicio",
+    "🔬 Descubrimientos",
+    "🧪 Diseñador de Consorcios",
+    "🏭 Portal del Cliente",
+    "💬 Asesoría IA",
+]
+
+# Support CTA button navigation from the home page
+if "nav_page" in st.session_state:
+    forced = st.session_state.pop("nav_page")
+    if forced in NAV_PAGES:
+        st.session_state["_current_page"] = forced
+
+default_idx = NAV_PAGES.index(st.session_state.get("_current_page", "🏠 Inicio"))
+
 with st.sidebar:
     st.markdown("""
     <div style="text-align:center; padding: 8px 0 16px 0;">
@@ -226,9 +242,11 @@ with st.sidebar:
 
     pagina = st.radio(
         "Navegación",
-        ["🏠 Descubrimientos", "🧪 Diseñador de Consorcios", "🏭 Portal del Cliente", "💬 Asesoría IA"],
-        label_visibility="collapsed"
+        NAV_PAGES,
+        index=default_idx,
+        label_visibility="collapsed",
     )
+    st.session_state["_current_page"] = pagina
 
     st.divider()
     st.markdown("""
@@ -238,7 +256,10 @@ with st.sidebar:
     </div>
     """, unsafe_allow_html=True)
 
-if pagina == "🏠 Descubrimientos":
+if pagina == "🏠 Inicio":
+    import views.inicio as inicio
+    inicio.render()
+elif pagina == "🔬 Descubrimientos":
     import views.descubrimientos as desc
     desc.render()
 elif pagina == "🧪 Diseñador de Consorcios":
@@ -251,7 +272,9 @@ else:
     import views.asesoria_ia as asesoria
     asesoria.render()
 
-st.markdown("""
+# Footer only shown on non-home pages (home has its own full footer)
+if pagina != "🏠 Inicio":
+    st.markdown("""
 <div class="app-footer">
     <b>Impulso BioCycle</b> © 2026 &nbsp;|&nbsp; Red Bull Basement &nbsp;|&nbsp;
     Datos basados en publicaciones científicas revisadas por pares<br>

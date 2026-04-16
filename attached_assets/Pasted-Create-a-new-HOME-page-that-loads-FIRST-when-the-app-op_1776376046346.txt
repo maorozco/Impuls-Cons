@@ -1,0 +1,66 @@
+Create a new HOME page that loads FIRST when the app opens (make it the default/main page). The other pages
+  (Descubrimientos, Diseñador, Portal Cliente, Asesoría) should be accessible from the sidebar navigation.
+                                          
+  The HOME page should look like a professional landing page with these sections:                                        
+                                                                                                                         
+  ## SECTION 1: HERO (full-width, dramatic)                                                                              
+  Use custom HTML/CSS with st.markdown(unsafe_allow_html=True) to create:                                                
+  - A full-width hero section with a dark semi-transparent overlay (background: rgba(0,0,0,0.65))
+  - Behind the overlay, use a background image from Unsplash:                                                            
+  https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?w=1920 (ocean pollution image)
+  - On top of the overlay, centered white text:                                                                          
+    - "Impulso BioCycle" in very large bold white font (font-size: 3.5rem, font-family: system-ui)                       
+    - Below: "Biorremediación Inteligente con IA" in yellow (#FFD600) smaller text (1.5rem)                              
+    - Below: "Diseñamos consorcios microbianos optimizados por inteligencia artificial para degradar contaminantes.      
+  Basados en ciencia publicada en Nature, Science y 2,000+ papers revisados por pares." in white (1.1rem, max-width      
+  700px, centered)                                                                                                       
+    - Below: a green call-to-action button "🧬 Diseñar mi primer consorcio →" that links to the Diseñador page           
+  - Hero height: min-height 500px, display flex, align center, justify center                                            
+                                                                                                                         
+  ## SECTION 2: "¿Qué es Impulso BioCycle?" (clean white section)                                                        
+  3 columns with icons:                                                                                                  
+  - Column 1: "🧬 Diseño Inteligente" — "Nuestra IA analiza 847 microorganismos catalogados y diseña el consorcio óptimo 
+  para tu contaminante específico. No recetas genéricas — soluciones personalizadas."                                    
+  - Column 2: "📊 Basado en Ciencia Real" — "Cada recomendación se respalda con publicaciones científicas de Nature,     
+  Science, ACS. Probabilidad de éxito calculada con Machine Learning entrenado en datos reales."                         
+  - Column 3: "💰 Ahorro Comprobado" — "La biorremediación es 3-10x más económica que la excavación. Para empresas       
+  textiles, 30-50% menos que tratamiento químico. Convertimos residuos en valor."                                        
+                                                                                                                         
+  ## SECTION 3: "¿Qué problemas resolvemos?" (cards grid)
+  Use cards with dark background (#1B4332) and white text, 2 columns:                                                    
+  - Card 1: "🛢️  Hidrocarburos y Derrames" — "Degradación in situ con décadas de evidencia. 60-80% eliminación en 60-180
+  días. Colombia tiene 6,371 sitios petroleros sin remediar."                                                            
+  - Card 2: "🏭 Aguas Residuales Textiles" — "Decoloración 85-99%. 200 plantas textiles en Medellín necesitan cumplir
+  Resolución 631/2015."                                                                                                  
+  - Card 3: "🌾 Suelos Agrícolas Contaminados" — "Detoxificación de organofosforados, glifosato, carbamatos. Suelo       
+  recuperado para uso agrícola."                                                                                         
+  - Card 4: "♻️  Plásticos en Biorreactor" — "Degradación enzimática de PET a monómeros vendibles (TPA $680-850/ton).     
+  Reciclaje biológico de nueva generación."   
+  - Card 5: "⛏️  Contaminación Minera" — "Metales pesados, drenaje ácido, mercurio. Biosorción y biotransformación."      
+  - Card 6: "💊 Residuos Farmacéuticos" — "Degradación de compuestos recalcitrantes en efluentes hospitalarios e
+  industriales."                                                                                                         
+                                          
+  ## SECTION 4: "Números que hablan" (metrics bar, dark green background #1B5E20)                                        
+  4 big centered metrics in white:                                                                                       
+  - "847+" subtitle "Microorganismos catalogados"                                                                        
+  - "2,000+" subtitle "Papers científicos indexados"                                                                     
+  - "43" subtitle "Datos de entrenamiento ML" 
+  - "12" subtitle "Países con evidencia"                                                                                 
+                                          
+  ## SECTION 5: "¿Cómo funciona?" (3 steps, clean)                                                                       
+  Horizontal flow with arrows:                                                                                           
+  Step 1: "📋 Describe tu problema" — "Tipo de contaminante, condiciones ambientales, volumen"                           
+  → Step 2: "🧬 La IA diseña tu consorcio" — "Microorganismos compatibles, cápsulas, protocolo"                          
+  → Step 3: "📊 Recibe tu plan" — "Predicción ML, costos, protocolo de despliegue, probabilidad de éxito"
+                                                                                                                         
+  ## SECTION 6: "Respaldados por ciencia de clase mundial" (logos/references)                                            
+  Show a row of text references (not logos, just names in gray):                                                         
+  "Nature | Science | ACS Catalysis | Springer | PubMed Central | Addgene | Premio Nobel Química 2024"                   
+                                                                                                                         
+  ## SECTION 7: Footer                                                                                                   
+  Dark background (#0A1F0A), white text:                                                                                 
+  "Impulso BioCycle © 2026 | Red Bull Basement Colombia"                                                                 
+  "Todos los datos basados en publicaciones científicas revisadas por pares"                                             
+  "Hecho con 🧬 en Colombia 🇨🇴"                                                                                          
+                                                                                                                         
+  Make sure the page scrolls smoothly and all sections have good spacing (padding: 3rem). Use system-ui font throughout.
