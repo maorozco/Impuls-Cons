@@ -1,188 +1,235 @@
 import streamlit as st
 
 
+# ── Brand palette (extracted from the Impulso BioCycle identity image) ──
+C_DEEP   = "#004D2C"   # deep forest green  (background, footer)
+C_MID    = "#006633"   # medium green       (sidebar, sections)
+C_BRIGHT = "#00C853"   # bright green       (borders, primary accents)
+C_CYAN   = "#00D9F5"   # electric cyan      (CTA buttons, metric numbers)
+C_LIME   = "#C4FF00"   # yellow-green       (subtle highlights)
+C_WHITE  = "#FFFFFF"
+C_OFFWH  = "#F4FBF7"   # near-white section bg
+C_DARK_T = "#0A1F12"   # footer bg
+
+
 def _css():
-    st.markdown("""
+    st.markdown(f"""
 <style>
-* { font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
-.block-container { padding-top: 0 !important; }
-section[data-testid="stMain"] > div { padding-top: 0 !important; }
+* {{ font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; box-sizing: border-box; }}
+.block-container {{ padding-top: 0 !important; max-width: 100% !important; }}
+section[data-testid="stMain"] > div {{ padding-top: 0 !important; }}
+
+/* ── Streamlit primary button override ── */
+button[kind="primary"] {{
+    background: {C_CYAN} !important;
+    color: {C_DEEP} !important;
+    font-weight: 800 !important;
+    border: none !important;
+    border-radius: 6px !important;
+}}
+button[kind="secondary"] {{
+    background: transparent !important;
+    color: {C_CYAN} !important;
+    font-weight: 700 !important;
+    border: 2px solid {C_CYAN} !important;
+    border-radius: 6px !important;
+}}
 
 /* ─── HERO ─── */
-.lp-hero {
-    min-height: 500px;
+.lp-hero {{
+    min-height: 520px;
     display: flex; align-items: center; justify-content: center;
-    background:
-        linear-gradient(rgba(0,0,0,0.65), rgba(0,0,0,0.65)),
-        url('https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?w=1920')
-        center / cover no-repeat;
+    background: url('/app/static/hero.png') center / cover no-repeat;
     text-align: center;
-    padding: 4.5rem 2rem 3.5rem 2rem;
+    padding: 5rem 2rem 4rem 2rem;
     margin: -1rem -1rem 0 -1rem;
-}
-.lp-hero-inner { max-width: 820px; margin: 0 auto; }
-.lp-hero h1 {
-    font-size: 3.5rem; font-weight: 900; color: #fff;
-    margin: 0 0 .4rem 0; line-height: 1.05; letter-spacing: -1.5px;
-}
-.lp-hero h2 {
-    font-size: 1.3rem; font-weight: 500; font-style: italic;
-    color: #FFD600; margin: 0 0 1.1rem 0;
-}
-.lp-hero p {
-    font-size: 1.1rem; color: rgba(255,255,255,.9);
-    max-width: 680px; margin: 0 auto 2.2rem auto; line-height: 1.75;
-}
+    position: relative;
+}}
+.lp-hero::after {{
+    content: "";
+    position: absolute; inset: 0;
+    background: rgba(0,30,15,0.38);
+    pointer-events: none;
+}}
+.lp-hero-inner {{
+    position: relative; z-index: 2;
+    max-width: 820px; margin: 0 auto;
+}}
+.lp-hero h1 {{
+    font-size: 3.6rem; font-weight: 900; color: {C_WHITE};
+    margin: 0 0 .2rem 0; line-height: 1.0; letter-spacing: -1.5px;
+}}
+.lp-hero h2 {{
+    font-size: 1.15rem; font-weight: 400; font-style: italic;
+    color: {C_CYAN}; margin: 0 0 1rem 0; letter-spacing: .5px;
+}}
+.lp-hero-tag {{
+    display: inline-block;
+    background: rgba({int("C4",16)},{int("FF",16)},{int("00",16)},.18);
+    border: 1px solid {C_LIME};
+    border-radius: 4px;
+    padding: 3px 14px;
+    font-size: .82rem; color: {C_LIME}; font-weight: 600;
+    letter-spacing: 1.5px; text-transform: uppercase;
+    margin-bottom: 1.4rem;
+}}
+.lp-hero p {{
+    font-size: 1.05rem; color: rgba(255,255,255,.88);
+    max-width: 660px; margin: 0 auto 2.2rem auto; line-height: 1.8;
+}}
 
 /* ─── WHAT IS ─── */
-.lp-what {
-    background: #fff;
+.lp-what {{
+    background: {C_WHITE};
     padding: 3.5rem 2rem;
     text-align: center;
-}
-.lp-what-title {
-    font-size: 1.8rem; font-weight: 800; color: #1B4332; margin-bottom: 1.2rem;
-}
-.lp-what-body {
-    font-size: 1.1rem; color: #444; max-width: 760px;
-    margin: 0 auto; line-height: 1.8;
-}
+    border-bottom: 1px solid #E8F5EC;
+}}
+.lp-what-title {{
+    font-size: 1.7rem; font-weight: 800; color: {C_DEEP}; margin-bottom: 1rem;
+}}
+.lp-what-body {{
+    font-size: 1.05rem; color: #3A5A45;
+    max-width: 740px; margin: 0 auto; line-height: 1.85;
+}}
 
 /* ─── TWO PATHS ─── */
-.lp-path-card-green {
-    background: #1B5E20; color: white;
-    border-radius: 18px; padding: 2.2rem 2rem;
-    height: 100%; box-sizing: border-box;
-    box-shadow: 0 6px 28px rgba(27,94,32,0.32);
-    transition: transform .25s, box-shadow .25s;
-}
-.lp-path-card-green:hover { transform: translateY(-4px); box-shadow: 0 12px 36px rgba(27,94,32,0.42); }
-.lp-path-card-dark {
-    background: #263238; color: white;
-    border-radius: 18px; padding: 2.2rem 2rem;
-    height: 100%; box-sizing: border-box;
-    box-shadow: 0 6px 28px rgba(38,50,56,0.30);
-    transition: transform .25s, box-shadow .25s;
-}
-.lp-path-card-dark:hover { transform: translateY(-4px); box-shadow: 0 12px 36px rgba(38,50,56,0.40); }
-.lp-path-icon { font-size: 2.4rem; margin-bottom: .7rem; }
-.lp-path-title { font-size: 1.35rem; font-weight: 900; margin-bottom: .3rem; letter-spacing: -.3px; }
-.lp-path-sub { font-size: .92rem; opacity: .8; margin-bottom: 1.1rem; }
-.lp-path-list { list-style: none; padding: 0; margin: 0 0 1.4rem 0; }
-.lp-path-list li { font-size: .93rem; opacity: .9; margin-bottom: .5rem; padding-left: .3rem; }
-.lp-path-list li::before { content: "✓ "; font-weight: 700; opacity: .7; }
-
-/* ─── PROBLEM GRID ─── */
-.lp-prob-item {
-    background: white; border-radius: 14px; padding: 1.4rem 1.5rem;
-    margin-bottom: 1rem;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
-    border-left: 4px solid #00C853;
+.lp-section-label {{
+    text-align: center; margin-bottom: 1.6rem;
+}}
+.lp-section-label h3 {{
+    font-size: 1.65rem; font-weight: 800; color: {C_DEEP}; margin: 0 0 .3rem 0;
+}}
+.lp-section-label p {{
+    font-size: .95rem; color: #6A8A74; margin: 0;
+}}
+.lp-path-green {{
+    background: {C_DEEP}; color: white;
+    border-radius: 12px; padding: 2rem 1.8rem;
+    box-shadow: 0 6px 28px rgba(0,77,44,0.28);
     transition: transform .2s, box-shadow .2s;
-}
-.lp-prob-item:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(27,94,32,0.14); }
-.lp-prob-icon { font-size: 1.6rem; margin-bottom: .35rem; }
-.lp-prob-title { font-size: 1rem; font-weight: 800; color: #1B4332; margin-bottom: .3rem; }
-.lp-prob-desc { font-size: .88rem; color: #666; line-height: 1.55; }
+}}
+.lp-path-green:hover {{ transform: translateY(-3px); box-shadow: 0 12px 36px rgba(0,77,44,0.38); }}
+.lp-path-slate {{
+    background: #1C2A22; color: white;
+    border-radius: 12px; padding: 2rem 1.8rem;
+    box-shadow: 0 6px 28px rgba(28,42,34,0.28);
+    transition: transform .2s, box-shadow .2s;
+}}
+.lp-path-slate:hover {{ transform: translateY(-3px); box-shadow: 0 12px 36px rgba(28,42,34,0.38); }}
+.lp-path-kicker {{
+    font-size: .72rem; font-weight: 700; letter-spacing: 2px;
+    text-transform: uppercase; color: {C_CYAN}; margin-bottom: .5rem;
+}}
+.lp-path-title {{ font-size: 1.3rem; font-weight: 900; margin-bottom: .3rem; }}
+.lp-path-sub {{ font-size: .88rem; opacity: .72; margin-bottom: 1.2rem; }}
+.lp-path-list {{ list-style: none; padding: 0; margin: 0 0 1.5rem 0; }}
+.lp-path-list li {{
+    font-size: .9rem; opacity: .88; margin-bottom: .55rem; padding-left: .1rem;
+    border-left: 2px solid {C_CYAN}; padding-left: .7rem;
+}}
+
+/* ─── PROBLEMS ─── */
+.lp-probs-section {{
+    background: {C_OFFWH}; margin: 0 -1rem; padding: 3.5rem 2rem;
+}}
+.lp-prob-card {{
+    background: white; border-radius: 10px; padding: 1.4rem 1.5rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+    border-top: 3px solid {C_BRIGHT};
+    transition: transform .2s, box-shadow .2s;
+}}
+.lp-prob-card:hover {{ transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,77,44,0.12); }}
+.lp-prob-title {{ font-size: .98rem; font-weight: 800; color: {C_DEEP}; margin-bottom: .3rem; }}
+.lp-prob-desc {{ font-size: .85rem; color: #5A7A65; line-height: 1.55; }}
 
 /* ─── CAPSULE ANIMATION ─── */
-.capsule-scene {
-    position: relative; width: 260px; height: 260px;
-    margin: 0 auto;
-}
-.capsule-outer {
+.capsule-scene {{
+    position: relative; width: 240px; height: 240px; margin: 0 auto;
+}}
+.capsule-outer {{
     position: absolute; top: 50%; left: 50%;
-    width: 200px; height: 200px;
-    transform: translate(-50%, -50%);
-    border: 3px solid rgba(0,200,83,0.55);
+    width: 190px; height: 190px;
+    transform: translate(-50%,-50%);
+    border: 2px solid rgba(0,217,245,.50);
     border-radius: 50%;
-    background: rgba(0,200,83,0.07);
-    animation: capsule-pulse 3s ease-in-out infinite;
-}
-.bact {
+    background: rgba(0,217,245,.06);
+    animation: cap-pulse 3.2s ease-in-out infinite;
+}}
+.bact {{
     position: absolute; border-radius: 50%;
-    width: 38px; height: 38px;
-    animation-duration: 3s;
+    width: 36px; height: 36px;
+    animation-duration: 3.2s;
     animation-timing-function: ease-in-out;
     animation-iteration-count: infinite;
-}
-.b1 { background: rgba(0,200,83,.85);  top: 68px; left: 52px;  animation-name: float1; }
-.b2 { background: rgba(33,150,243,.8); top: 52px; left: 148px; animation-name: float2; }
-.b3 { background: rgba(255,193,7,.85); top: 150px;left: 60px;  animation-name: float3; }
-.b4 { background: rgba(156,39,176,.8); top: 145px;left: 150px; animation-name: float4; }
-.b-label {
-    position: absolute; font-size: 8px; font-weight: 700;
-    color: white; width: 100%; text-align: center; top: 50%;
-    transform: translateY(-50%); line-height: 1.2; padding: 0 3px;
-}
-@keyframes capsule-pulse {
-    0%,100% { transform: translate(-50%,-50%) scale(1);   opacity: .9; }
-    50%      { transform: translate(-50%,-50%) scale(1.08); opacity: 1; }
-}
-@keyframes float1 {
-    0%,100% { top: 68px;  left: 52px; }
-    50%     { top: 78px;  left: 62px; }
-}
-@keyframes float2 {
-    0%,100% { top: 52px;  left: 148px; }
-    50%     { top: 62px;  left: 138px; }
-}
-@keyframes float3 {
-    0%,100% { top: 150px; left: 60px; }
-    50%     { top: 140px; left: 70px; }
-}
-@keyframes float4 {
-    0%,100% { top: 145px; left: 150px; }
-    50%     { top: 155px; left: 140px; }
-}
+}}
+.b1 {{ background: {C_BRIGHT}; top:68px; left:50px; animation-name: fl1; }}
+.b2 {{ background: {C_CYAN};   top:50px; left:148px; animation-name: fl2; }}
+.b3 {{ background: {C_LIME};   top:148px; left:56px; animation-name: fl3; }}
+.b4 {{ background: #5CE0C8;    top:144px; left:148px; animation-name: fl4; }}
+.b-lbl {{
+    position:absolute; font-size:7px; font-weight:700; color:{C_DEEP};
+    width:100%; text-align:center; top:50%; transform:translateY(-50%); padding:0 2px;
+    line-height:1.2;
+}}
+@keyframes cap-pulse {{
+    0%,100% {{ transform:translate(-50%,-50%) scale(1);    opacity:.85; }}
+    50%      {{ transform:translate(-50%,-50%) scale(1.08); opacity:1; }}
+}}
+@keyframes fl1 {{ 0%,100% {{top:68px;left:50px}} 50% {{top:76px;left:60px}} }}
+@keyframes fl2 {{ 0%,100% {{top:50px;left:148px}} 50% {{top:60px;left:138px}} }}
+@keyframes fl3 {{ 0%,100% {{top:148px;left:56px}} 50% {{top:140px;left:66px}} }}
+@keyframes fl4 {{ 0%,100% {{top:144px;left:148px}} 50% {{top:154px;left:138px}} }}
 
-/* ─── METRICS BAR ─── */
-.lp-metrics-bar {
-    background: #1B5E20; padding: 3rem 1rem;
+/* ─── HOW IT WORKS steps ─── */
+.lp-step-row {{
+    background: {C_OFFWH}; border-radius: 10px; padding: 1.2rem 1.4rem;
+    margin-bottom: .9rem;
+    border-left: 3px solid {C_CYAN};
+}}
+.lp-step-num {{
+    display: inline-flex; align-items:center; justify-content:center;
+    background: {C_CYAN}; color: {C_DEEP};
+    width: 26px; height: 26px; border-radius: 50%;
+    font-weight: 900; font-size: .85rem; margin-right: .6rem;
+    flex-shrink: 0; vertical-align: middle;
+}}
+.lp-step-title {{ font-size: .95rem; font-weight: 700; color: {C_DEEP}; display:inline; vertical-align:middle; }}
+.lp-step-desc  {{ font-size: .84rem; color: #5A7A65; margin-top: .3rem; padding-left: 2rem; line-height:1.55; }}
+
+/* ─── METRICS ─── */
+.lp-metrics-bg {{
+    background: {C_DEEP}; padding: 3rem 1rem;
     margin: 0 -1rem; text-align: center;
-}
-.lp-metric-num  { font-size: 3rem; font-weight: 900; color: #FFD600; line-height: 1; }
-.lp-metric-label { font-size: .92rem; color: rgba(255,255,255,.82); margin-top: .4rem; }
+}}
+.lp-metric-num   {{ font-size: 2.8rem; font-weight: 900; color: {C_CYAN}; line-height: 1; }}
+.lp-metric-label {{ font-size: .88rem; color: rgba(255,255,255,.75); margin-top: .4rem; }}
 
 /* ─── REFS ─── */
-.lp-refs-bar {
-    background: #F5F5F5; padding: 2.2rem 1rem; text-align: center;
+.lp-refs-bg {{
+    background: #F0F4F2; padding: 2rem 1rem; text-align: center;
     margin: 0 -1rem;
-}
-.lp-refs-title {
-    font-size: .78rem; color: #AAA; text-transform: uppercase;
-    letter-spacing: 2.5px; font-weight: 700; margin-bottom: 1.1rem;
-}
-.lp-refs-row { display: flex; flex-wrap: wrap; justify-content: center; gap: .8rem 1.6rem; }
-.lp-ref-chip {
-    font-size: .88rem; font-weight: 700; color: #666;
-    border: 1px solid #DDD; border-radius: 8px;
-    padding: 5px 14px; background: white;
-}
+}}
+.lp-refs-title {{
+    font-size: .72rem; color: #8AA898; text-transform: uppercase;
+    letter-spacing: 2.5px; font-weight: 700; margin-bottom: 1rem;
+}}
+.lp-refs-row {{ display:flex; flex-wrap:wrap; justify-content:center; gap:.7rem 1.4rem; }}
+.lp-ref-chip {{
+    font-size: .84rem; font-weight: 700; color: #4A7060;
+    border: 1px solid #C8DDD2; border-radius: 6px;
+    padding: 4px 13px; background: white;
+}}
 
 /* ─── FOOTER ─── */
-.lp-footer-full {
-    background: #0A1F0A; color: rgba(255,255,255,.78);
-    text-align: center; padding: 2.8rem 1rem;
-    font-size: .9rem; line-height: 2.1;
+.lp-footer-full {{
+    background: {C_DARK_T}; color: rgba(255,255,255,.72);
+    text-align: center; padding: 2.6rem 1rem;
+    font-size: .88rem; line-height: 2.1;
     margin: 0 -1rem -4rem -1rem;
-}
-.lp-footer-full b { color: #A5D6A7; }
-
-/* ─── STEP CARDS ─── */
-.lp-step-card {
-    background: #F1F8E9; border-radius: 14px; padding: 1.3rem 1.5rem;
-    margin-bottom: 1rem; border-left: 4px solid #00C853;
-}
-.lp-step-num-badge {
-    display: inline-flex; align-items: center; justify-content: center;
-    background: linear-gradient(135deg,#00C853,#1B5E20);
-    color: white; width: 28px; height: 28px; border-radius: 50%;
-    font-weight: 900; font-size: .9rem; margin-right: .6rem;
-    flex-shrink: 0; vertical-align: middle;
-}
-.lp-step-text { font-size: .95rem; color: #1B4332; font-weight: 600; display: inline; vertical-align: middle; }
-.lp-step-sub  { font-size: .85rem; color: #555; margin-top: .35rem; padding-left: 2.2rem; line-height: 1.55; }
+}}
+.lp-footer-full b {{ color: {C_CYAN}; }}
 </style>
 """, unsafe_allow_html=True)
 
@@ -190,28 +237,29 @@ section[data-testid="stMain"] > div { padding-top: 0 !important; }
 def render():
     _css()
 
-    # ══ HERO ══
+    # ══ HERO (full-width brand image) ══
     st.markdown("""
 <div class="lp-hero">
   <div class="lp-hero-inner">
+    <div class="lp-hero-tag">Plataforma Global de Biorremediación</div>
     <h1>Impulso BioCycle</h1>
-    <h2>creates substances based on living organisms</h2>
-    <p>Plataforma global de inteligencia artificial para diseño de soluciones biológicas de biorremediación.
-    Basada en ciencia publicada en Nature, Science y 2,000+ papers revisados por pares.</p>
+    <h2>Accelerating the Natural Cycle through Intelligence</h2>
+    <p>Plataforma global de inteligencia artificial para diseño de soluciones biológicas de
+    biorremediación. Basada en ciencia publicada en Nature, Science y 2,000+ papers revisados por pares.</p>
   </div>
 </div>
 """, unsafe_allow_html=True)
 
     # CTA buttons
-    st.markdown('<div style="height:.8rem;"></div>', unsafe_allow_html=True)
-    cta_l, cta1, cta2, cta_r = st.columns([1, 2, 2, 1])
+    st.markdown('<div style="height:.6rem;"></div>', unsafe_allow_html=True)
+    _, cta1, cta2, _ = st.columns([1, 2, 2, 1])
     with cta1:
-        if st.button("🧬 Construye tu Consorcio\nPara laboratorios y productores",
+        if st.button("Construye tu Consorcio — Para laboratorios y productores",
                      type="primary", use_container_width=True, key="cta_cons"):
             st.session_state["nav_page"] = "🧬 Construye tu Consorcio"
             st.rerun()
     with cta2:
-        if st.button("🏭 Gestiona tus Residuos\nPara empresas y operadores",
+        if st.button("Gestiona tus Residuos — Para empresas y operadores",
                      use_container_width=True, key="cta_portal"):
             st.session_state["nav_page"] = "🏭 Gestiona tus Residuos"
             st.rerun()
@@ -229,45 +277,46 @@ def render():
 """, unsafe_allow_html=True)
 
     # ══ DOS CAMINOS ══
-    st.markdown('<div style="padding: 3rem 0 1rem 0;">', unsafe_allow_html=True)
     st.markdown("""
-<div style="text-align:center; margin-bottom:1.8rem;">
-  <div style="font-size:1.8rem; font-weight:800; color:#1B4332;">Dos caminos, un objetivo</div>
-  <div style="font-size:1rem; color:#666; margin-top:.4rem;">Elige el que se adapta a tu rol</div>
+<div style="padding: 3rem 0 .5rem 0;">
+  <div class="lp-section-label">
+    <h3>Dos caminos, un objetivo</h3>
+    <p>Elige el que se adapta a tu rol</p>
+  </div>
 </div>
 """, unsafe_allow_html=True)
 
     dc_l, dc_r = st.columns(2)
     with dc_l:
         st.markdown("""
-<div class="lp-path-card-green">
-  <div class="lp-path-icon">🧬</div>
-  <div class="lp-path-title">CONSTRUYE TU CONSORCIO</div>
-  <div class="lp-path-sub">Para laboratorios, investigadores y productores de soluciones</div>
+<div class="lp-path-green">
+  <div class="lp-path-kicker">Para laboratorios y productores</div>
+  <div class="lp-path-title">Construye tu Consorcio</div>
+  <div class="lp-path-sub">Diseña desde cero. Tú defines los organismos y el protocolo.</div>
   <ul class="lp-path-list">
-    <li>Diseña consorcios personalizados desde cero</li>
-    <li>Selecciona microorganismos BSL-1/GRAS verificados</li>
-    <li>Verifica compatibilidad entre especies</li>
-    <li>Obtén formulación de cápsula optimizada</li>
+    <li>Consorcios personalizados desde cero</li>
+    <li>Microorganismos BSL-1/GRAS verificados</li>
+    <li>Verificación de compatibilidad entre especies</li>
+    <li>Formulación de cápsula optimizada</li>
     <li>Predicción ML de degradación</li>
     <li>Protocolo de preparación paso a paso</li>
   </ul>
 </div>
 """, unsafe_allow_html=True)
-        if st.button("Empezar a diseñar →", type="primary",
+        if st.button("Empezar a diseñar", type="primary",
                      use_container_width=True, key="path_cons"):
             st.session_state["nav_page"] = "🧬 Construye tu Consorcio"
             st.rerun()
 
     with dc_r:
         st.markdown("""
-<div class="lp-path-card-dark">
-  <div class="lp-path-icon">🏭</div>
-  <div class="lp-path-title">GESTIONA TUS RESIDUOS</div>
-  <div class="lp-path-sub">Para empresas industriales, operadores y consultoras</div>
+<div class="lp-path-slate">
+  <div class="lp-path-kicker">Para empresas industriales y consultoras</div>
+  <div class="lp-path-title">Gestiona tus Residuos</div>
+  <div class="lp-path-sub">Recibe una solución pre-diseñada y probada para tu industria.</div>
   <ul class="lp-path-list">
-    <li>Selecciona tu tipo de operación y residuo</li>
-    <li>Recibe una solución pre-diseñada y probada</li>
+    <li>Selección por tipo de operación y residuo</li>
+    <li>Solución pre-diseñada y validada</li>
     <li>Plan operativo mes a mes</li>
     <li>Análisis financiero: inversión, ahorro, ROI</li>
     <li>Cumplimiento normativo automático</li>
@@ -275,54 +324,45 @@ def render():
   </ul>
 </div>
 """, unsafe_allow_html=True)
-        if st.button("Ver soluciones →", use_container_width=True, key="path_portal"):
+        if st.button("Ver soluciones", use_container_width=True, key="path_portal"):
             st.session_state["nav_page"] = "🏭 Gestiona tus Residuos"
             st.rerun()
 
-    st.markdown('</div>', unsafe_allow_html=True)
-
-    # ══ QUÉ PROBLEMAS ══
+    # ══ PROBLEMAS ══
     st.markdown("""
-<div style="background:#F9FBF9; margin: 1rem -1rem 0 -1rem; padding: 3rem 2rem;">
-  <div style="text-align:center; margin-bottom:1.8rem;">
-    <div style="font-size:1.8rem; font-weight:800; color:#1B4332;">¿Qué problemas resolvemos?</div>
-    <div style="font-size:1rem; color:#666; margin-top:.4rem;">De la contaminación al ecosistema restaurado</div>
+<div class="lp-probs-section">
+  <div class="lp-section-label" style="margin-bottom:1.8rem;">
+    <h3>Problemas que resolvemos</h3>
+    <p>De la contaminación al ecosistema restaurado</p>
   </div>
 </div>
 """, unsafe_allow_html=True)
 
     problems = [
-        ("🛢️", "Hidrocarburos y derrames",
-         "60-80% eliminación in situ. Décadas de evidencia global."),
-        ("🏭", "Aguas residuales industriales",
-         "Decoloración 85-99%. Tratamiento biológico más económico."),
-        ("🌾", "Suelos agrícolas contaminados",
-         "Detoxificación de plaguicidas. Suelo recuperado para uso."),
-        ("♻️", "Plásticos en biorreactor",
-         "PET a monómeros vendibles ($680-850/ton)."),
-        ("⛏️", "Contaminación minera",
-         "Metales pesados, drenaje ácido, mercurio."),
-        ("💊", "Efluentes farmacéuticos",
-         "Compuestos recalcitrantes en agua hospitalaria."),
+        ("Hidrocarburos y derrames",    "60-80% eliminación in situ. Décadas de evidencia global."),
+        ("Aguas residuales industriales","Decoloración 85-99%. Tratamiento biológico más económico."),
+        ("Suelos agrícolas contaminados","Detoxificación de plaguicidas. Suelo recuperado para uso."),
+        ("Plásticos en biorreactor",    "PET a monómeros vendibles ($680-850/ton)."),
+        ("Contaminación minera",        "Metales pesados, drenaje ácido, mercurio."),
+        ("Efluentes farmacéuticos",     "Compuestos recalcitrantes en agua hospitalaria."),
     ]
     pb1, pb2, pb3 = st.columns(3)
-    cols_cycle = [pb1, pb2, pb3]
-    for i, (icon, title, desc) in enumerate(problems):
-        with cols_cycle[i % 3]:
+    for i, (title, desc) in enumerate(problems):
+        col = [pb1, pb2, pb3][i % 3]
+        with col:
             st.markdown(f"""
-<div class="lp-prob-item">
-  <div class="lp-prob-icon">{icon}</div>
+<div class="lp-prob-card">
   <div class="lp-prob-title">{title}</div>
   <div class="lp-prob-desc">{desc}</div>
 </div>
 """, unsafe_allow_html=True)
 
-    # ══ CAPSULE ANIMATION + STEPS ══
+    # ══ CAPSULE + STEPS ══
     st.markdown("""
 <div style="padding: 3rem 0 2rem 0;">
-  <div style="text-align:center; margin-bottom:2rem;">
-    <div style="font-size:1.8rem; font-weight:800; color:#1B4332;">Cómo funciona nuestra IA</div>
-    <div style="font-size:1rem; color:#666; margin-top:.4rem;">Microorganismos + Encapsulación + Machine Learning</div>
+  <div class="lp-section-label">
+    <h3>Cómo funciona nuestra IA</h3>
+    <p>Microorganismos · Encapsulación · Machine Learning</p>
   </div>
 </div>
 """, unsafe_allow_html=True)
@@ -330,66 +370,64 @@ def render():
     anim_col, steps_col = st.columns([2, 3])
     with anim_col:
         st.markdown("""
-<div style="display:flex; flex-direction:column; align-items:center; justify-content:center;
-            padding: 1rem 0;">
+<div style="display:flex; flex-direction:column; align-items:center; padding: .5rem 0 1rem 0;">
   <div class="capsule-scene">
     <div class="capsule-outer"></div>
-    <div class="bact b1"><div class="b-label">Bacillus</div></div>
-    <div class="bact b2"><div class="b-label">Dehalococcoides</div></div>
-    <div class="bact b3"><div class="b-label">Rhodotorula</div></div>
-    <div class="bact b4"><div class="b-label">Ideonella</div></div>
+    <div class="bact b1"><div class="b-lbl">Bacillus</div></div>
+    <div class="bact b2"><div class="b-lbl">Dehalococcoides</div></div>
+    <div class="bact b3"><div class="b-lbl">Rhodotorula</div></div>
+    <div class="bact b4"><div class="b-lbl">Ideonella</div></div>
   </div>
-  <div style="margin-top:1rem; font-size:.82rem; color:#888; text-align:center; max-width:220px;">
-    Microorganismos BSL-1/GRAS siendo encapsulados en alginato de sodio
+  <div style="margin-top:.9rem; font-size:.78rem; color:#6A8A74; text-align:center; max-width:200px; line-height:1.5;">
+    Microorganismos BSL-1/GRAS encapsulados en alginato de sodio
   </div>
 </div>
 """, unsafe_allow_html=True)
 
     with steps_col:
-        for num, icon, title, desc in [
-            (1, "📋", "Describe tu contaminante y condiciones",
+        for num, title, desc in [
+            (1, "Describe tu contaminante y condiciones",
              "Tipo de residuo, temperatura, pH, volumen y zona climática."),
-            (2, "🧬", "Nuestra IA consulta 847 microorganismos y diseña el consorcio óptimo",
+            (2, "La IA consulta 847 microorganismos y diseña el consorcio óptimo",
              "Verifica compatibilidad entre especies, sinergias y ausencia de competencia."),
-            (3, "💊", "Recibe la receta de tu cápsula con predicción de éxito y protocolo completo",
+            (3, "Recibe la receta de tu cápsula con predicción de éxito y protocolo completo",
              "Probabilidad ML, cronograma, costos comparativos y protocolo de despliegue."),
         ]:
             st.markdown(f"""
-<div class="lp-step-card">
-  <span class="lp-step-num-badge">{num}</span>
-  <span class="lp-step-text">{icon} {title}</span>
-  <div class="lp-step-sub">{desc}</div>
+<div class="lp-step-row">
+  <span class="lp-step-num">{num}</span>
+  <span class="lp-step-title">{title}</span>
+  <div class="lp-step-desc">{desc}</div>
 </div>
 """, unsafe_allow_html=True)
 
     # ══ METRICS ══
+    st.markdown('<div class="lp-metrics-bg">', unsafe_allow_html=True)
     st.markdown("""
-<div class="lp-metrics-bar">
-  <div style="font-size:.8rem; color:rgba(255,255,255,.65); text-transform:uppercase;
-              letter-spacing:2.5px; font-weight:700; margin-bottom:1.5rem;">
-    Números que hablan
-  </div>
+<div style="font-size:.75rem; color:rgba(255,255,255,.55); text-transform:uppercase;
+            letter-spacing:2.5px; font-weight:700; text-align:center; margin-bottom:1.5rem;">
+  Números que hablan
 </div>
 """, unsafe_allow_html=True)
-
     m1, m2, m3, m4 = st.columns(4)
     for mc, num, lbl in [
         (m1, "847+",   "Microorganismos catalogados"),
-        (m2, "2,000+", "Papers científicos"),
+        (m2, "2,000+", "Papers científicos indexados"),
         (m3, "15+",    "Tipos de contaminantes"),
         (m4, "30+",    "Países con evidencia"),
     ]:
         with mc:
             st.markdown(f"""
-<div style="background:#1B5E20; padding:1.6rem 1rem; text-align:center;">
+<div style="text-align:center; padding:.5rem 0;">
   <div class="lp-metric-num">{num}</div>
   <div class="lp-metric-label">{lbl}</div>
 </div>
 """, unsafe_allow_html=True)
+    st.markdown('</div>', unsafe_allow_html=True)
 
     # ══ REFERENCES ══
     st.markdown("""
-<div class="lp-refs-bar">
+<div class="lp-refs-bg">
   <div class="lp-refs-title">Respaldados por ciencia de clase mundial</div>
   <div class="lp-refs-row">
     <span class="lp-ref-chip">Nature</span>

@@ -2,10 +2,11 @@
 headless = true
 enableCORS = false
 enableXsrfProtection = false
+enableStaticServing = true
 
 [theme]
-primaryColor="#00C853"
+primaryColor="#00D4FF"
 backgroundColor="#FFFFFF"
-secondaryBackgroundColor="#F1F8E9"
-textColor="#1B4332"
+secondaryBackgroundColor="#F0FBF4"
+textColor="#003D1F"
 font="sans serif"
