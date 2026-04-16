@@ -1,0 +1,31 @@
+Improve the Consortium Designer page with these additions:
+
+  1. LOADING SIMULATION: When user clicks "Diseñar Consorcio", show sequential phases with spinners:                     
+     - "🔍 Analizando contaminante y condiciones..." (2 sec)
+     - "🧫 Consultando 847 microorganismos catalogados..." (2 sec)                                                       
+     - "🔗 Verificando compatibilidad entre especies..." (1.5 sec)                                                       
+     - "🧬 Optimizando con modelo ML (Gradient Boosting)..." (2 sec)
+     - "💊 Seleccionando formulación de cápsula..." (1.5 sec)                                                            
+     - "📊 Generando predicción de degradación..." (1.5 sec)                                                             
+     - "✅ Consorcio diseñado exitosamente" (1 sec)                                                                      
+     Use time.sleep() and st.empty() for each phase.                                                                     
+                                                                                                                         
+  2. SUCCESS PROBABILITY: After results load, show a big metric with color:                                              
+     - Green (>60%): "Alta — Evidencia científica sólida"                                                                
+     - Yellow (30-60%): "Moderada — Viable con optimización"                                                             
+     - Red (<30%): "Baja — Requiere investigación adicional"                                                             
+     Base the value on contaminant type: hydrocarbons=70%, organophosphates=85%, glyphosate=75%, azo_dyes=90%,
+  PET_bioreactor=88%, heavy_metals=85%, HDPE=30%, PP=15%, PFAS=20%                                                       
+                                                                                                                         
+  3. COMPATIBILITY SECTION: Show a table of organism pairs with their relationship:                                      
+     "🟢 Sintrófica" = they help each other (explain why in one sentence)                                                
+     "🟡 Neutral" = no interference                                                                                      
+     Summary: "Consorcio 100% compatible — X sintróficas, Y neutrales, 0 competitivas"                                   
+                                              
+  4. PROCESS RESULT: Dynamic section based on contaminant:                                                               
+     If hydrocarbons: "📦 CO₂ + H₂O. El contaminante se MINERALIZA completamente ✅"
+     If plastics: "📦 TPA ($680-850/ton) + EG ($500-650/ton). Monómeros vendibles como materia prima 💰"                 
+     If agricultural soil: "📦 Compuestos no tóxicos. Suelo recuperado para uso agrícola 🌱"                             
+     If textiles: "📦 Agua decolorizada. Potencial reutilización industrial 💧"                                          
+     If heavy metals: "📦 Metales bioacumulados en biomasa. Recuperación o disposición RESPEL ♻️ "                        
+                                                                                                       

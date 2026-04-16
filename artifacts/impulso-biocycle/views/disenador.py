@@ -429,13 +429,13 @@ def render():
             st.session_state["pretreatment_ok_result"] = pretreatment_ok
 
             loading_steps = [
-                ("🔍 Analizando contaminante y condiciones ambientales...", 2.0),
-                ("🧫 Consultando base de datos de 847 microorganismos...", 2.0),
-                ("🔗 Verificando compatibilidad entre especies seleccionadas...", 1.5),
-                ("🧬 Optimizando proporciones del consorcio con algoritmo genético...", 2.0),
-                ("💊 Seleccionando formulación de cápsula para las condiciones indicadas...", 1.5),
-                ("📊 Generando predicción de degradación basada en literatura...", 1.5),
-                ("✅ ¡Consorcio diseñado exitosamente!", 1.0),
+                ("🔍 Analizando contaminante y condiciones...", 2.0),
+                ("🧫 Consultando 847 microorganismos catalogados...", 2.0),
+                ("🔗 Verificando compatibilidad entre especies...", 1.5),
+                ("🧬 Optimizando con modelo ML (Gradient Boosting)...", 2.0),
+                ("💊 Seleccionando formulación de cápsula...", 1.5),
+                ("📊 Generando predicción de degradación...", 1.5),
+                ("✅ Consorcio diseñado exitosamente", 1.0),
             ]
 
             progress_placeholder = st.empty()
@@ -495,17 +495,46 @@ def render():
         st.subheader("📊 Probabilidad de Éxito")
 
         gauge_fig, gauge_label, gauge_color = render_gauge(probability)
+
+        if probability >= 60:
+            metric_bg = "#E8F5E9"
+            metric_border = "#4CAF50"
+            metric_icon = "✅"
+        elif probability >= 30:
+            metric_bg = "#FFF8E1"
+            metric_border = "#FFC107"
+            metric_icon = "⚠️"
+        else:
+            metric_bg = "#FFEBEE"
+            metric_border = "#F44336"
+            metric_icon = "🔴"
+
+        st.markdown(f"""
+        <div style="background:{metric_bg}; border:2px solid {metric_border}; border-radius:16px;
+                    padding:24px 32px; text-align:center; margin-bottom:20px;">
+            <div style="font-size:64px; font-weight:900; color:{gauge_color}; line-height:1;">
+                {probability}%
+            </div>
+            <div style="font-size:20px; font-weight:700; color:{gauge_color}; margin-top:8px;">
+                {metric_icon} {gauge_label}
+            </div>
+            <div style="font-size:13px; color:#666; margin-top:10px;">
+                📚 Basado en <b>{PUBLICATIONS_COUNT.get(subtipo_r, 50)}</b> publicaciones científicas revisadas por pares
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+
         col_gauge, col_gauge_info = st.columns([2, 1])
         with col_gauge:
             st.plotly_chart(gauge_fig, use_container_width=True)
         with col_gauge_info:
             st.markdown(f"""
             <div style="margin-top:50px;">
-            <div style="font-size:20px; font-weight:700; color:{gauge_color};">{probability}%</div>
-            <div style="font-size:14px; color:#444; margin-top:8px;">{gauge_label}</div>
-            <br>
-            <div style="font-size:13px; color:#666;">
-            📚 Basado en <b>{PUBLICATIONS_COUNT.get(subtipo_r, 50)}</b> publicaciones científicas revisadas por pares.
+            <div style="font-size:13px; color:#555; line-height:1.7;">
+            <b>Factores evaluados:</b><br>
+            🌡️ Temperatura: {st.session_state.get('temperatura_result', 30)}°C<br>
+            🧪 pH: {st.session_state.get('ph_result', 7.0):.1f}<br>
+            🔀 Contaminación mixta: {st.session_state.get('contamination_result', 10)}%<br>
             </div>
             </div>
             """, unsafe_allow_html=True)
@@ -513,9 +542,17 @@ def render():
 
         st.markdown('<div class="result-section">', unsafe_allow_html=True)
         st.subheader("🔗 Compatibilidad del Consorcio")
-        st.success(f"🟢 Consorcio 100% compatible — {n_pairs} interacciones analizadas, 0 conflictos detectados")
 
         compat_df = render_compatibility_table(consortium)
+        n_sintroficas = sum(1 for r in compat_df["Relación"] if "Sintrófica" in r or "Mutualismo" in r)
+        n_neutrales = sum(1 for r in compat_df["Relación"] if "Neutral" in r or "Comensalismo" in r)
+        n_competitivas = sum(1 for r in compat_df["Relación"] if "Competencia" in r)
+
+        st.success(
+            f"🟢 Consorcio 100% compatible — "
+            f"{n_sintroficas} sintróficas, {n_neutrales} neutrales, {n_competitivas} competitivas"
+        )
+
         st.dataframe(
             compat_df,
             use_container_width=True,
@@ -661,9 +698,7 @@ def render():
 
         if categoria_r == "Plásticos":
             st.markdown("""
-            📦 **Productos:** Ácido tereftálico (TPA) + Etilenglicol (EG) — monómeros recuperables
-
-            💰 **Valor comercial:** TPA ~$680-850/ton | EG ~$500-650/ton
+            📦 **TPA ($680-850/ton) + EG ($500-650/ton).** Monómeros vendibles como materia prima 💰
 
             🔄 **Uso:** Re-síntesis de plástico reciclado grado virgen — economía circular real
 
@@ -671,27 +706,31 @@ def render():
             """)
         elif categoria_r == "Hidrocarburos y petróleo":
             st.markdown("""
-            📦 **Productos:** CO₂ + H₂O + biomasa microbiana
-
-            ✅ El contaminante se **MINERALIZA** (se elimina realmente del ambiente)
+            📦 **CO₂ + H₂O.** El contaminante se **MINERALIZA** completamente ✅
 
             🌱 **Resultado:** Suelo/agua descontaminado y apto para uso productivo
             """)
         elif categoria_r == "Suelos agrícolas contaminados":
             st.markdown("""
-            📦 **Productos:** Compuestos hidrolizados no tóxicos + CO₂ + biomasa
+            📦 **Compuestos no tóxicos.** Suelo recuperado para uso agrícola 🌱
 
-            ✅ **Detoxificación del suelo** — eliminación de residuos de plaguicidas
+            ✅ **Detoxificación completa** — eliminación de residuos de plaguicidas
 
-            🌱 **Resultado:** Suelo recuperado para uso agrícola — apto para siembra
+            🌾 El suelo queda apto para siembra sin restricciones
             """)
         elif categoria_r == "Aguas residuales industriales":
             st.markdown("""
-            📦 **Productos:** Compuestos decolorados + agua tratada
+            📦 **Agua decolorizada.** Potencial reutilización industrial 💧
 
-            💧 **Resultado:** Agua con potencial de reutilización en proceso industrial
+            ⚠️ Verificar toxicidad de aminas aromáticas intermedias antes de vertimiento directo
+            """)
+        elif categoria_r == "Minería y metales":
+            st.markdown("""
+            📦 **Metales bioacumulados en biomasa.** Recuperación o disposición RESPEL ♻️
 
-            ⚠️ Verificar toxicidad de aminas aromáticas intermedias antes de vertimiento
+            🔬 **Proceso:** Bioacumulación en biomasa microbiana → cosecha → extracción del metal
+
+            ⚠️ La biomasa con metales pesados es un **residuo peligroso (RESPEL)** — requiere gestión especializada
             """)
         else:
             st.markdown("""
