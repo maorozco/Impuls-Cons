@@ -1,0 +1,375 @@
+Build a multi-page Streamlit web app called "Impuls
+consortia for biodegradation of pollutants. The app
+
+## DESIGN
+- Colors: primary deep green #1B5E20, background w
+- Modern cards with box-shadow, rounded corners, ho
+- page_config: title="Impulso BioCycle", icon="🧬",
+- Sidebar: "🧬 Impulso BioCycle" logo text, navigat
+🇨🇴"
+- ALL text in Spanish
+- Add .streamlit/config.toml:
+  [theme]
+  primaryColor="#00C853"
+  backgroundColor="#FFFFFF"
+  secondaryBackgroundColor="#F1F8E9"
+  textColor="#1B4332"
+  font="sans serif"
+
+---
+
+## PAGE 1: "🏠 Descubrimientos"
+
+Top stats: "🔬 10 descubrimientos | 🧫 50+ microorg
+países"
+
+Filter buttons row: "Todas", "Enzimas", "Bacterias"
+
+Cards in 2-column grid. Each card: colored category
+bold key result, "Ver paper →" link (opens new tab)
+
+Cards data:
+
+1. FAST-PETase | Enzima | 2022 | U. Texas Austin
+"Enzima diseñada por machine learning que degrada P
+Result: "51 productos PET degradados en 1 semana a 
+Link: https://www.nature.com/articles/s41586-022-04
+
+2. LCC-ICCG | Enzima | 2021 | INRAE/Carbios
+"Variante cuádruple de cutinasa de compost. El benc
+Result: ">90% PET post-consumo degradado en 10 hora
+Link: https://www.nature.com/articles/s41586-020-21
+
+3. Ideonella sakaiensis | Bacteria | 2016 | Inst. T
+"Primera bacteria descubierta que usa PET como fuen
+Result: "Degrada PET completamente con PETase + MHE
+Link: https://www.science.org/doi/10.1126/science.a
+
+4. Consorcio Pseudomonas-Bacillus-Acinetobacter | C
+"Consorcio de tres especies con roles complementari
+Result: ">80% degradación en 60 días vs <40% con es
+Link: https://www.sciencedirect.com/science/article
+
+5. Deepwater Horizon — Alcanivorax | Proyecto | 201
+"Tras el mayor derrame de la historia, bacterias ma
+subsuperficial."
+Result: ">90% de HC subsuperficiales degradados en 
+Link: https://pmc.ncbi.nlm.nih.gov/articles/PMC3155
+
+6. AlphaFold + ProteinMPNN | IA | 2024 | Premio Nob
+"Modelos de diseño computacional de proteínas. Revo
+Result: "89% precisión en clasificación de enzimas 
+Link: https://www.nobelprize.org/prizes/chemistry/2
+
+7. Proyecto EiCLaR | Proyecto | 2024 | Comisión Eur
+"4 tecnologías de biorremediación in situ probadas 
+Result: "Todas las tecnologías listas para mercado 
+Link: https://cordis.europa.eu/project/id/101037492
+
+8. Encapsulación alginato para HC | Consorcio | 202
+"Bacterias inmovilizadas en alginato-carbón activad
+Result: "75.1% degradación crudo en 7 días vs ~40% 
+Link: https://link.springer.com/article/10.1007/s10
+
+9. Biorremediación Colombia — Revisión | Proyecto |
+"Revisión sistemática de 37 estudios colombianos so
+Result: "Pseudomonas y Bacillus son los géneros más
+Link: https://pmc.ncbi.nlm.nih.gov/articles/PMC8913
+
+10. Allonnia — Biorremediación comercial | Proyecto
+"Primera empresa en comercializar biorremediación m
+Result: "99% degradación de 1,4-dioxano en campo ab
+Link: https://allonnia.com
+
+---
+
+## PAGE 2: "🧪 Diseñador de Consorcios"
+
+Subtitle: "Diseña el tratamiento biológico óptimo p
+
+### STEP 1: "¿Qué quieres tratar?" (styled card)
+
+**Categoría** — selectbox:
+["Plásticos", "Hidrocarburos y petróleo", "Suelos a
+"Contaminantes químicos"]
+
+**Sub-tipo** — changes per category:
+If Plásticos: ["PET (botellas, envases) — en biorre
+(bolsas, film) — en biorreactor", "PS/Icopor (vasos
+compostaje", "Mezcla de plásticos — en biorreactor"
+If Hidrocarburos: ["Petróleo crudo / derrames", "Di
+policíclicos)", "Aceites industriales usados"]
+If Suelos agrícolas: ["Organofosforados (clorpirifo
+"Glifosato y AMPA", "Carbamatos (carbofurán, carbar
+If Aguas residuales: ["Colorantes textiles azo", "C
+"Fenoles industriales", "Residuos farmacéuticos"]
+If Contaminantes químicos: ["PFAS (químicos eternos
+
+### STEP 2: "¿Cómo se va a tratar?" (styled card)
+
+**Modo de aplicación** — selectbox:
+"🔬 Biorreactor de laboratorio (condiciones control
+"🏭 Biorreactor industrial (planta de tratamiento)"
+"🌿 In situ — suelo (aplicación directa con cápsula
+"💧 In situ — cuerpo de agua"
+"🏗️ Compostaje industrial"
+
+Show warning if user selects plastic + in situ:
+"⚠️ La degradación de plásticos requiere biorreacto
+in situ, recomendamos hidrocarburos, suelos agrícol
+
+**If plastic selected, show pretreatment section:**
+"Pretratamiento del residuo plástico"
+- Trituración: selectbox ["Sin triturar", "Gruesa (
+- Limpieza: selectbox ["Sin lavar", "Lavado básico 
+amorfización"]
+
+### STEP 3: "Condiciones del entorno" (styled card)
+
+- **Temperatura (°C)** — slider 5 to 80, default 30
+- **pH** — slider 3.0 to 10.0, step 0.1, default 7.
+- **Tipo de medio** — selectbox: ["Acuoso (sumergid
+seco (<20% humedad)", "Agua salada (marina/estuario
+- **Contaminación mixta (%)** — slider 0 to 80, def
+reciclaje: 5-15% | Suelo agrícola: 10-30%"
+- **Volumen a tratar** — number_input, default 100,
+de suelo" for soils, "m³ de agua" for water
+
+### BIG BUTTON
+"🧬 Diseñar Consorcio Óptimo" — large, green, cente
+
+### LOADING SIMULATION (sequential, dramatic)
+When clicked:
+- (2s) "🔍 Analizando contaminante y condiciones am
+- (2s) "🧫 Consultando base de datos de 847 microor
+- (1.5s) "🔗 Verificando compatibilidad entre espec
+- (2s) "🧬 Optimizando proporciones del consorcio c
+- (1.5s) "💊 Seleccionando formulación de cápsula p
+- (1.5s) "📊 Generando predicción de degradación ba
+- (1s) "✅ ¡Consorcio diseñado exitosamente!"
+
+Green banner: "✅ Consorcio de {N} microorganismos 
+organismos son BSL-1 o GRAS (seguros para humanos).
+
+### RESULT A: "🧫 Receta del Consorcio"
+
+Styled table. Each row shows: Microorganismo | 🟢 B
+Rango óptimo
+
+DATA BY CATEGORY:
+
+**PET (biorreactor):**
+| Ideonella sakaiensis | 🟢 BSL-1 | Degradador prim
+| Bacillus subtilis (FAST-PETase) | 🟢 GRAS | Acele
+| Pseudomonas putida | 🟢 BSL-1 | Metabolizador de 
+| Rhodococcus ruber | 🟢 BSL-1 | Biosurfactante + e
+
+**Hidrocarburos (petróleo/diésel):**
+| Pseudomonas putida | 🟢 BSL-1 | Degradador primar
+7.5 |
+| Bacillus subtilis | 🟢 GRAS | Productor biosurfac
+| Rhodococcus erythropolis | 🟢 BSL-1 | Co-degradad
+| Sphingomonas paucimobilis | 🟢 BSL-1 | Especialis
+| 20% | 25-30°C |
+
+**PAHs (alto peso molecular):**
+| Mycobacterium vanbaalenii | 🟢 BSL-1 | Degradador
+multicomponente | 30% | 25-30°C |
+| Sphingomonas paucimobilis | 🟢 BSL-1 | Degradador
+30°C |
+| Phanerochaete chrysosporium | 🟢 BSL-1 | Hongo: f
+pH 4.5-5.5 |
+| Bacillus subtilis | 🟢 GRAS | Biosurfactante + so
+
+**Organofosforados (clorpirifos):**
+| Pseudomonas putida KT2440 | 🟢 BSL-1 | Degradador
+30°C, pH 6.5-7.5 |
+| Bacillus subtilis | 🟢 GRAS | Co-degradador + bio
+| Sphingomonas sp. | 🟢 BSL-1 | Degradador de metab
+| Trichoderma harzianum | 🟢 BSL-1 | Degradador fún
+
+**Glifosato:**
+| Bacillus subtilis Bs-15 | 🟢 GRAS | Degradador pr
+| Lysinibacillus sphaericus | 🟢 BSL-1 | Vía sarcos
+| Pseudomonas putida | 🟢 BSL-1 | Co-degradador + d
+| Aspergillus niger | 🟢 BSL-1 | Degradador fúngico
+
+**Colorantes textiles azo:**
+| Phanerochaete chrysosporium | 🟢 BSL-1 | Decolora
+pH 4.5-5.5 |
+| Trametes versicolor | 🟢 BSL-1 | Decoloración enz
+| Bacillus subtilis | 🟢 GRAS | Reducción enlace az
+| Pseudomonas putida | 🟢 BSL-1 | Mineralización am
+
+**Metales pesados:**
+| Aspergillus niger | 🟢 BSL-1 | Bioacumulador prim
+| Bacillus subtilis | 🟢 GRAS | Biosurfactante + bi
+| Pseudomonas putida | 🟢 BSL-1 | Biotransformación
+| Chlorella vulgaris | 🟢 BSL-1 | Alga: biosorción 
+
+For HDPE, LDPE, PP, PS, PLA, mezcla plasticos, orga
+fenoles, farmaceuticos, PFAS: create similar tables
+GRAS organisms. Never use Pseudomonas aeruginosa.
+
+### RESULT B: "📊 Probabilidad de Éxito"
+
+Show a big gauge/progress bar (0-100%) with colors:
+- Red: 0-30% "Baja — Requiere investigación adicion
+- Yellow: 30-60% "Moderada — Viable con optimizació
+- Green: 60-100% "Alta — Evidencia científica sólid
+
+Values by scenario:
+- PET biorreactor + trituración fina + lavado + tem
+- PET biorreactor + sin pretratamiento + temp 30°C:
+- Hidrocarburos in situ + consorcio: 60-75%
+- Organofosforados in situ: 70-85%
+- Glifosato in situ: 65-80%
+- Colorantes textiles biorreactor: 80-95%
+- Metales pesados: 70-90%
+- HDPE/LDPE biorreactor: 20-35%
+- PP biorreactor: 10-25%
+- PVC: 5-15%
+- PFAS: 15-30%
+
+Adjust: if temp < 20°C: -20%. If contamination > 50
+pretreatment (plastics): -30%.
+
+Show text: "Basado en {N} publicaciones científicas
+
+### RESULT C: "🔗 Compatibilidad del Consorcio"
+
+Show summary: "🟢 Consorcio 100% compatible — {X} i
+
+Show small table of each pair with:
+| Par | Relación | Razón científica |
+| P. putida ↔ B. subtilis | 🟢 Sintrófica | B. subt
+P. putida |
+| P. putida ↔ Rhodococcus | 🟢 Sintrófica | Rhodoco
+|
+(etc. for each pair in the consortium)
+
+Expander "¿Por qué importa la compatibilidad?" with
+
+### RESULT D: "💊 Formulación de Cápsula"
+
+Card with:
+- Material recomendado (based on conditions):
+  Agua salada → "PVA-Alginato (resistente a salinid
+  pH extremo → "Sol-gel (resistente a pH)"
+  UV expuesto → "Alginato-CaCl₂ + quitosano (protec
+  Default → "Alginato de sodio 2% — CaCl₂ 0.1M (est
+- Costo por cápsula: < $0.001 USD
+- Proveedor Colombia: Brenntag Colombia
+- Diámetro: 3-4 mm
+
+5 preparation steps with emojis:
+1. 🧪 Disolver alginato 2% en agua destilada estéri
+2. 🧫 Cultivar consorcio según proporciones indicad
+3. 🔬 Mezclar consorcio en solución de alginato
+4. 💧 Gotear con jeringa/bomba sobre CaCl₂ 0.1M
+5. ✅ Cápsulas se forman instantáneamente — lavar y
+
+### RESULT E: "📈 Predicción de Degradación"
+
+Plotly line chart:
+- X: Semanas (0-16)
+- Y: Degradación acumulada (%)
+- Green line: "Con consorcio BioCycle"
+- Gray dashed: "Sin tratamiento / atenuación natura
+- Orange dashed: "Método convencional"
+
+Curves vary by type (use realistic S-curves based o
+
+Below chart, 3 metrics:
+- "Degradación estimada 12 semanas": "{X}%"
+- "Tiempo hasta 50% degradación": "{Y} semanas"
+- "Aceleración vs. natural": "{Z}x"
+
+### RESULT F: "📦 Resultado del Proceso"
+
+Dynamic based on category:
+
+If plastics:
+"📦 Productos: Ácido tereftálico (TPA) + Etilenglic
+"💰 Valor comercial: TPA ~$680-850/ton | EG ~$500-6
+"🔄 Uso: Re-síntesis de plástico reciclado grado vi
+"⚠️ Requiere separación/purificación de monómeros p
+
+If hydrocarbons:
+"📦 Productos: CO₂ + H₂O + biomasa microbiana"
+"✅ El contaminante se MINERALIZA (se elimina realm
+"🌱 Resultado: Suelo/agua descontaminado y apto par
+
+If agricultural soil:
+"📦 Productos: Compuestos hidrolizados no tóxicos +
+"✅ Detoxificación del suelo"
+"🌱 Resultado: Suelo recuperado para uso agrícola"
+
+If textile wastewater:
+"📦 Productos: Compuestos decolorados + agua tratad
+"💧 Resultado: Agua con potencial de reutilización"
+"⚠️ Verificar toxicidad de aminas aromáticas interm
+
+If heavy metals:
+"📦 Productos: Metales bioacumulados en biomasa"
+"♻️ Biomasa con metales: disposición como RESPEL o 
+
+### RESULT G: "💰 Comparación de Costos"
+
+Plotly horizontal bar chart. Bars depend on categor
+
+If plastics:
+- "BioCycle (biorreactor enzimático)": $450-900/ton
+- "Reciclaje mecánico": $200-350/ton (gray)
+- "Incineración": $150-300/ton (red)
+- "PET virgen (referencia)": $900-1100/ton (blue da
+- "Valor monómeros recuperados": $600-750/ton (gold
+
+If hydrocarbons:
+- "BioCycle (biorremediación in situ)": $50-310/m³ 
+- "Excavación + disposición": $800-1500/m³ (red)
+- "Oxidación química": $150-500/m³ (orange)
+- "Atenuación natural": $0 but years (gray)
+
+If agricultural soil:
+- "BioCycle (bioaumentación)": $18-131/ton (green)
+- "Excavación + disposición": $270-460/ton (red)
+- "Fitorremediación": $8-131/ton but 2-10 years (ye
+- "Oxidación química": >$90/yd³ (orange)
+
+If textiles:
+- "BioCycle (tratamiento biológico)": $0.50-1.50/m³
+- "Coagulación/floculación": $0.20-0.50/m³ + lodos 
+- "Ozono": $1.50-3.00/m³ (orange)
+- "Carbón activado": $2.00-5.00/m³ (red)
+
+Show savings metric: "Ahorro estimado para {volume}
+usado"
+
+### RESULT H: "📋 Protocolo de Despliegue" (expandi
+
+st.expander with step-by-step deployment guide cust
+organismos BSL-1/GRAS. No requiere equipo especial 
+
+### RESULT I: "⚠️ Limitaciones y Notas"
+
+st.expander with honest disclaimers:
+"1. Las predicciones se basan en publicaciones revi
+2. Para plásticos: la degradación produce monómeros
+3. La probabilidad es una estimación. Se recomienda
+4. Cualquier aplicación de campo requiere permisos 
+5. Todos los microorganismos son BSL-1/GRAS pero se
+
+### DOWNLOAD BUTTON
+"📥 Descargar reporte" — shows toast "Disponible en
+
+---
+
+## TECHNICAL
+- streamlit >= 1.30, plotly, pandas
+- No external APIs
+- Responsive, mobile-friendly
+- All hardcoded data (no database needed)
+- Use st.session_state for storing results between 
+- Use time.sleep for loading simulation
+- Sidebar navigation with st.page_link or selectbox
