@@ -1,0 +1,25 @@
+kind = "web"
+  previewPath = "/"
+  title = "Impulso BioCycle"
+  version = "1.0.0"
+  id = "iBcYsP2mQnRe9wT4uXkL7j"
+
+  [[services]]
+  localPort = 5000
+  name = "Impulso BioCycle"
+  paths = ["/"]
+
+  [services.development]
+  run = "cd artifacts/impulso-biocycle && streamlit run app.py --server.port $PORT --server.address 0.0.0.0"
+
+  [services.env]
+  PORT = "5000"
+
+  [services.production]
+
+  [services.production.run]
+  args = ["streamlit", "run", "artifacts/impulso-biocycle/app.py", "--server.port", "5000", "--server.address", "0.0.0.0"]
+
+  [services.production.run.env]
+  PORT = "5000"
+  
