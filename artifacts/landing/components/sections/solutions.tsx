@@ -4,6 +4,11 @@ export function Solutions({ t }: { t: Messages['solutions'] }) {
   return (
     <section className="py-24 sm:py-32 bg-card/20 border-y border-border">
       <div className="container-tight">
+        {t.tagline && (
+          <p className="text-2xl sm:text-3xl font-semibold tracking-tight gradient-text mb-6">
+            {t.tagline}
+          </p>
+        )}
         <h2 className="text-3xl sm:text-4xl md:text-5xl font-semibold tracking-tight max-w-3xl">
           {t.h2}
         </h2>
@@ -15,7 +20,6 @@ export function Solutions({ t }: { t: Messages['solutions'] }) {
               className="card-elevated p-7 flex flex-col gap-4 animate-fade-in-up"
               style={{ animationDelay: `${idx * 100}ms` }}
             >
-              <div className="text-4xl">{card.icon}</div>
               <h3 className="text-xl font-semibold tracking-tight text-foreground">
                 {card.title}
               </h3>

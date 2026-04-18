@@ -35,13 +35,13 @@ export default async function LandingPage({ params }: { params: { lang: string }
           initialCountries={countries}
         />
         <ProductPreview />
-        <SocialProof t={t.socialProof} />
         <Problem t={t.problem} />
         <Video t={t.video} />
         <Dream t={t.dream} />
         <WhatYouGet t={t.whatYouGet} />
         <Solutions t={t.solutions} />
         <How t={t.how} />
+        <SocialProof t={t.socialProof} />
         <What t={t.what} />
         <Founder t={t.founder} />
         <Alliances t={t.alliances} />

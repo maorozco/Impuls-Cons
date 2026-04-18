@@ -6,9 +6,11 @@ export function WhatYouGet({ t }: { t: Messages['whatYouGet'] }) {
     <section className="py-24 sm:py-32">
       <div className="container-tight">
         <div className="max-w-3xl space-y-6">
-          <p className="text-lg sm:text-xl leading-relaxed text-foreground/90">
-            {t.intro}
-          </p>
+          {t.intro && (
+            <p className="text-lg sm:text-xl leading-relaxed text-foreground/90">
+              {t.intro}
+            </p>
+          )}
           <p className="text-2xl sm:text-3xl font-semibold tracking-tight text-foreground">
             {t.subtitle}
           </p>

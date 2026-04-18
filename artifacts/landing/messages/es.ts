@@ -14,19 +14,20 @@ const es: Messages = {
     languageToggle: 'EN',
   },
   hero: {
-    kicker: 'IMPULSO BIOCYCLE · WAITLIST ABIERTA',
-    headlineLine1: 'La gestión de residuos sigue siendo un dolor de cabeza.',
-    headlineLine1Accent: '',
-    headlineLine2: 'Tu consultor lleva 3 años y',
-    headlineLine2Accent: 'el sitio sigue contaminado.',
-    sub: 'No estamos lanzando otra consultoría. Estamos construyendo la IA que diseña el consorcio microbiano exacto para cada sitio — integrando sistemas multiagénticos de IA y la ciencia publicada entre 2024 y 2026. El producto está siendo validado. Los primeros 100 lo ven nacer desde adentro.',
+    kicker: 'Conoce el poder de los Microorganismos',
+    headlineLine1: '¿La gestión de tus residuos sigue siendo',
+    headlineLine1Accent: 'un problema sin solución clara?',
+    headlineLine2: '',
+    headlineLine2Accent: '',
+    sub: 'Si crees que la biorremediación inteligente es el futuro — y quieres vivirlo de primera mano mientras se construye — tu lugar está aquí.',
     emailPlaceholder: 'tu@correo.com',
     submit: 'Unirme',
     submitting: 'Enviando...',
     subCta:
-      'Reservado para quienes creen que la ciencia puede cerrar lo que los contratistas dejaron abierto.',
-    counter: 'profesionales se unieron desde',
-    countriesLabel: 'países esta semana',
+      'Reservado para quienes quieren ver cómo la ciencia y la IA transforman la forma de cuidar el planeta.',
+    counterPrefix: 'más de',
+    counter: 'profesionales provenientes de',
+    countriesLabel: 'diferentes países se han unido',
     errors: {
       invalidEmail: 'Ese correo no se ve válido. Inténtalo de nuevo.',
       generic: 'Algo falló. Intenta de nuevo en un momento.',
@@ -65,7 +66,8 @@ const es: Messages = {
     ],
   },
   video: {
-    h2: 'Por qué estamos construyendo esto (y por qué no puede esperar)',
+    h2: 'Por qué estamos construyendo esto',
+    h2Accent: '(y por qué no puede esperar)',
     placeholderLabel: 'Video próximamente',
   },
   dream: {
@@ -75,13 +77,11 @@ const es: Messages = {
       'En 90 segundos recibe la receta exacta para su caso.',
     ],
     bullets: [],
-    closer:
-      'En 90 días el sitio se cierra. El VP firma el bono. El equipo pasa al próximo sitio.',
-    tagline: 'Eso es lo que estamos construyendo.',
+    closer: '',
+    tagline: '',
   },
   whatYouGet: {
-    intro:
-      'En 90 segundos, a solo un click luego de ingresar TU contaminante específico a tratar y las características específicas de TU entorno a la plataforma.',
+    intro: '',
     subtitle: 'Recibe:',
     bullets: [
       'La combinación exacta de microorganismos BSL-1 (seguridad humana) que lo degradan.',
@@ -95,6 +95,7 @@ const es: Messages = {
     ],
   },
   solutions: {
+    tagline: 'Eso es lo que estamos construyendo.',
     h2: 'Tres formas de sumarte al cambio:',
     cards: [
       {

@@ -18,17 +18,16 @@ test.describe('Landing ES', () => {
     await expect(page).toHaveTitle(/La gestión de residuos ya no tiene que doler/);
 
     const h1 = page.locator('h1').first();
-    await expect(h1).toContainText('La gestión de residuos sigue siendo un dolor de cabeza.');
-    await expect(h1).toContainText('Tu consultor lleva 3 años y');
+    await expect(h1).toContainText('¿La gestión de tus residuos sigue siendo');
 
     const accent = h1.locator('span.gradient-text');
-    await expect(accent).toContainText('el sitio sigue contaminado.');
+    await expect(accent).toContainText('un problema sin solución clara?');
 
     await expect(
-      page.getByText('No estamos lanzando otra consultoría.', { exact: false })
+      page.getByText('Si crees que la biorremediación inteligente', { exact: false })
     ).toBeVisible();
     await expect(
-      page.getByText('Reservado para quienes creen que la ciencia', { exact: false })
+      page.getByText('Reservado para quienes quieren ver cómo la ciencia y la IA', { exact: false })
     ).toBeVisible();
 
     await page.screenshot({
@@ -76,17 +75,16 @@ test.describe('Landing EN', () => {
     await expect(page).toHaveTitle(/Waste management doesn't have to hurt anymore/);
 
     const h1 = page.locator('h1').first();
-    await expect(h1).toContainText('Waste management is still a headache.');
-    await expect(h1).toContainText('Your contractor has been at it 3 years and');
+    await expect(h1).toContainText('Is managing your waste still');
 
     const accent = h1.locator('span.gradient-text');
-    await expect(accent).toContainText('the site is still contaminated.');
+    await expect(accent).toContainText('a problem without a clear solution?');
 
     await expect(
-      page.getByText("We're not launching another consulting firm.", { exact: false })
+      page.getByText('If you believe intelligent bioremediation is the future', { exact: false })
     ).toBeVisible();
     await expect(
-      page.getByText('Reserved for those who believe science can close', { exact: false })
+      page.getByText('Reserved for those who want to see how science and AI', { exact: false })
     ).toBeVisible();
 
     await page.screenshot({
