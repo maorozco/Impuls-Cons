@@ -1,12 +1,28 @@
 /**
  * Messages shape — central type for all locale dictionaries.
- * Lives separately so es.ts and en.ts both implement it identically without literal-narrowing
- * (which would otherwise reject any non-equal string assignment between locales).
+ * Lives separately so es.ts and en.ts both implement it identically without literal-narrowing.
  */
 
-export type StackItem = { name: string; label: string; source: string };
+export type StackItem = {
+  name: string;
+  label: string;
+  source: string;
+  status: string;
+};
 export type StatItem = { value: string; label: string };
 export type StepItem = { number: string; title: string; body: string };
+export type SolutionCard = {
+  icon: string;
+  title: string;
+  body: string;
+  badge: string;
+};
+export type FounderMember = {
+  name: string;
+  initial: string;
+  bio: string;
+  quote: string;
+};
 
 export type Messages = {
   meta: {
@@ -40,14 +56,16 @@ export type Messages = {
   };
   socialProof: {
     publishedIn: string;
-    partnerships: string;
   };
   problem: {
-    h2: string;
+    h2Prefix: string;
+    h2Accent: string;
+    h2Suffix: string;
     stats: StatItem[];
-    quote: string;
-    quoteAttribution: string;
-    sources: string;
+  };
+  video: {
+    h2: string;
+    placeholderLabel: string;
   };
   dream: {
     h2: string;
@@ -55,6 +73,15 @@ export type Messages = {
     bullets: string[];
     closer: string;
     tagline: string;
+  };
+  whatYouGet: {
+    intro: string;
+    subtitle: string;
+    bullets: string[];
+  };
+  solutions: {
+    h2: string;
+    cards: SolutionCard[];
   };
   how: {
     h2: string;
@@ -69,13 +96,21 @@ export type Messages = {
   };
   founder: {
     h2: string;
-    bio: string;
-    quote: string;
+    members: FounderMember[];
+  };
+  alliances: {
+    h2: string;
+    nationalLabel: string;
+    nationalItems: string[];
+    internationalLabel: string;
+    internationalItems: string[];
+    disclaimer: string;
   };
   finalCta: {
     headline: string;
     headlineAccent: string;
     sub: string;
+    fine: string;
     emailPlaceholder: string;
     submit: string;
     counter1: string;
@@ -100,7 +135,6 @@ export type Messages = {
     sub: string;
     formH2: string;
     formIntro: string;
-    /** Template with `{n}` and `{total}` tokens — interpolated client-side. */
     progress: string;
     questions: {
       role: { label: string; options: Record<string, string> };

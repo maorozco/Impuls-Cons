@@ -8,3 +8,5 @@ out/
 .DS_Store
 .vercel
 drizzle/migrations/
+test-results/
+playwright-report/

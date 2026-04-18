@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useTransition } from 'react';
+import { useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { ArrowRight, CheckCircle2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -26,9 +26,10 @@ export function Hero({
   const [success, setSuccess] = useState(false);
   const [isPending, startTransition] = useTransition();
 
-  // Display a baseline counter to avoid showing "0" before any signups
   const baselineCount = Math.max(initialCount, 25);
   const baselineCountries = Math.max(initialCountries, 8);
+
+  const hasLine2 = Boolean(t.headlineLine2 || t.headlineLine2Accent);
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -57,7 +58,6 @@ export function Hero({
         return;
       }
       setSuccess(true);
-      // Redirect to thank-you page with the email as query param
       const target = `/${locale}/thank-you?email=${encodeURIComponent(email)}`;
       setTimeout(() => router.push(target), 600);
     });
@@ -68,7 +68,6 @@ export function Hero({
       id="waitlist"
       className="relative isolate overflow-hidden pt-32 pb-24 sm:pt-40 sm:pb-32"
     >
-      {/* Background layers */}
       <div className="absolute inset-0 grid-bg pointer-events-none" aria-hidden />
       <div className="absolute inset-0 hero-glow pointer-events-none" aria-hidden />
 
@@ -79,15 +78,27 @@ export function Hero({
             {t.kicker}
           </span>
 
-          <h1 className="font-sans text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-semibold leading-[1.05] tracking-tight max-w-3xl">
-            <span className="text-foreground">{t.headlineLine1}</span>{' '}
-            <span className="gradient-text">{t.headlineLine1Accent}</span>
-            <br />
-            <span className="text-foreground">{t.headlineLine2}</span>{' '}
-            <span className="gradient-text">{t.headlineLine2Accent}</span>
+          <h1 className="font-sans text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-[1.05] tracking-tight max-w-4xl">
+            <span className="text-foreground">{t.headlineLine1}</span>
+            {t.headlineLine1Accent && (
+              <>
+                {' '}
+                <span className="gradient-text">{t.headlineLine1Accent}</span>
+              </>
+            )}
+            {hasLine2 && (
+              <>
+                <br />
+                {t.headlineLine2 && <span className="text-foreground">{t.headlineLine2}</span>}
+                {t.headlineLine2 && t.headlineLine2Accent && ' '}
+                {t.headlineLine2Accent && (
+                  <span className="gradient-text">{t.headlineLine2Accent}</span>
+                )}
+              </>
+            )}
           </h1>
 
-          <p className="mt-8 max-w-2xl text-base sm:text-lg leading-relaxed text-muted-foreground">
+          <p className="mt-8 max-w-3xl text-base sm:text-lg leading-relaxed text-muted-foreground">
             {t.sub}
           </p>
 
@@ -136,7 +147,9 @@ export function Hero({
             </p>
           )}
 
-          <p className="mt-4 text-xs text-muted-foreground/80">{t.subCta}</p>
+          <p className="mt-4 max-w-xl text-xs text-muted-foreground/80 leading-relaxed">
+            {t.subCta}
+          </p>
 
           <div className="mt-12 flex items-center gap-2 text-xs text-muted-foreground">
             <span className="live-dot" aria-hidden />
