@@ -77,9 +77,13 @@ export function FinalCta({
           {t.sub}
         </p>
 
+        <p className="mt-4 max-w-xl mx-auto text-sm text-muted-foreground/70 leading-relaxed">
+          {t.fine}
+        </p>
+
         <form
           onSubmit={handleSubmit}
-          className="mt-10 mx-auto max-w-md flex flex-col gap-3 sm:flex-row"
+          className="mt-10 mx-auto max-w-lg flex flex-col gap-3 sm:flex-row"
         >
           <Input
             type="email"
@@ -91,7 +95,7 @@ export function FinalCta({
             className="h-12 text-base"
             autoComplete="email"
           />
-          <Button type="submit" size="lg" disabled={isPending || success} className="h-12 px-6">
+          <Button type="submit" size="lg" disabled={isPending || success} className="h-12 px-6 whitespace-nowrap">
             {success ? (
               <CheckCircle2 className="h-4 w-4" />
             ) : (
@@ -105,8 +109,10 @@ export function FinalCta({
         {error && <p className="mt-3 text-sm text-red-400">{error}</p>}
 
         <p className="mt-8 text-xs text-muted-foreground">
-          <span className="font-mono tabular-nums text-foreground">{baselineCount}</span> {t.counter1}{' '}
-          <span className="font-mono tabular-nums text-foreground">{remaining}</span> {t.counter2}
+          <span className="font-mono tabular-nums text-foreground">{baselineCount}</span>{' '}
+          {t.counter1}{' '}
+          <span className="font-mono tabular-nums text-foreground">{remaining}</span>{' '}
+          {t.counter2}
         </p>
       </div>
     </section>

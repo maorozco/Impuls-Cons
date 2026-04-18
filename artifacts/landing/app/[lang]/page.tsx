@@ -5,10 +5,14 @@ import { Nav } from '@/components/sections/nav';
 import { Hero } from '@/components/sections/hero';
 import { SocialProof } from '@/components/sections/social-proof';
 import { Problem } from '@/components/sections/problem';
+import { Video } from '@/components/sections/video';
 import { Dream } from '@/components/sections/dream';
+import { WhatYouGet } from '@/components/sections/what-you-get';
+import { Solutions } from '@/components/sections/solutions';
 import { How } from '@/components/sections/how';
 import { What } from '@/components/sections/what';
 import { Founder } from '@/components/sections/founder';
+import { Alliances } from '@/components/sections/alliances';
 import { FinalCta } from '@/components/sections/final-cta';
 import { Footer } from '@/components/sections/footer';
 
@@ -31,10 +35,14 @@ export default async function LandingPage({ params }: { params: { lang: string }
         />
         <SocialProof t={t.socialProof} />
         <Problem t={t.problem} />
+        <Video t={t.video} />
         <Dream t={t.dream} />
+        <WhatYouGet t={t.whatYouGet} />
+        <Solutions t={t.solutions} />
         <How t={t.how} />
         <What t={t.what} />
         <Founder t={t.founder} />
+        <Alliances t={t.alliances} />
         <FinalCta
           locale={params.lang}
           t={t.finalCta}
