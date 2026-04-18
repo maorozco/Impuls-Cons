@@ -27,7 +27,11 @@ export async function signupForWaitlist(input: WaitlistInput): Promise<HeroSignu
 
   if (isMockMode) {
     // eslint-disable-next-line no-console
-    console.log('[mock] signupForWaitlist', { email: parsed.data.email, locale: parsed.data.locale });
+    console.log('[mock] signupForWaitlist', {
+      email: parsed.data.email,
+      locale: parsed.data.locale,
+      variant: parsed.data.variant,
+    });
     return { ok: true, alreadySignedUp: false };
   }
 
@@ -52,6 +56,7 @@ export async function signupForWaitlist(input: WaitlistInput): Promise<HeroSignu
       utmCampaign: parsed.data.utmCampaign ?? null,
       utmContent: parsed.data.utmContent ?? null,
       userAgent: ua ?? null,
+      variant: parsed.data.variant ?? 'a',
     });
     return { ok: true, alreadySignedUp: false };
   } catch (err) {

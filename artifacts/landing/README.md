@@ -193,11 +193,38 @@ SELECT
 
 **Geist font not loading** — we deliberately use a system-font stack (`ui-sans-serif, system-ui, ...`) to avoid extra round-trips. To use real Geist, install `geist` npm package and update `app/layout.tsx`.
 
+## A/B test: variants A and B
+
+Two landing aesthetics run side by side on the same app, sharing the same copy (`messages/es.ts` + `messages/en.ts`) and the same waitlist plumbing. Only visual DNA differs.
+
+| Variant | Route | Aesthetic |
+|---|---|---|
+| A (original) | `/es`, `/en` | Dark B2B — Linear/Vercel/Anthropic vibes, sans-serif, emerald accent, grid background |
+| B (editorial) | `/es/v2`, `/en/v2` | Light editorial — cream paper, serif display (italic accent), moss green, hairline rules |
+
+Signups are tagged in the `waitlist.variant` column (`'a'` or `'b'`), so conversion can be compared with a single SQL query:
+
+```sql
+SELECT variant, COUNT(*) AS signups
+FROM waitlist
+GROUP BY variant
+ORDER BY variant;
+```
+
+The v2 hero and final-CTA both send `variant: 'b'` through `signupForWaitlist`; the v1 forms omit it (defaults to `'a'`). The thank-you form is shared, the `waitlist_responses` table is unchanged.
+
+To run the smoke tests:
+
+```bash
+npm run dev          # terminal 1
+npm run test:e2e     # terminal 2 — runs both landing.spec.ts (A) and variant-b.spec.ts (B)
+```
+
 ## What's NOT included (intentionally)
 
 - Email automation (welcome series) — wire to ConvertKit/Beehiiv via webhook from `signupForWaitlist`
 - LinkedIn/X social proof embeds — add a `<Posts />` section if useful
-- A/B testing framework — keep it simple for the 7-day campaign
+- Traffic-split middleware — point paid campaigns at `/es` vs `/es/v2` directly (or add a UTM-based redirect later)
 - Analytics dashboard — query Postgres directly or pipe to Metabase/Retool
 
 ## License

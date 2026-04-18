@@ -27,11 +27,13 @@ export const waitlist = pgTable(
     utmCampaign: text('utm_campaign'),
     utmContent: text('utm_content'),
     userAgent: text('user_agent'),
+    variant: varchar('variant', { length: 4 }).notNull().default('a'),
     createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
   },
   (table) => ({
     emailIdx: index('waitlist_email_idx').on(table.email),
     createdAtIdx: index('waitlist_created_at_idx').on(table.createdAt),
+    variantIdx: index('waitlist_variant_idx').on(table.variant),
   }),
 );
 
@@ -65,6 +67,7 @@ export const waitlistResponses = pgTable(
 // ─── Zod validators (hand-rolled — avoids drizzle-zod version drift) ───────
 
 export const localeSchema = z.enum(['es', 'en']);
+export const variantSchema = z.enum(['a', 'b']);
 
 export const insertWaitlistSchema = z.object({
   email: z.string().email().toLowerCase().trim(),
@@ -76,6 +79,7 @@ export const insertWaitlistSchema = z.object({
   utmCampaign: z.string().optional(),
   utmContent: z.string().optional(),
   userAgent: z.string().optional(),
+  variant: variantSchema.optional(),
 });
 
 export const roleEnum = z.enum([
