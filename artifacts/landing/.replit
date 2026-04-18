@@ -1,0 +1,23 @@
+# Replit configuration for Impulso BioCycle landing
+# https://docs.replit.com/replit-workspace/configuring-repl
+
+modules = ["nodejs-20", "postgresql-16"]
+hidden = [".next", "node_modules", ".env.local"]
+run = "npm run dev"
+
+[nix]
+channel = "stable-24_05"
+
+[deployment]
+deploymentTarget = "autoscale"
+build = ["npm", "run", "build"]
+run = ["npm", "run", "start"]
+ignorePorts = false
+
+[[ports]]
+localPort = 3000
+externalPort = 80
+
+[env]
+NEXT_TELEMETRY_DISABLED = "1"
+NODE_ENV = "development"
