@@ -131,3 +131,208 @@
   src: local('Inter'), local('SF Pro Display'), local('Segoe UI'), local('Arial');
   font-display: swap;
 }
+
+/* ─── Variant B: light editorial aesthetic ───
+ * A/B test companion to the dark B2B aesthetic. Reuses identical copy
+ * but swaps visual DNA: warm cream background, forest-green accent,
+ * serif display type, hairline dividers, generous whitespace.
+ * All v2 pages wrap their <main> with `.v2-theme` so these tokens scope.
+ */
+.v2-theme {
+  --v2-bg: 44 36% 96%;            /* #F7F5EF — cream */
+  --v2-bg-alt: 42 30% 93%;        /* #EFECE4 — parchment shadow */
+  --v2-ink: 150 20% 8%;           /* #101914 — richer forest charcoal */
+  --v2-ink-soft: 150 10% 30%;     /* #485148 */
+  --v2-ink-faint: 150 6% 50%;     /* #7B837D */
+  --v2-line: 44 14% 84%;          /* warm hairline */
+  --v2-accent: 148 38% 26%;       /* #2A5C3E — moss */
+  --v2-accent-soft: 148 30% 40%;
+  --v2-paper: 0 0% 100%;
+}
+
+.v2-theme {
+  /* Reskin shadcn-style tokens so shared primitives (Button, Input,
+   * Textarea, Progress, ThankYouForm) pick up the light theme too. */
+  --background: 44 36% 96%;
+  --foreground: 150 12% 10%;
+  --card: 0 0% 100%;
+  --card-foreground: 150 12% 10%;
+  --primary: 150 12% 10%;
+  --primary-foreground: 44 36% 96%;
+  --muted: 42 30% 93%;
+  --muted-foreground: 150 8% 34%;
+  --accent: 42 30% 93%;
+  --accent-foreground: 150 12% 10%;
+  --border: 44 14% 84%;
+  --input: 44 14% 84%;
+  --ring: 148 38% 26%;
+  --emerald: 148 38% 26%;
+  --emerald-muted: 148 30% 40%;
+
+  background: hsl(var(--v2-bg));
+  color: hsl(var(--v2-ink));
+  font-family: var(--font-geist-sans);
+}
+
+.v2-theme .v2-serif {
+  font-family: 'Cormorant Garamond', 'EB Garamond', Georgia, 'Times New Roman',
+    'Iowan Old Style', Cambria, serif;
+  font-feature-settings: 'liga' 1, 'dlig' 1;
+  letter-spacing: -0.015em;
+}
+
+.v2-theme .v2-rule {
+  height: 1px;
+  background: hsl(var(--v2-line));
+  width: 100%;
+}
+
+.v2-theme .v2-rule-short {
+  height: 1px;
+  background: hsl(var(--v2-ink));
+  width: 2.5rem;
+  opacity: 0.6;
+}
+
+.v2-theme .v2-eyebrow {
+  font-family: var(--font-geist-mono);
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: hsl(var(--v2-accent));
+  font-weight: 500;
+}
+
+.v2-theme .v2-ink {
+  color: hsl(var(--v2-ink));
+}
+.v2-theme .v2-ink-soft {
+  color: hsl(var(--v2-ink-soft));
+}
+.v2-theme .v2-ink-faint {
+  color: hsl(var(--v2-ink-faint));
+}
+.v2-theme .v2-accent {
+  color: hsl(var(--v2-accent));
+}
+.v2-theme .v2-bg-paper {
+  background: hsl(var(--v2-paper));
+}
+.v2-theme .v2-bg-alt {
+  background: hsl(var(--v2-bg-alt));
+}
+
+.v2-theme .v2-card {
+  background: hsl(var(--v2-paper));
+  border: 1px solid hsl(var(--v2-line));
+  border-radius: 6px;
+}
+
+.v2-theme .v2-input {
+  background: hsl(var(--v2-paper));
+  border: 1px solid hsl(var(--v2-line));
+  color: hsl(var(--v2-ink));
+  border-radius: 4px;
+  padding: 0 1rem;
+  height: 52px;
+  font-size: 15px;
+  width: 100%;
+  transition: border-color 180ms ease, box-shadow 180ms ease;
+  font-family: var(--font-geist-sans);
+}
+.v2-theme .v2-input::placeholder {
+  color: hsl(var(--v2-ink-faint));
+}
+.v2-theme .v2-input:focus {
+  outline: none;
+  border-color: hsl(var(--v2-accent));
+  box-shadow: 0 0 0 3px hsl(var(--v2-accent) / 0.12);
+}
+
+.v2-theme .v2-btn {
+  background: hsl(var(--v2-ink));
+  color: hsl(var(--v2-bg));
+  border: 1px solid hsl(var(--v2-ink));
+  border-radius: 4px;
+  height: 52px;
+  padding: 0 1.75rem;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background 180ms ease, transform 180ms ease;
+  font-family: var(--font-geist-sans);
+}
+.v2-theme .v2-btn:hover:not(:disabled) {
+  background: hsl(var(--v2-accent));
+  border-color: hsl(var(--v2-accent));
+}
+.v2-theme .v2-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.v2-theme .v2-btn-ghost {
+  background: transparent;
+  color: hsl(var(--v2-ink));
+  border: 1px solid hsl(var(--v2-ink) / 0.3);
+}
+.v2-theme .v2-btn-ghost:hover:not(:disabled) {
+  background: hsl(var(--v2-ink));
+  color: hsl(var(--v2-bg));
+}
+
+.v2-theme .v2-link {
+  color: hsl(var(--v2-ink));
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  transition: color 180ms ease;
+}
+.v2-theme .v2-link:hover {
+  color: hsl(var(--v2-accent));
+}
+
+.v2-theme .v2-dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: hsl(var(--v2-accent));
+}
+
+/* Subtle paper grain — layered noise gradient without a bitmap */
+.v2-theme .v2-grain {
+  position: relative;
+}
+.v2-theme .v2-grain::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    radial-gradient(hsl(var(--v2-ink) / 0.025) 1px, transparent 1px);
+  background-size: 3px 3px;
+  opacity: 0.5;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .v2-theme .v2-fade-in {
+    animation: v2-fade-in 0.7s ease-out both;
+  }
+  @keyframes v2-fade-in {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}
