@@ -37,6 +37,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             `,
           }}
         />
+      </head>
+      <body className="font-sans antialiased">
         <noscript>
           <img
             height="1"
@@ -46,8 +48,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             alt=""
           />
         </noscript>
-      </head>
-      <body className="font-sans antialiased">{children}</body>
+        {children}
+      </body>
     </html>
   );
 }
