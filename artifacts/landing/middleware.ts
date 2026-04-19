@@ -7,7 +7,8 @@ function isValidSession(request: NextRequest): boolean {
   if (!cookie) return false;
   const adminPassword = process.env.ADMIN_PASSWORD ?? 'biocycle2026';
   try {
-    const decoded = Buffer.from(cookie, 'base64').toString('utf-8');
+    // atob is available in Edge Runtime (no Buffer needed)
+    const decoded = atob(cookie);
     return decoded === adminPassword;
   } catch {
     return false;
@@ -18,7 +19,6 @@ export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   if (!pathname.startsWith('/admin')) return NextResponse.next();
-
   if (pathname === '/admin/login') return NextResponse.next();
 
   if (!isValidSession(request)) {
