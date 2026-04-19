@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import type { Messages } from '@/messages/types';
 
 export function How({ t }: { t: Messages['how'] }) {
@@ -19,6 +20,17 @@ export function How({ t }: { t: Messages['how'] }) {
               <p className="text-sm text-muted-foreground leading-relaxed">{step.body}</p>
             </div>
           ))}
+        </div>
+
+        <div className="mt-16 mx-auto max-w-5xl rounded-xl border border-border bg-card/40 p-2 sm:p-3 shadow-[0_0_0_1px_hsl(var(--emerald)/0.08),0_24px_60px_-20px_hsl(var(--emerald)/0.18)] relative">
+          <div className="absolute inset-0 -z-10 rounded-xl bg-gradient-to-br from-emerald/8 via-transparent to-transparent blur-2xl" aria-hidden />
+          <Image
+            src="/imagenes/consortium-designer.png"
+            alt="Impulso BioCycle — Consortium Designer dashboard preview"
+            width={1024}
+            height={1024}
+            className="w-full h-auto rounded-lg"
+          />
         </div>
       </div>
     </section>
