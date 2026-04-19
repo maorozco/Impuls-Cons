@@ -24,3 +24,8 @@ export async function adminLogin(password: string): Promise<{ ok: boolean }> {
 
   redirect('/admin');
 }
+
+export async function adminLogout(): Promise<void> {
+  cookies().set('admin_session', '', { maxAge: 0, path: '/' });
+  redirect('/admin/login');
+}
