@@ -1,28 +1,32 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-export function middleware(request: NextRequest) {
-  if (!request.nextUrl.pathname.startsWith('/admin')) {
-    return NextResponse.next();
-  }
+const COOKIE_NAME = 'admin_session';
 
+function isValidSession(request: NextRequest): boolean {
+  const cookie = request.cookies.get(COOKIE_NAME)?.value;
+  if (!cookie) return false;
   const adminPassword = process.env.ADMIN_PASSWORD ?? 'biocycle2026';
-  const authHeader = request.headers.get('authorization');
+  try {
+    const decoded = Buffer.from(cookie, 'base64').toString('utf-8');
+    return decoded === adminPassword;
+  } catch {
+    return false;
+  }
+}
 
-  if (authHeader) {
-    const base64 = authHeader.replace('Basic ', '');
-    const decoded = Buffer.from(base64, 'base64').toString('utf-8');
-    const [, password] = decoded.split(':');
-    if (password === adminPassword) {
-      return NextResponse.next();
-    }
+export function middleware(request: NextRequest) {
+  const { pathname } = request.nextUrl;
+
+  if (!pathname.startsWith('/admin')) return NextResponse.next();
+
+  if (pathname === '/admin/login') return NextResponse.next();
+
+  if (!isValidSession(request)) {
+    const loginUrl = new URL('/admin/login', request.url);
+    return NextResponse.redirect(loginUrl);
   }
 
-  return new NextResponse('Acceso denegado', {
-    status: 401,
-    headers: {
-      'WWW-Authenticate': 'Basic realm="Impulso BioCycle Admin"',
-    },
-  });
+  return NextResponse.next();
 }
 
 export const config = {
