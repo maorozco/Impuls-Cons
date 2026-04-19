@@ -19,7 +19,7 @@ export function Video({ t }: { t: Messages['video'] }) {
               preload="metadata"
               playsInline
             >
-              <source src="/founder-video.mp4" type="video/mp4" />
+              <source src="/api/video" type="video/mp4" />
               {t.placeholderLabel}
             </video>
           </div>
