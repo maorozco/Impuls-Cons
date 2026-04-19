@@ -144,12 +144,6 @@ const es: Messages = {
       'Los mejores modelos de biología del mundo se publicaron entre 2024 y 2026.',
     stack: [
       {
-        name: 'AlphaFold 3',
-        label: 'Predice estructura 3D de proteínas y afinidad enzima-sustrato',
-        source: 'DeepMind',
-        status: 'Código abierto',
-      },
-      {
         name: 'RFDiffusion 2',
         label: 'Diseña proteínas y enzimas de novo con difusión generativa',
         source: 'Baker Lab, U. Washington',
