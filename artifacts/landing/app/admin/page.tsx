@@ -82,7 +82,7 @@ export default async function AdminPage() {
   const rows = emails
     .map((e) => ({ ...e, survey: responseMap.get(e.email) ?? null }))
     .sort((a, b) => {
-      const tierOrder = { green: 0, yellow: 1, red: 2 };
+      const tierOrder: Record<string, number> = { green: 0, yellow: 1, red: 2 };
       const ta = tierOrder[a.survey?.tier ?? ''] ?? 3;
       const tb = tierOrder[b.survey?.tier ?? ''] ?? 3;
       if (ta !== tb) return ta - tb;
