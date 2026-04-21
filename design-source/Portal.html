@@ -1,0 +1,349 @@
+<!doctype html>
+<html lang="es"><head>
+<meta charset="utf-8" /><meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Impulso BioCycle — Gestiona tus Residuos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Geist+Mono:wght@400;500;600&family=Fraunces:opsz,wght@9..144,400;9..144,500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="shared.css" />
+<style>
+.page-head{padding:40px 0 20px; border-bottom:1px solid var(--line)}
+.page-head h1{font-size:42px}
+.page-head h1 em{font-family:var(--font-serif);font-style:italic;font-weight:400;color:var(--forest-deep)}
+.tabs{display:flex; gap:2px; border-bottom:1px solid var(--line); padding:24px 0 0}
+.tab{padding:10px 18px; border-radius:8px 8px 0 0; font-size:13.5px; font-weight:500; color:var(--muted); cursor:pointer; position:relative}
+.tab.active{color:var(--ink); background:#fff; border:1px solid var(--line); border-bottom:1px solid #fff; margin-bottom:-1px}
+.tab .cnt{font-family:var(--font-mono);font-size:10.5px;color:var(--muted-2);margin-left:6px}
+
+.section-body{padding:32px 0 64px}
+
+/* Cotiza */
+.quote-grid{display:grid; grid-template-columns:1.1fr 1.2fr; gap:24px}
+.form-card{padding:24px; border:1px solid var(--line); border-radius:var(--r-lg); background:#fff}
+.form-card h3{font-size:17px; margin-bottom:16px}
+.field{margin-bottom:14px}
+.field label{font-family:var(--font-mono);font-size:10.5px;letter-spacing:.1em;color:var(--muted);text-transform:uppercase;display:block;margin-bottom:6px}
+.field select, .field input{width:100%; height:40px; padding:0 12px; border:1px solid var(--line); border-radius:8px; font-family:inherit; font-size:13.5px; background:#fff; color:var(--ink)}
+.opt-row{display:grid; grid-template-columns:repeat(3,1fr); gap:6px}
+.opt{padding:10px; border:1px solid var(--line); border-radius:8px; background:#fff; cursor:pointer; font-size:12px; text-align:center}
+.opt.selected{border-color:var(--forest-deep); background:#F4FBF7; box-shadow:0 0 0 2px rgba(0,77,44,.08)}
+.opt b{display:block;font-size:12.5px}
+.opt span{font-family:var(--font-mono);font-size:10.5px;color:var(--muted)}
+
+/* Quote output */
+.quote-out{display:flex;flex-direction:column;gap:12px}
+.qout-top{padding:20px; border:1px solid var(--line); border-radius:var(--r-lg); background:linear-gradient(135deg,var(--forest-deep),var(--forest-ink));color:#fff; position:relative; overflow:hidden}
+.qout-top::before{content:""; position:absolute; inset:0; background:radial-gradient(400px 200px at 80% 0%, rgba(0,217,245,.2), transparent 60%)}
+.qout-top .ql{font-family:var(--font-mono);font-size:10.5px;letter-spacing:.12em;color:rgba(255,255,255,.65);text-transform:uppercase}
+.qout-top .qv{font-family:var(--font-mono);font-size:44px;letter-spacing:-.04em;margin-top:6px;font-weight:500}
+.qout-top .qs{font-size:13px; color:rgba(255,255,255,.75);margin-top:2px}
+.qout-top .qmeta{display:flex;gap:20px;margin-top:14px;font-family:var(--font-mono);font-size:11px;color:rgba(255,255,255,.6)}
+.qout-top .qmeta b{color:#C4FF00;font-weight:500}
+
+.metric-grid{display:grid; grid-template-columns:1fr 1fr; gap:10px}
+.mx-card{padding:16px; border:1px solid var(--line); border-radius:10px; background:#fff}
+.mx-card .ml{font-family:var(--font-mono);font-size:10.5px;letter-spacing:.1em;color:var(--muted);text-transform:uppercase}
+.mx-card .mv{font-family:var(--font-mono);font-size:24px;font-weight:500;letter-spacing:-.03em;margin-top:6px;color:var(--forest-deep)}
+.mx-card .ms{font-size:11.5px;color:var(--muted);margin-top:2px}
+
+.timeline{padding:20px;border:1px solid var(--line);border-radius:var(--r-lg);background:#fff}
+.timeline h4{font-family:var(--font-mono);font-size:10.5px;letter-spacing:.1em;color:var(--muted);text-transform:uppercase;font-weight:500;margin-bottom:14px}
+.tl-row{display:grid;grid-template-columns:60px 1fr 120px;gap:10px;padding:8px 0;font-size:12.5px;border-bottom:1px dashed var(--line)}
+.tl-row:last-child{border-bottom:0}
+.tl-row .tl-w{font-family:var(--font-mono);font-size:11px;color:var(--muted-2)}
+.tl-row b{font-weight:500}
+.tl-bar{position:relative;height:18px;border-radius:4px;background:var(--line)}
+.tl-bar::before{content:"";position:absolute;inset:0 auto 0 var(--a,0%);right:var(--r,0%);background:linear-gradient(90deg,var(--forest-deep),var(--green-bright));border-radius:4px}
+
+.compliance{padding:16px 20px;border:1px solid var(--line);border-radius:var(--r-lg);background:linear-gradient(135deg,#F4FBF7,#ECF9EF);display:flex;gap:14px;align-items:center}
+.compliance svg{color:var(--forest-deep);flex:none}
+.compliance b{display:block;font-size:13px}
+.compliance span{font-size:12px;color:var(--muted)}
+
+/* Escucha Activa */
+.ea-grid{display:grid; grid-template-columns:1.3fr 1fr;gap:20px}
+.ea-card{padding:24px; border:1px solid var(--line); border-radius:var(--r-lg); background:#fff}
+.ea-head{display:flex;justify-content:space-between;margin-bottom:16px;align-items:center}
+.ea-head .live{display:inline-flex;align-items:center;gap:6px;font-family:var(--font-mono);font-size:10.5px;letter-spacing:.1em;color:var(--forest-deep);text-transform:uppercase}
+.ea-head .live::before{content:"";width:7px;height:7px;border-radius:99px;background:var(--green-bright);box-shadow:0 0 0 3px rgba(0,200,83,.18);animation:pulse 1.5s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+
+.quote{padding:16px;border:1px solid var(--line);border-radius:10px;background:#FBFDFB;margin-bottom:10px;position:relative}
+.quote .q-av{position:absolute;top:16px;right:16px;font-family:var(--font-mono);font-size:10px;color:var(--muted);background:#F4FBF7;border:1px solid var(--line);padding:2px 7px;border-radius:99px;letter-spacing:.05em}
+.quote p{font-size:13px; font-style:italic; color:var(--ink); line-height:1.55; padding-right:120px}
+.quote .q-meta{display:flex;gap:10px;margin-top:10px;font-family:var(--font-mono);font-size:11px;color:var(--muted)}
+.quote .q-meta b{color:var(--ink-2);font-weight:500}
+
+.competitor{display:grid;grid-template-columns:1fr 140px 80px;gap:12px;padding:10px 0;border-bottom:1px solid var(--line);align-items:center;font-size:13px}
+.competitor:last-child{border-bottom:0}
+.competitor b{font-weight:600}
+.sent-bar{position:relative;height:8px;border-radius:99px;background:linear-gradient(90deg,#FFE4E4 0%,#FFF4E5 50%,#E8F5E9 100%)}
+.sent-bar::before{content:"";position:absolute;top:-3px;width:14px;height:14px;border-radius:99px;background:#fff;border:2px solid var(--ink);left:var(--p,50%);transform:translateX(-50%)}
+.sent-val{font-family:var(--font-mono);font-weight:500;text-align:right}
+.sent-val.neg{color:#B71C1C}
+.sent-val.pos{color:#1B5E20}
+
+.dolor-card{padding:16px;border:1px solid var(--line);border-radius:10px;background:#fff;margin-bottom:10px}
+.dolor-card .d-rank{display:flex;justify-content:space-between;margin-bottom:8px}
+.dolor-card .d-rank .r{font-family:var(--font-mono);font-size:11px;color:var(--forest-deep);font-weight:500;letter-spacing:.08em}
+.dolor-card .d-rank .m{font-family:var(--font-mono);font-size:11px;color:var(--muted)}
+.dolor-card h4{font-size:13.5px;margin-bottom:4px}
+.dolor-card p{font-size:12.5px;color:var(--muted);line-height:1.5}
+
+/* Caso */
+.case-hero{padding:28px;border-radius:var(--r-xl);background:linear-gradient(135deg,#F4FBF7,#ECF9EF);border:1px solid var(--line);display:flex;gap:20px;align-items:center;justify-content:space-between}
+.case-hero .illus-tag{display:inline-block;padding:3px 10px;border-radius:99px;background:var(--warning);color:#fff;font-family:var(--font-mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;font-weight:500}
+.case-hero h3{font-size:22px;margin-top:8px;letter-spacing:-.02em}
+.case-hero p{font-size:13px;color:var(--muted);margin-top:4px;max-width:540px}
+
+.case-flow{display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-top:20px}
+.case-step{padding:16px;border:1px solid var(--line);border-radius:var(--r-lg);background:#fff;position:relative}
+.case-step .cs-n{font-family:var(--font-mono);font-size:10.5px;color:var(--muted);letter-spacing:.12em;text-transform:uppercase}
+.case-step h4{font-size:14px;margin:6px 0 4px}
+.case-step p{font-size:12px;color:var(--muted);line-height:1.5}
+.case-step .cs-stat{margin-top:10px;padding-top:10px;border-top:1px dashed var(--line);font-family:var(--font-mono);font-size:11px;color:var(--forest-deep);font-weight:500}
+
+.case-compare{display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:20px}
+.cmp{padding:20px;border-radius:var(--r-lg);border:1px solid var(--line);background:#fff}
+.cmp.bad{background:linear-gradient(135deg,#FFF9F5,#FFF0E5)}
+.cmp.good{background:linear-gradient(135deg,#F4FBF7,#ECF9EF);border-color:var(--forest-deep)}
+.cmp .ctag{display:inline-block;padding:2px 8px;border-radius:99px;font-family:var(--font-mono);font-size:10.5px;letter-spacing:.1em;font-weight:500}
+.cmp.bad .ctag{background:#FFE4CC;color:#6B2B00}
+.cmp.good .ctag{background:#C5EFD0;color:#003820}
+.cmp h4{font-size:15px;margin:6px 0 8px}
+.cmp .cv{font-family:var(--font-mono);font-size:36px;letter-spacing:-.04em;font-weight:500}
+.cmp.bad .cv{color:#B71C1C}.cmp.good .cv{color:var(--forest-deep)}
+.cmp ul{padding:0;list-style:none;margin-top:10px;font-size:12.5px;color:var(--muted);line-height:1.6}
+.cmp ul li{display:flex;gap:8px}
+.cmp ul svg{width:12px;height:12px;color:var(--forest-deep);flex:none;margin-top:4px}
+.cmp.bad ul svg{color:var(--warning)}
+</style>
+</head>
+<body data-view="portal" data-crumb="Gestiona tus Residuos" data-accent="cyan">
+<div class="app"><main>
+
+<section class="container page-head">
+  <div class="eyebrow" style="display:flex;align-items:center;gap:8px;margin-bottom:14px">
+    <span style="width:18px;height:1px;background:var(--forest-deep);display:inline-block"></span>
+    Portal B2B · HSEQ · Remediation PM
+  </div>
+  <h1>Cotiza tu operación en <em>4 minutos</em>.</h1>
+  <p style="color:var(--muted);font-size:15px;max-width:620px;margin-top:12px">
+    Del tipo de operación al plan con cronograma, inversión, ROI, CO₂ evitado y mapeo a ANLA · EPA · Res. 631/2015.
+  </p>
+  <div class="tabs">
+    <div class="tab active">📋 Cotiza <span class="cnt">· Plan + ROI</span></div>
+    <div class="tab">🎧 Escucha Activa <span class="cnt">· 4,797 posts</span></div>
+    <div class="tab">📊 Caso ilustrativo <span class="cnt">· Refinería Andina</span></div>
+  </div>
+</section>
+
+<section class="container section-body">
+
+  <!-- ═══ TAB 1 · COTIZA ═══ -->
+  <div class="quote-grid">
+    <div>
+      <div class="form-card">
+        <h3>Describe tu operación</h3>
+        <div class="field">
+          <label>Tipo de operación</label>
+          <div class="opt-row">
+            <div class="opt selected"><b>Refinería</b><span>oil &amp; gas</span></div>
+            <div class="opt"><b>Textil</b><span>efluentes</span></div>
+            <div class="opt"><b>Agro</b><span>pesticidas</span></div>
+            <div class="opt"><b>Relleno</b><span>lixiviados</span></div>
+            <div class="opt"><b>Minería</b><span>relaves</span></div>
+            <div class="opt"><b>Consultora</b><span>ambiental</span></div>
+          </div>
+        </div>
+        <div class="field">
+          <label>País</label>
+          <select><option>🇨🇴 Colombia · ANLA · Res. 631/2015</option></select>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+          <div class="field"><label>Volumen a tratar</label><input value="120 m³" /></div>
+          <div class="field"><label>Contaminante principal</label><input value="TPH — hidrocarburos" /></div>
+        </div>
+        <div class="field">
+          <label>Urgencia regulatoria</label>
+          <div class="opt-row">
+            <div class="opt"><b>Baja</b><span>&gt;12 meses</span></div>
+            <div class="opt selected"><b>Media</b><span>3–12 meses</span></div>
+            <div class="opt"><b>Alta</b><span>&lt;3 meses</span></div>
+          </div>
+        </div>
+        <button class="btn btn-primary" style="width:100%;justify-content:center;margin-top:10px">Generar cotización</button>
+      </div>
+    </div>
+
+    <div class="quote-out">
+      <div class="qout-top">
+        <div class="ql">Inversión mensual · plan piloto</div>
+        <div class="qv">$3,800 <span style="font-size:16px;color:rgba(255,255,255,.6);font-weight:400">USD/mes</span></div>
+        <div class="qs">3 meses · incluye monitoreo + reporte ANLA</div>
+        <div class="qmeta">
+          <span>ROI estimado · <b>14 meses</b></span>
+          <span>Ahorro año 1 · <b>$87K USD</b></span>
+          <span>CO₂ evitado · <b>38 t</b></span>
+        </div>
+      </div>
+      <div class="metric-grid">
+        <div class="mx-card"><div class="ml">Costo total piloto</div><div class="mv">$11,400</div><div class="ms">vs. $287K excavación convencional</div></div>
+        <div class="mx-card"><div class="ml">ROI proyectado</div><div class="mv">+612%</div><div class="ms">year-1 conservador · Monte Carlo P50</div></div>
+        <div class="mx-card"><div class="ml">Degradación esperada</div><div class="mv">−78%</div><div class="ms">TPH en 90 días · IC 68%</div></div>
+        <div class="mx-card"><div class="ml">CO₂ evitado</div><div class="mv">38 t</div><div class="ms">vs. transporte a relleno</div></div>
+      </div>
+      <div class="timeline">
+        <h4>Cronograma 90 días</h4>
+        <div class="tl-row"><span class="tl-w">S 1–2</span><b>Caracterización + línea base</b><div class="tl-bar" style="--a:0%;--r:83%"></div></div>
+        <div class="tl-row"><span class="tl-w">S 3–4</span><b>Diseño consorcio + preparación lab</b><div class="tl-bar" style="--a:17%;--r:67%"></div></div>
+        <div class="tl-row"><span class="tl-w">S 5–10</span><b>Despliegue + monitoreo semanal</b><div class="tl-bar" style="--a:33%;--r:17%"></div></div>
+        <div class="tl-row"><span class="tl-w">S 11–13</span><b>Reporte final + entrega ANLA</b><div class="tl-bar" style="--a:83%;--r:0%"></div></div>
+      </div>
+      <div class="compliance">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="22" height="22"><path d="M9 12l2 2 4-4M12 3l8 3v6c0 5-3 8-8 9-5-1-8-4-8-9V6l8-3z"/></svg>
+        <div><b>Cumplimiento normativo verificado</b><span>ANLA Res. 631/2015 · EPA RCRA Subpart C · referencias cargadas</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ TAB 2 · ESCUCHA ACTIVA ═══ -->
+  <div style="margin-top:60px">
+    <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:20px">
+      <div>
+        <div class="eyebrow" style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
+          <span style="width:18px;height:1px;background:var(--forest-deep);display:inline-block"></span>
+          Tab 2 · Escucha Activa
+        </div>
+        <h2 style="font-size:32px">Dolor del mercado · verbatim.</h2>
+      </div>
+      <div style="font-family:var(--font-mono);font-size:11.5px;color:var(--muted);text-align:right;line-height:1.6">
+        <div style="display:inline-flex;align-items:center;gap:6px"><span style="width:7px;height:7px;border-radius:99px;background:#00C853;box-shadow:0 0 0 3px rgba(0,200,83,.18);animation:pulse 1.5s infinite"></span> LIVE · Reddit + LinkedIn</div>
+        <div>4,797 posts clasificados</div>
+        <div>Última sync · 04:12 AM GMT-5</div>
+      </div>
+    </div>
+    <div class="ea-grid">
+      <div>
+        <div class="ea-card">
+          <div class="ea-head"><h3>🔥 Top 3 dolores · esta semana</h3><span style="font-family:var(--font-mono);font-size:11px;color:var(--muted)">semana 16 · 2026</span></div>
+          <div class="dolor-card">
+            <div class="d-rank"><span class="r">#1 · 342 menciones</span><span class="m">+42% vs. sem anterior</span></div>
+            <h4>ANLA rechazó el plan de cierre; necesito alternativa biológica YA</h4>
+            <p>Dominante en r/EnvironmentalCareers · avatar: <b>hseq_latam</b> · afecta refinerías medianas post-2025.</p>
+          </div>
+          <div class="dolor-card">
+            <div class="d-rank"><span class="r">#2 · 287 menciones</span><span class="m">estable</span></div>
+            <h4>Costo de landfarming subió 3× · ya no cuadra para proyectos &lt;$500K</h4>
+            <p>Inflación insumos + transporte · oportunidad clara para vía biológica in-situ.</p>
+          </div>
+          <div class="dolor-card">
+            <div class="d-rank"><span class="r">#3 · 201 menciones</span><span class="m">nuevo</span></div>
+            <h4>Vendors prometen bacterias mágicas que degradan plástico en playa — regulador les cerró</h4>
+            <p>Refuerza el pivote A+C · aquí nuestro mensaje de honestidad científica pega.</p>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:16px">
+        <div class="ea-card">
+          <div class="ea-head"><h3>Quotes verbatim</h3><span class="live">Live</span></div>
+          <div class="quote">
+            <span class="q-av">hseq_latam</span>
+            <p>"Me dieron deadline a 90 días para presentar plan alternativo al relleno. El proveedor clásico me cotizó $340K. Si alguien conoce vía biológica con respaldo técnico real — no marketing — mándenme DM."</p>
+            <div class="q-meta">r/EnvironmentalProfessionals · <b>Bogotá, CO</b> · hace 3h · <b>142 upvotes</b></div>
+          </div>
+          <div class="quote">
+            <span class="q-av">remediation_pm_usa</span>
+            <p>"Trece años en remediación de Superfund sites. La mitad del presupuesto se va en transporte. Cualquier tecnología in-situ creíble con papers ≥Tier 2 me la venden mañana."</p>
+            <div class="q-meta">r/civilengineering · <b>Houston, TX</b> · hace 9h · <b>89 upvotes</b></div>
+          </div>
+          <div class="quote">
+            <span class="q-av">compliance_eu</span>
+            <p>"La Directiva (EU) 2024/1626 entra en vigor en enero. Mis clientes textiles no están ni cerca. ¿Bioreactores enzimáticos con monómeros recuperables son viable pricing para un cluster de 5 plantas?"</p>
+            <div class="q-meta">LinkedIn · <b>Porto, PT</b> · ayer · <b>234 reacciones</b></div>
+          </div>
+        </div>
+        <div class="ea-card">
+          <div class="ea-head"><h3>Competidores · sentimiento agregado</h3><span style="font-family:var(--font-mono);font-size:11px;color:var(--muted)">n=2,394 posts</span></div>
+          <div class="competitor"><div><b>Veolia</b><div style="font-size:11px;color:var(--muted)">remediation · global</div></div><div class="sent-bar" style="--p:42%"></div><div class="sent-val neg">−0.15</div></div>
+          <div class="competitor"><div><b>AECOM</b><div style="font-size:11px;color:var(--muted)">consultora · USA</div></div><div class="sent-bar" style="--p:28%"></div><div class="sent-val neg">−0.42</div></div>
+          <div class="competitor"><div><b>Carbios</b><div style="font-size:11px;color:var(--muted)">PET enzimático · FR</div></div><div class="sent-bar" style="--p:53%"></div><div class="sent-val pos">+0.05</div></div>
+          <div class="competitor"><div><b>Bioteknica</b><div style="font-size:11px;color:var(--muted)">landfarming · LATAM</div></div><div class="sent-bar" style="--p:38%"></div><div class="sent-val neg">−0.22</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ TAB 3 · CASO ILUSTRATIVO ═══ -->
+  <div style="margin-top:60px">
+    <div class="case-hero">
+      <div>
+        <div class="illus-tag">Ejemplo · datos compuestos</div>
+        <h3>Refinería Andina S.A. · 120 m³ suelo con TPH</h3>
+        <p>Caso compuesto a partir de 3 clientes reales anonimizados en Santander y Casanare. Todos los números escalan al piloto de 90 días del lab aliado.</p>
+      </div>
+      <div style="text-align:right">
+        <div style="font-family:var(--font-mono);font-size:10.5px;color:var(--muted);letter-spacing:.12em;text-transform:uppercase">Decisión final</div>
+        <div style="font-family:var(--font-mono);font-size:28px;font-weight:500;letter-spacing:-.03em;color:var(--forest-deep)">−88% costo</div>
+        <div style="font-size:12px;color:var(--muted)">con BioCycle vs. convencional</div>
+      </div>
+    </div>
+
+    <div class="case-flow">
+      <div class="case-step">
+        <div class="cs-n">01 · Caracterización</div>
+        <h4>Línea base</h4>
+        <p>TPH 4,800 mg/kg · pH 6.9 · humedad 18% · temp. 27°C · 120 m³ arcilloso.</p>
+        <div class="cs-stat">Por encima norma · factor 3.2×</div>
+      </div>
+      <div class="case-step">
+        <div class="cs-n">02 · Consorcio</div>
+        <h4>Diseñado en 6s</h4>
+        <p>Pseudomonas putida · Rhodococcus jostii · Bacillus subtilis · Trichoderma harzianum.</p>
+        <div class="cs-stat">Compatibilidad 0.82 · BSL-1</div>
+      </div>
+      <div class="case-step">
+        <div class="cs-n">03 · Cronograma</div>
+        <h4>90 días · 4 fases</h4>
+        <p>Base · diseño · despliegue + monitoreo semanal · reporte regulatorio final.</p>
+        <div class="cs-stat">Entrega ANLA · semana 13</div>
+      </div>
+      <div class="case-step">
+        <div class="cs-n">04 · Resultado</div>
+        <h4>−78% TPH real</h4>
+        <p>Cierre regulatorio aprobado · sitio disponible para siembra post-remediación.</p>
+        <div class="cs-stat">Ahorro · $252K USD</div>
+      </div>
+    </div>
+
+    <div class="case-compare">
+      <div class="cmp bad">
+        <span class="ctag">Convencional</span>
+        <h4>Excavación + relleno autorizado</h4>
+        <div class="cv">$1.87M</div>
+        <div style="font-size:12px;color:var(--muted);margin-top:4px">USD · 6 meses · camino base</div>
+        <ul>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg>Transporte 840 km ida + vuelta</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg>Emisiones 142 t CO₂</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg>Traslada el problema · no resuelve</li>
+        </ul>
+      </div>
+      <div class="cmp good">
+        <span class="ctag">BioCycle</span>
+        <h4>Piloto 90 días · cápsulas in-situ</h4>
+        <div class="cv">$285K</div>
+        <div style="font-size:12px;color:var(--muted);margin-top:4px">USD · 3 meses · todo incluido</div>
+        <ul>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l4 4L19 7"/></svg>In-situ · cero transporte</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l4 4L19 7"/></svg>38 t CO₂ vs. 142 t convencional</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l4 4L19 7"/></svg>ROI 14 meses + sitio re-usable</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+</main></div>
+<script src="shell.js"></script>
+</body></html>

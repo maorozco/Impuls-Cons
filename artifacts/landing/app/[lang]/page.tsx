@@ -3,6 +3,8 @@ import { isLocale, getMessages } from '@/lib/i18n';
 import { getWaitlistCount } from '@/app/actions';
 import { Nav } from '@/components/sections/nav';
 import { Hero } from '@/components/sections/hero';
+import { BuildInPublicWidget } from '@/components/sections/build-in-public';
+import { ProductPreview } from '@/components/sections/product-preview';
 import { SocialProof } from '@/components/sections/social-proof';
 import { Problem } from '@/components/sections/problem';
 import { Video } from '@/components/sections/video';
@@ -33,6 +35,8 @@ export default async function LandingPage({ params }: { params: { lang: string }
           initialCount={total}
           initialCountries={countries}
         />
+        <BuildInPublicWidget locale={params.lang as 'es' | 'en'} />
+        <ProductPreview />
         <Video t={t.video} />
         <Problem t={t.problem} />
         <Dream t={t.dream} />

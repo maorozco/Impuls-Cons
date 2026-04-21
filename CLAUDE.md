@@ -8,25 +8,52 @@
 
 ## Cómo está organizado este repo
 
-Es un **monorepo híbrido** (pnpm + Python). Hoy lo único vivo y demoable es la app de Streamlit en `artifacts/impulso-biocycle/`. El stack TypeScript (`lib/`, `artifacts/api-server/`, `artifacts/mockup-sandbox/`) está esqueletizado pero no operacional.
+Es un **monorepo híbrido** (pnpm + Python). Hoy hay **dos apps vivas y demoables**: la app Streamlit (MVP técnico) y la landing Next.js (producto comercial + Portal B2B + Diseñador B2C + Asesoría RAG).
 
 ```
 .
 ├── artifacts/
-│   ├── impulso-biocycle/   ← LA APP (Streamlit) — ver CLAUDE.md adentro
-│   ├── api-server/         ← Express 5 + Drizzle (no demoable hoy)
-│   └── mockup-sandbox/     ← React mockups (no demoable hoy)
+│   ├── impulso-biocycle/   ← Streamlit MVP — ver CLAUDE.md adentro
+│   ├── landing/            ← Next.js (producto real) — ver CLAUDE.md adentro
+│   │   ├── app/biocycle/   ← 5 rutas del producto BioCycle (ver CLAUDE.md)
+│   │   ├── components/biocycle/ ← componentes BioCycle (ver CLAUDE.md)
+│   │   └── lib/            ← rules engines + scoring (ver CLAUDE.md)
+│   ├── ml-api/             ← FastAPI ML + RAG backend — ver CLAUDE.md adentro
+│   ├── agents/             ← Claude agents (scraper, classifier, etc) — ver CLAUDE.md adentro
+│   ├── api-server/         ← Express 5 + Drizzle (skeleton · no demoable)
+│   └── mockup-sandbox/     ← React mockups antiguos (deprecated)
 ├── lib/                    ← schemas zod, drizzle db, hooks generados (TS)
-├── scripts/                ← post-merge hooks, utilidades repo
-├── .planning/              ← workspace GSD si se inicializa (no existe aún)
-├── .research-synthesis.md  ← sintesis de la investigación de mercado/pivote
-├── .qa-screenshots/        ← capturas Playwright de QA inicial
+├── scripts/                ← dev.sh (one-command), smoke.sh (healthcheck)
+├── marketing/              ← launch-plan, avatares, ad hooks, AI/ML moat
+├── .planning/              ← workspace GSD si se inicializa
+├── .research-synthesis.md  ← investigación de mercado + pivote A+C
+├── .qa-screenshots/        ← capturas Playwright de todas las rondas QA
 ├── pyproject.toml          ← dependencias Python (uv)
 ├── pnpm-workspace.yaml     ← packages TS
-└── README.md               ← README del proyecto (orientado a colaborador externo)
+└── README.md               ← onboarding 5-min para colaboradores
 ```
 
-**Cuando trabajes en código de la app, lee `artifacts/impulso-biocycle/CLAUDE.md`.** Esa carpeta tiene su propia guía con convenciones específicas (carpeta `views/` no `pages/`, BSL-1 only, etc).
+**Cada dominio tiene su CLAUDE.md con reglas propias.** Lee el que corresponda al código que vas a tocar:
+- `artifacts/impulso-biocycle/CLAUDE.md` — Streamlit (views/ no pages/, BSL-1 only)
+- `artifacts/landing/CLAUDE.md` — Next.js App Router (rutas biocycle, quote rules, RAG chat)
+- `artifacts/landing/app/biocycle/CLAUDE.md` — las 5 rutas del producto
+- `artifacts/landing/components/biocycle/CLAUDE.md` — componentes compartidos
+- `artifacts/landing/lib/CLAUDE.md` — rules engines (cotiza-rules, consortia-rules)
+- `artifacts/ml-api/CLAUDE.md` — FastAPI (ML Gradient Boosting + RAG TF-IDF)
+- `artifacts/agents/CLAUDE.md` — pipeline Reddit scraper → classifier → synthesizer → feeder
+
+## Cómo correr todo local (one-command)
+
+```bash
+# scripts/dev.sh inicia Next (3000) + ml-api (5001) + postgres local si es necesario.
+./scripts/dev.sh
+
+# Streamlit solo (si quieres el MVP técnico aparte):
+cd artifacts/impulso-biocycle
+../../.venv/bin/streamlit run app.py --server.port 5000 --server.address 127.0.0.1 --server.headless true
+```
+
+Healthcheck rápido: `./scripts/smoke.sh` — verifica que las 5 rutas responden 200 + ML API + insights.
 
 ---
 

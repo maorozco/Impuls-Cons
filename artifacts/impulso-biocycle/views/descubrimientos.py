@@ -35,10 +35,10 @@ CSS = """
 def render():
     st.markdown(CSS, unsafe_allow_html=True)
     st.markdown("""
-    <div class="hero-section">
-        <div class="hero-title">🧬 Impulso BioCycle</div>
-        <div class="hero-subtitle">Biorremediación Inteligente con IA</div>
-        <span class="hero-badge">🏠 Descubrimientos Científicos</span>
+    <div class="page-breadcrumb">
+        <div class="bc-dot"></div>
+        <div class="bc-title">Descubrimientos</div>
+        <div class="bc-sub">investigación peer-reviewed</div>
     </div>
     """, unsafe_allow_html=True)
 

@@ -89,6 +89,21 @@ export function ThankYouForm({
         return;
       }
       setSubmitted({ tier: result.tier, score: result.score });
+      // Confetti for the green tier — extra celebration when they qualify (Fase 0 · E3.6)
+      if (result.tier === 'green') {
+        try {
+          const confetti = (await import('canvas-confetti')).default;
+          confetti({
+            particleCount: 120,
+            spread: 90,
+            origin: { y: 0.55 },
+            colors: ['#00C853', '#00D9F5', '#C4FF00'],
+            ticks: 240,
+          });
+        } catch {
+          /* decorative — ignore */
+        }
+      }
     });
   }
 

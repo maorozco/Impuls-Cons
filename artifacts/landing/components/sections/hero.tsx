@@ -1,8 +1,9 @@
 'use client';
 
-import { useState, useTransition } from 'react';
+import { useEffect, useRef, useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { ArrowRight, CheckCircle2 } from 'lucide-react';
+import { animate, useInView, useMotionValue, useTransform } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { signupForWaitlist } from '@/app/actions';
@@ -51,15 +52,32 @@ export function Hero({
       referrer: typeof document !== 'undefined' ? document.referrer || undefined : undefined,
     };
 
+    // Optimistic UI — flash success state immediately while server processes.
+    setSuccess(true);
+
     startTransition(async () => {
       const result = await signupForWaitlist(payload);
       if (!result.ok) {
+        setSuccess(false);
         setError(result.error === 'invalid_email' ? t.errors.invalidEmail : t.errors.generic);
         return;
       }
-      setSuccess(true);
+      // Confetti burst on success — celebra el momento (Fase 0 · E3.6)
+      try {
+        const confetti = (await import('canvas-confetti')).default;
+        const palette = ['#00C853', '#00D9F5', '#C4FF00', '#1B5E20'];
+        confetti({
+          particleCount: 80,
+          spread: 70,
+          origin: { y: 0.6 },
+          colors: palette,
+          ticks: 200,
+        });
+      } catch {
+        /* confetti is decorative — ignore failures */
+      }
       const target = `/${locale}/thank-you?email=${encodeURIComponent(email)}`;
-      setTimeout(() => router.push(target), 600);
+      setTimeout(() => router.push(target), 800);
     });
   }
 
@@ -154,13 +172,42 @@ export function Hero({
           <div className="mt-12 flex items-center gap-2 text-xs text-muted-foreground">
             <span className="live-dot" aria-hidden />
             <span>{t.counterPrefix}</span>
-            <span className="font-mono tabular-nums">{baselineCount}</span>
+            <AnimatedCount value={baselineCount} />
             <span>{t.counter}</span>
-            <span className="font-mono tabular-nums">{baselineCountries}</span>
+            <AnimatedCount value={baselineCountries} />
             <span>{t.countriesLabel}</span>
           </div>
         </div>
       </div>
     </section>
+  );
+}
+
+/**
+ * Animated tabular counter — counts 0→value with rAF easing when in view.
+ * Used for the "live" social proof under the hero CTA. (Fase 0 · E3.7)
+ */
+function AnimatedCount({ value }: { value: number }) {
+  const ref = useRef<HTMLSpanElement>(null);
+  const inView = useInView(ref, { once: true, amount: 0.5 });
+  const mv = useMotionValue(0);
+  const rounded = useTransform(mv, (v) => Math.round(v).toLocaleString());
+  const [display, setDisplay] = useState('0');
+
+  useEffect(() => {
+    const unsub = rounded.on('change', setDisplay);
+    return unsub;
+  }, [rounded]);
+
+  useEffect(() => {
+    if (!inView) return;
+    const controls = animate(mv, value, { duration: 1.6, ease: [0.22, 1, 0.36, 1] });
+    return controls.stop;
+  }, [inView, value, mv]);
+
+  return (
+    <span ref={ref} className="font-mono tabular-nums">
+      {display}
+    </span>
   );
 }

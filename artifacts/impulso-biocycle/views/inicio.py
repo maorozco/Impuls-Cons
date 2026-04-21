@@ -1,5 +1,11 @@
 import streamlit as st
 
+from data import (
+    AGGREGATE_PUBLICATIONS,
+    TOTAL_CONTAMINANTS,
+    UNIQUE_MICROORGANISMS,
+)
+
 
 # ── Brand palette (extracted from the Impulso BioCycle identity image) ──
 C_DEEP   = "#004D2C"   # deep forest green  (background, footer)
@@ -40,6 +46,61 @@ button[kind="secondary"] {{
     min-height: 420px;
     background: url('/app/static/hero.png') center / cover no-repeat;
     margin: -1rem -1rem 0 -1rem;
+}}
+
+/* ─── Value props grid (Qué hacemos — premium cards) ─── */
+.vp-grid {{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1rem;
+}}
+.vp-card {{
+    padding: 1.9rem 1.6rem;
+    background: white;
+    border: 1px solid #E0ECE2;
+    border-radius: 16px;
+    transition: transform .26s cubic-bezier(.2,.9,.3,1),
+                box-shadow .26s cubic-bezier(.2,.9,.3,1),
+                border-color .2s ease;
+    position: relative;
+    overflow: hidden;
+}}
+.vp-card::after {{
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, transparent 60%, rgba(0,200,83,0.04) 100%);
+    opacity: 0;
+    transition: opacity .3s ease;
+    pointer-events: none;
+}}
+.vp-card:hover {{
+    transform: translateY(-4px);
+    box-shadow: 0 20px 40px -12px rgba(15,36,25,0.18), 0 4px 12px rgba(0,0,0,0.04);
+}}
+.vp-card:hover::after {{ opacity: 1; }}
+.vp-card-green:hover {{ border-color: {C_BRIGHT}; }}
+.vp-card-cyan:hover  {{ border-color: {C_CYAN}; }}
+.vp-card-lime:hover  {{ border-color: {C_LIME}; }}
+.vp-icon {{
+    width: 44px; height: 44px;
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 1.2rem;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}}
+.vp-title {{
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: {C_DARK_T};
+    margin-bottom: .45rem;
+    letter-spacing: -0.015em;
+    line-height: 1.25;
+}}
+.vp-body {{
+    font-size: .9rem;
+    color: #6A8A74;
+    line-height: 1.6;
 }}
 
 /* ─── WHAT IS ─── */
@@ -205,12 +266,12 @@ def render():
     st.markdown('<div class="lp-hero"></div>', unsafe_allow_html=True)
 
     # Descripción debajo de la imagen
-    st.markdown("""
+    st.markdown(f"""
 <div style="text-align:center; padding: 1.6rem 2rem 0.4rem 2rem; max-width: 780px; margin: 0 auto;">
   <p style="font-size:1.1rem; color:#3A5A45; line-height:1.85; margin:0;">
     Plataforma global de inteligencia artificial para diseño de soluciones biológicas de biorremediación.
     Basada en ciencia publicada en <strong>Nature</strong>, <strong>Science</strong>
-    y 2,000+ papers revisados por pares.
+    y {AGGREGATE_PUBLICATIONS:,}+ referencias científicas agregadas de literatura peer-reviewed.
   </p>
 </div>
 """, unsafe_allow_html=True)
@@ -229,15 +290,102 @@ def render():
             st.session_state["nav_page"] = "🏭 Gestiona tus Residuos"
             st.rerun()
 
-    # ══ QUÉ ES ══
-    st.markdown("""
-<div class="lp-what">
-  <div class="lp-what-title">¿Qué es Impulso BioCycle?</div>
-  <div class="lp-what-body">
-    Impulso BioCycle es la primera plataforma de inteligencia artificial que diseña consorcios microbianos
-    optimizados para biodegradación de contaminantes. Conectamos el conocimiento de 2,000+ publicaciones
-    científicas con las empresas y laboratorios que lo necesitan — en cualquier parte del mundo.
+    # ══ QUÉ ES — rediseño premium con tipografía editorial + grid de value props ══
+    st.markdown(f"""
+<div style="max-width: 1100px; margin: 4.5rem auto 3rem; padding: 0 1.5rem;">
+
+  <div style="display: flex; align-items: flex-end; gap: 1rem; margin-bottom: 2rem;">
+    <div style="width: 40px; height: 2px; background: linear-gradient(90deg, #00C853, #00D9F5); margin-bottom: .9rem;"></div>
+    <div style="font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 2.5px; text-transform: uppercase; color: #6A8A74; font-weight: 600;">
+      Qué hacemos · desde 2026
+    </div>
   </div>
+
+  <h2 style="font-size: clamp(2rem, 4.5vw, 3.5rem); font-weight: 800; letter-spacing: -0.035em; line-height: 1.08; color: #0F2419; max-width: 920px; margin: 0 0 1.2rem 0;">
+    La primera plataforma de IA que diseña
+    <span class="serif-display" style="color: #00C853; font-weight: 400; font-size: 1.08em;">consorcios microbianos</span>
+    optimizados para biorremediación.
+  </h2>
+
+  <p style="font-size: 1.05rem; line-height: 1.65; color: #3A5A45; max-width: 720px; margin: 0 0 2.5rem 0; font-weight: 400;">
+    Conectamos {AGGREGATE_PUBLICATIONS:,}+ referencias científicas peer-reviewed con las empresas y
+    laboratorios que las necesitan. Tú describes el contaminante y el sitio — nosotras te diseñamos la receta
+    microbiana óptima, su protocolo y la predicción de degradación.
+  </p>
+
+</div>
+""", unsafe_allow_html=True)
+
+    # Grid de 3 value props vía st.columns (evita que Streamlit markdown parser colapse el HTML anidado)
+    vp_col1, vp_col2, vp_col3 = st.columns(3, gap="small")
+    VP_CARDS = [
+        (vp_col1, "🧬", "Diseño asistido por IA",
+         "ML entrenado con literatura peer-reviewed recomienda los 4 microorganismos óptimos para tu contaminante y tus condiciones de sitio.",
+         "linear-gradient(135deg,#E8F5E9,#C4FF00 120%)", "#00C853"),
+        (vp_col2, "📚", "Fuentes citadas, siempre",
+         "Cada respuesta cita los papers exactos que la respaldan. Nature, Science, PNAS. Sin alucinación.",
+         "linear-gradient(135deg,#E0F7FA,#00D9F5 140%)", "#00D9F5"),
+        (vp_col3, "✓", "Solo microorganismos BSL-1 / GRAS",
+         "Todas las cepas son seguras para humanos y aprobadas regulatoriamente. Sin OGM liberados al ambiente.",
+         "linear-gradient(135deg,#FFF9C4,#C4FF00 140%)", "#C4FF00"),
+    ]
+    for col, icon, title, body, icon_bg, accent in VP_CARDS:
+        with col:
+            st.markdown(f"""
+<div style="padding:1.9rem 1.5rem; background:white; border:1px solid #E0ECE2; border-radius:16px;
+            transition:transform .26s cubic-bezier(.2,.9,.3,1), box-shadow .26s, border-color .2s;
+            position:relative; overflow:hidden; height:100%;">
+  <div style="width:44px; height:44px; border-radius:12px; background:{icon_bg};
+              display:flex; align-items:center; justify-content:center; font-size:22px;
+              margin-bottom:1.2rem; box-shadow:0 4px 12px rgba(0,0,0,0.05);">
+    {icon}
+  </div>
+  <div style="font-size:1.05rem; font-weight:700; color:#0F2419; margin-bottom:0.5rem;
+              letter-spacing:-0.015em; line-height:1.25;">{title}</div>
+  <div style="font-size:0.9rem; color:#6A8A74; line-height:1.6;">{body}</div>
+</div>
+""", unsafe_allow_html=True)
+
+    st.markdown(f"""
+<div style="max-width: 1100px; margin: 2rem auto 3rem; padding: 0 1.5rem;">
+  <!-- Stats strip -->
+  <div style="margin-top: 2.5rem; padding: 1.3rem 1.75rem; background: linear-gradient(135deg, #0F2419, #1B5E20);
+              border-radius: 16px; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 1.5rem;
+              box-shadow: 0 20px 50px -12px rgba(27,94,32,0.25);">
+    <div>
+      <div style="font-family: 'JetBrains Mono', monospace; font-size: 2rem; font-weight: 700; color: #C4FF00; line-height: 1; letter-spacing: -0.03em;">
+        {AGGREGATE_PUBLICATIONS:,}
+      </div>
+      <div style="font-size: 11px; letter-spacing: 1.8px; text-transform: uppercase; color: rgba(255,255,255,0.7); margin-top: .4rem; font-weight: 500;">
+        Referencias peer-reviewed
+      </div>
+    </div>
+    <div>
+      <div style="font-family: 'JetBrains Mono', monospace; font-size: 2rem; font-weight: 700; color: #00D9F5; line-height: 1; letter-spacing: -0.03em;">
+        {UNIQUE_MICROORGANISMS}
+      </div>
+      <div style="font-size: 11px; letter-spacing: 1.8px; text-transform: uppercase; color: rgba(255,255,255,0.7); margin-top: .4rem; font-weight: 500;">
+        Microorganismos BSL-1/GRAS
+      </div>
+    </div>
+    <div>
+      <div style="font-family: 'JetBrains Mono', monospace; font-size: 2rem; font-weight: 700; color: #00C853; line-height: 1; letter-spacing: -0.03em;">
+        {TOTAL_CONTAMINANTS}
+      </div>
+      <div style="font-size: 11px; letter-spacing: 1.8px; text-transform: uppercase; color: rgba(255,255,255,0.7); margin-top: .4rem; font-weight: 500;">
+        Tipos de contaminantes
+      </div>
+    </div>
+    <div>
+      <div style="font-family: 'JetBrains Mono', monospace; font-size: 2rem; font-weight: 700; color: white; line-height: 1; letter-spacing: -0.03em;">
+        30+
+      </div>
+      <div style="font-size: 11px; letter-spacing: 1.8px; text-transform: uppercase; color: rgba(255,255,255,0.7); margin-top: .4rem; font-weight: 500;">
+        Países con evidencia
+      </div>
+    </div>
+  </div>
+
 </div>
 """, unsafe_allow_html=True)
 
@@ -353,7 +501,7 @@ def render():
         for num, title, desc in [
             (1, "Describe tu contaminante y condiciones",
              "Tipo de residuo, temperatura, pH, volumen y zona climática."),
-            (2, "La IA consulta 847 microorganismos y diseña el consorcio óptimo",
+            (2, f"La IA consulta {UNIQUE_MICROORGANISMS} microorganismos BSL-1/GRAS + {AGGREGATE_PUBLICATIONS:,} referencias y diseña el consorcio óptimo",
              "Verifica compatibilidad entre especies, sinergias y ausencia de competencia."),
             (3, "Recibe la receta de tu cápsula con predicción de éxito y protocolo completo",
              "Probabilidad ML, cronograma, costos comparativos y protocolo de despliegue."),
@@ -376,10 +524,10 @@ def render():
 """, unsafe_allow_html=True)
     m1, m2, m3, m4 = st.columns(4)
     for mc, num, lbl in [
-        (m1, "847+",   "Microorganismos catalogados"),
-        (m2, "2,000+", "Papers científicos indexados"),
-        (m3, "15+",    "Tipos de contaminantes"),
-        (m4, "30+",    "Países con evidencia"),
+        (m1, f"{UNIQUE_MICROORGANISMS}",           "Microorganismos BSL-1/GRAS"),
+        (m2, f"{AGGREGATE_PUBLICATIONS:,}",        "Referencias científicas agregadas"),
+        (m3, f"{TOTAL_CONTAMINANTS}",              "Tipos de contaminantes cubiertos"),
+        (m4, "30+",                                "Países con evidencia"),
     ]:
         with mc:
             st.markdown(f"""

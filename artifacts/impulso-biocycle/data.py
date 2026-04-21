@@ -471,3 +471,11 @@ def get_category_type(category):
         return "suelo_agricola"
     else:
         return "quimico"
+
+
+# Métricas agregadas — derivadas de los datos reales para evitar overclaim.
+# Usadas por inicio.py, app.py y disenador.py.
+UNIQUE_MICROORGANISMS = len({m["microorganism"] for v in CONSORTIA_DATA.values() for m in v})
+TOTAL_CONTAMINANTS = len(CONSORTIA_DATA)
+AGGREGATE_PUBLICATIONS = sum(PUBLICATIONS_COUNT.values())
+TOTAL_DISCOVERIES = len(DISCOVERIES)

@@ -1,0 +1,8 @@
+{
+  "id": "onboarding-welcome",
+  "aspect": "1:1",
+  "model": "gemini-2.5-flash-image",
+  "bytes": 1018537,
+  "generated_at": "2026-04-21T00:08:42.372Z",
+  "prompt": "Centered square editorial illustration of an abstract microbial consortium rendered as four interlocking organic shapes — a green sphere, a cyan curve, a lime spiral, and a darker green hexagon — floating in a clean paper-white space with subtle drop shadows. No text. Evokes the four avatars (lab, enterprise, regulator, investor) converging on the same problem. Minimalist and warm."
+}

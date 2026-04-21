@@ -1,0 +1,33 @@
+# Impulso BioCycle ml-api — consolidated Python deps.
+#
+# This file is the single source of truth for the FastAPI service.
+# It covers both the HTTP layer AND the modules imported from
+# artifacts/impulso-biocycle/ (ml_model.py, rag.py, data.py).
+#
+# On Replit, `pip install -r artifacts/ml-api/requirements.txt` is run
+# once during the build step (see scripts/replit-build.sh).
+
+# ── HTTP layer ──────────────────────────────────────────────────────
+fastapi>=0.115.0
+uvicorn[standard]>=0.32.0
+pydantic>=2.9.0
+python-dotenv>=1.0.0
+
+# ── Data / ML ───────────────────────────────────────────────────────
+pandas>=2.0.0
+numpy>=1.26.0
+scikit-learn>=1.3.0
+
+# ── LLM providers (fallback chain: Anthropic → OpenRouter → Ollama) ─
+anthropic>=0.40.0
+openai>=1.0.0
+requests>=2.31.0
+
+# ── Postgres (drizzle schema is pushed from Node, but psycopg2 is
+#    used by impulso-biocycle/insights_client.py for live queries) ──
+psycopg2-binary>=2.9.0
+
+# NOTE: Streamlit and plotly are NOT included — the legacy Streamlit
+# app (artifacts/impulso-biocycle/app.py) does NOT run on Replit.
+# The ml-api imports ONLY: data.py, ml_model.py, rag.py from
+# impulso-biocycle/ — verified none of them import streamlit/plotly.

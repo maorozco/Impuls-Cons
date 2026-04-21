@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import { Reveal } from '@/components/ui/reveal';
 import type { Messages } from '@/messages/types';
 
 const photoMap: Record<string, string> = {
@@ -10,17 +11,20 @@ export function Founder({ t }: { t: Messages['founder'] }) {
   return (
     <section className="py-24 sm:py-32 bg-card/20 border-y border-border">
       <div className="container-tight">
-        <h2 className="text-3xl sm:text-4xl md:text-5xl font-semibold tracking-tight">
-          {t.h2}
-        </h2>
+        <Reveal>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-semibold tracking-tight">
+            {t.h2}
+          </h2>
+        </Reveal>
 
         <div className="mt-12 space-y-16 sm:space-y-20">
-          {t.members.map((member) => (
-            <div
+          {t.members.map((member, idx) => (
+            <Reveal
               key={member.name}
+              delay={idx * 0.1}
               className="grid gap-10 sm:grid-cols-3 sm:gap-12 items-start"
             >
-              <div className="aspect-square rounded-xl overflow-hidden border border-border bg-gradient-to-br from-emerald/20 via-card to-card">
+              <div className="aspect-square rounded-xl overflow-hidden border border-border bg-gradient-to-br from-emerald/20 via-card to-card transition-all duration-300 hover:border-emerald/50 hover:shadow-lg hover:shadow-emerald/10">
                 {photoMap[member.initial] ? (
                   <Image
                     src={photoMap[member.initial]}
@@ -46,7 +50,7 @@ export function Founder({ t }: { t: Messages['founder'] }) {
                   {member.quote}
                 </blockquote>
               </div>
-            </div>
+            </Reveal>
           ))}
         </div>
       </div>

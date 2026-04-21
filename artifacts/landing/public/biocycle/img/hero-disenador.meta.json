@@ -1,0 +1,8 @@
+{
+  "id": "hero-disenador",
+  "aspect": "16:9",
+  "model": "gemini-2.5-flash-image",
+  "bytes": 1401322,
+  "generated_at": "2026-04-21T00:08:49.264Z",
+  "prompt": "Wide over-the-shoulder perspective of a scientist's hands typing conditions into a holographic interface while a glowing cyan 3D model of a microbial consortium rotates in front of her — each microorganism color-coded (bacteria in cyan, fungi in lime, yeast in forest green). Subtle lime lighting from below. Photorealistic, not sci-fi cliché. Feels like a product demo from 2030."
+}

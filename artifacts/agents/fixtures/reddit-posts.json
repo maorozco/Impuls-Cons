@@ -1,0 +1,167 @@
+[
+  {
+    "post_id": "f1x01",
+    "subreddit": "PFAS",
+    "title": "EPA PFAS NPDWR — how are you budgeting for 2027 compliance?",
+    "body": "We got a formal notice last week. Legacy AFFF use at one of our legacy sites means groundwater is above the 4 ppt limit. Our incumbent remediation contractor quoted $18M for pump-and-treat plus GAC. We already burned $2.7M on a failed pilot last year. How are other Remediation PMs budgeting for this? I feel like the whole industry is about to get hit at once and the contractors know it.",
+    "author": "rem_pm_texas",
+    "url": "https://reddit.com/r/PFAS/comments/f1x01",
+    "upvotes": 184,
+    "num_comments": 52,
+    "posted_at": "2026-04-15T14:22:00Z"
+  },
+  {
+    "post_id": "f1x02",
+    "subreddit": "environmental_science",
+    "title": "Biorremediación in-situ con consorcios — está alguien viendo buenos resultados?",
+    "body": "Tenemos un sitio con 50 ppm de diésel en suelo arcilloso. El contratista convencional nos ofrece excavar y llevarlo a incinerador: $220/m3 + disposición. Alguien ha probado biorremediación in-situ con consorcios diseñados para el tipo de suelo específico? Tengo literatura de Pseudomonas putida y Rhodococcus pero no tenemos capacidad lab para optimizar la mezcla. Queremos una cotización de caracterización.",
+    "author": "hseq_medellin",
+    "url": "https://reddit.com/r/environmental_science/comments/f1x02",
+    "upvotes": 42,
+    "num_comments": 18,
+    "posted_at": "2026-04-16T09:11:00Z"
+  },
+  {
+    "post_id": "f1x03",
+    "subreddit": "colombia",
+    "title": "Multa ANLA por lixiviados — necesitamos alternativa al tratamiento fisicoquímico",
+    "body": "Trabajo en un relleno sanitario en Cundinamarca. La ANLA nos está pidiendo reducir DBO5 por debajo de 80 mg/L y hoy estamos en 1400. El tratamiento fisicoquímico convencional nos cuesta $55/m3 y no alcanzamos a cumplir. Alguien conoce alternativas biológicas para lixiviados con alta carga orgánica y metales? Ley 2387 nos está haciendo la vida imposible.",
+    "author": "operador_relleno",
+    "url": "https://reddit.com/r/colombia/comments/f1x03",
+    "upvotes": 87,
+    "num_comments": 31,
+    "posted_at": "2026-04-10T16:45:00Z"
+  },
+  {
+    "post_id": "f1x04",
+    "subreddit": "hazmat",
+    "title": "Superfund site reopened — CERCLA strict liability question",
+    "body": "Our site was delisted in 2009 but new soil monitoring data shows PAHs creeping back up. Under CERCLA strict liability I think we're on the hook again even though the original contamination is 40 years old. Is anyone using bioremediation approaches that actually work on aged PAHs? The Veolia bid came in at $4.2M for a 3-acre plume.",
+    "author": "liability_lead",
+    "url": "https://reddit.com/r/hazmat/comments/f1x04",
+    "upvotes": 98,
+    "num_comments": 24,
+    "posted_at": "2026-04-12T11:02:00Z"
+  },
+  {
+    "post_id": "f1x05",
+    "subreddit": "water",
+    "title": "Textil effluent — resolución 631/2015 en Colombia y me están sancionando",
+    "body": "Soy gerente de planta textil en Ibagué. Los vertimientos azo dyes no bajan de 1500 mg/L DQO aunque le metimos coagulantes y flocculentes. La CAR ya nos sancionó 2 veces este año y estamos en el cronograma de plan de reducción. AECOM nos ofreció una propuesta de biorremediación pero a $200/m3 la inversión no la vemos viable. Necesitamos una cotización real basada en nuestras condiciones.",
+    "author": "planta_textil_ibague",
+    "url": "https://reddit.com/r/water/comments/f1x05",
+    "upvotes": 36,
+    "num_comments": 14,
+    "posted_at": "2026-04-08T13:30:00Z"
+  },
+  {
+    "post_id": "f1x06",
+    "subreddit": "oilandgasworkers",
+    "title": "Crude spill cleanup — why does everyone push landfarming?",
+    "body": "We had a 200-barrel crude spill last month. Three contractors came in and all three pushed landfarming as the default. Thing is, we don't have the acreage and the climate sucks here. Has anyone actually had success with accelerated bioremediation using designed microbial consortia for oil-contaminated soil? Feels like the consulting industry just pushes whatever has the highest margin.",
+    "author": "og_tx_field",
+    "url": "https://reddit.com/r/oilandgasworkers/comments/f1x06",
+    "upvotes": 142,
+    "num_comments": 38,
+    "posted_at": "2026-04-14T22:18:00Z"
+  },
+  {
+    "post_id": "f1x07",
+    "subreddit": "enviroengineering",
+    "title": "Glifosato residuals in soil — ANLA monitoring 2026",
+    "body": "Several ag operations in the Llanos are failing the new glifosato soil monitoring thresholds. We ran a trial with a commercial biostimulant that didn't move the needle. Anyone doing quantitative work on microbial consortia specifically for glifosato/AMPA? The papers are promising but nobody is turning them into a turnkey product for field ops.",
+    "author": "ag_llanos",
+    "url": "https://reddit.com/r/enviroengineering/comments/f1x07",
+    "upvotes": 54,
+    "num_comments": 19,
+    "posted_at": "2026-04-13T07:40:00Z"
+  },
+  {
+    "post_id": "f1x08",
+    "subreddit": "composting",
+    "title": "Why do compost startups keep over-promising?",
+    "body": "I run a neighborhood composting coop in Bogotá. We keep getting pitched by startups selling magic microbial blends that supposedly speed composting 3x. Every single one has failed in our conditions (humid highland, 14°C average). Is it ever real or is it all snake oil? I want to believe but I've been burned 5 times now.",
+    "author": "compost_mom",
+    "url": "https://reddit.com/r/composting/comments/f1x08",
+    "upvotes": 210,
+    "num_comments": 64,
+    "posted_at": "2026-04-09T18:12:00Z"
+  },
+  {
+    "post_id": "f1x09",
+    "subreddit": "Geotech",
+    "title": "Carbios — thoughts on their France plant from the engineering side?",
+    "body": "Carbios is bringing a €230M enzymatic recycling plant online this year. Impressive on paper but for a Geotech/remediation PM it's totally the wrong tool for the soil contamination jobs we deal with. Anyone seeing distributed/decentralized alternatives that actually scale to multi-site enterprise remediation? Most of what I see is either academic or Veolia consulting.",
+    "author": "geotech_lead_atx",
+    "url": "https://reddit.com/r/Geotech/comments/f1x09",
+    "upvotes": 29,
+    "num_comments": 12,
+    "posted_at": "2026-04-11T10:05:00Z"
+  },
+  {
+    "post_id": "f1x10",
+    "subreddit": "mexico",
+    "title": "Minería de oro y mercurio — hay alternativas reales?",
+    "body": "En Oaxaca tenemos varios sitios mineros artesanales con contaminación de mercurio en suelos. La normativa mexicana NOM-147 es clara pero las opciones son excavar y confinar (carísimo) o dejarlo. Alguien ha visto soluciones biológicas con hongos o bacterias que efectivamente reduzcan el mercurio bioavailable? No me interesa marketing, quiero casos reales con números.",
+    "author": "hseq_oaxaca",
+    "url": "https://reddit.com/r/mexico/comments/f1x10",
+    "upvotes": 74,
+    "num_comments": 22,
+    "posted_at": "2026-04-07T15:50:00Z"
+  },
+  {
+    "post_id": "f1x11",
+    "subreddit": "ZeroWaste",
+    "title": "Plastic capsules that eat plastic on the beach — real or marketing?",
+    "body": "Seeing a bunch of posts about microbial capsules that you throw on beaches and they eat the plastic. Asking people with actual biology backgrounds: is this bullshit? Because the engineering on this doesn't add up — UV, salinity, geometry all work against it. Feels like a greenwashing play.",
+    "author": "curious_biologist",
+    "url": "https://reddit.com/r/ZeroWaste/comments/f1x11",
+    "upvotes": 312,
+    "num_comments": 87,
+    "posted_at": "2026-04-05T19:22:00Z"
+  },
+  {
+    "post_id": "f1x12",
+    "subreddit": "sustainability",
+    "title": "Biorremediación para minería de oro — LATAM",
+    "body": "Operamos en Perú y Colombia, vemos contaminación de cianuro y arsénico en suelos por minería. Tenemos un presupuesto de $150K para un piloto de 90 días. Alguien que pueda diseñar un consorcio bacteriano específico para nuestras condiciones y darnos un baseline?",
+    "author": "mineria_andes",
+    "url": "https://reddit.com/r/sustainability/comments/f1x12",
+    "upvotes": 46,
+    "num_comments": 15,
+    "posted_at": "2026-04-16T12:00:00Z"
+  },
+  {
+    "post_id": "f1x13",
+    "subreddit": "environment",
+    "title": "Pesticide runoff in EU — REACH 2025 deadline",
+    "body": "EU Soil Monitoring Law baseline is 2028 but REACH restrictions on certain pesticides already hit. Small farms in Spain and Portugal are scrambling. Anyone working on cost-effective bioremediation for pesticide-contaminated ag soils that isn't $500/m2?",
+    "author": "eu_farm_consult",
+    "url": "https://reddit.com/r/environment/comments/f1x13",
+    "upvotes": 68,
+    "num_comments": 21,
+    "posted_at": "2026-04-10T08:30:00Z"
+  },
+  {
+    "post_id": "f1x14",
+    "subreddit": "argentina",
+    "title": "Derrame en Neuquén — vaca muerta y suelo contaminado, qué hay de cierto en bioremediación?",
+    "body": "Después del último incidente en Vaca Muerta, estamos buscando alternativas al landfarming tradicional. Las consultoras grandes (AECOM, Jacobs) cobran caro y no garantizan tiempos. Hay proyectos reales con consorcios microbianos en la Patagonia, o seguimos excavando?",
+    "author": "og_neuquen",
+    "url": "https://reddit.com/r/argentina/comments/f1x14",
+    "upvotes": 103,
+    "num_comments": 34,
+    "posted_at": "2026-04-12T20:15:00Z"
+  },
+  {
+    "post_id": "f1x15",
+    "subreddit": "collapse",
+    "title": "The microplastic problem is unsolvable — or is it?",
+    "body": "Every few months someone posts about FAST-PETase or some enzyme discovery and claims we can now eat plastic. But when I dig in, it's always 50°C in a bioreactor with pre-treated PET. In the wild, nothing works. Is there anyone doing serious work on the real problem (microplastics in environment) or is the whole field a feel-good distraction?",
+    "author": "collapse_realist",
+    "url": "https://reddit.com/r/collapse/comments/f1x15",
+    "upvotes": 487,
+    "num_comments": 156,
+    "posted_at": "2026-04-06T03:14:00Z"
+  }
+]

@@ -3,6 +3,11 @@ import { waitlist, waitlistResponses } from '@/drizzle/schema';
 import { desc } from 'drizzle-orm';
 import LogoutButton from './LogoutButton';
 
+// Skip prerender — this page reads live DB at request time.
+// Required for Replit builds where Postgres may not be ready during build.
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 const TIER: Record<string, { ring: string; badge: string; dot: string; label: string }> = {
   green:  { ring: 'ring-emerald-500/40',  badge: 'bg-emerald-500/15 text-emerald-300', dot: 'bg-emerald-400', label: 'Green'  },
   yellow: { ring: 'ring-amber-400/40',    badge: 'bg-amber-400/15  text-amber-300',   dot: 'bg-amber-400',   label: 'Yellow' },

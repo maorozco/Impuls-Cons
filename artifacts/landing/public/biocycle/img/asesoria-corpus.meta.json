@@ -1,0 +1,8 @@
+{
+  "id": "asesoria-corpus",
+  "aspect": "16:9",
+  "model": "gemini-2.5-flash-image",
+  "bytes": 1135440,
+  "generated_at": "2026-04-21T00:08:35.275Z",
+  "prompt": "Abstract visualization of a scientific knowledge graph: 60 paper thumbnails rendered as small floating cards in 3D space, connected by thin lime-green lines of varying opacity that represent citations. Cards are photographed from above with soft depth-of-field, forest-green background, a single card pulled forward in focus showing a ribbon diagram. Evokes an interconnected corpus of 61 peer-reviewed sources."
+}

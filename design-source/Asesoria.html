@@ -1,0 +1,296 @@
+<!doctype html>
+<html lang="es"><head>
+<meta charset="utf-8" /><meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Impulso BioCycle — Asesoría IA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Geist+Mono:wght@400;500;600&family=Fraunces:opsz,wght@9..144,400;9..144,500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="shared.css" />
+<style>
+.chat-layout{display:grid; grid-template-columns:1fr 340px; gap:0; min-height:calc(100vh - 54px)}
+.chat-main{padding:32px 40px 120px; border-right:1px solid var(--line); position:relative}
+.chat-head{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:28px}
+.chat-head h1{font-size:36px;letter-spacing:-.028em}
+.chat-head h1 em{font-family:var(--font-serif);font-style:italic;font-weight:400;color:var(--forest-deep)}
+.status-banner{display:inline-flex;align-items:center;gap:8px;padding:6px 12px;border-radius:99px;background:#E8F5E9;border:1px solid #C5EFD0;font-family:var(--font-mono);font-size:11px;color:#003820;font-weight:500;letter-spacing:.02em}
+.status-banner::before{content:"";width:7px;height:7px;border-radius:99px;background:#00C853;box-shadow:0 0 0 3px rgba(0,200,83,.2)}
+
+.msg{display:flex; gap:12px; margin-bottom:26px}
+.msg .av{width:32px;height:32px;border-radius:10px;flex:none;display:grid;place-items:center;font-family:var(--font-mono);font-size:11px;font-weight:500}
+.msg.u .av{background:#1B4332;color:#fff}
+.msg.a .av{background:linear-gradient(135deg,var(--forest-deep),var(--green-bright));color:#fff}
+.msg .body{flex:1; max-width:760px}
+.msg .meta{display:flex;align-items:center;gap:8px;margin-bottom:6px;font-family:var(--font-mono);font-size:11px;color:var(--muted-2);letter-spacing:.02em}
+.msg .meta b{color:var(--ink);font-weight:500}
+.msg.u .body .bubble{background:#F4FBF7;border:1px solid var(--line);padding:14px 16px;border-radius:12px;font-size:14px;color:var(--ink)}
+.msg.a .bubble{font-size:14.5px; color:var(--ink); line-height:1.6}
+.msg.a .bubble p{margin:0 0 12px; color:var(--ink)}
+.msg.a .bubble ul{padding-left:20px;margin:8px 0 12px;font-size:13.5px}
+.msg.a .bubble li{margin-bottom:4px;color:var(--ink-2)}
+.msg.a .bubble .cite{display:inline-flex;align-items:center;justify-content:center;min-width:20px;height:20px;padding:0 5px;margin:0 2px;border-radius:5px;background:var(--forest-deep);color:#fff;font-family:var(--font-mono);font-size:10.5px;font-weight:500;vertical-align:1px;cursor:pointer}
+.msg.a .bubble .cite:hover{background:#003820}
+
+.sources{margin-top:14px; border:1px solid var(--line); border-radius:12px; background:#FBFDFB}
+.sources summary{list-style:none; padding:10px 14px; display:flex; align-items:center; gap:10px; cursor:pointer; font-size:12.5px; color:var(--ink-2); font-weight:500}
+.sources summary::-webkit-details-marker{display:none}
+.sources summary .chev{margin-left:auto; color:var(--muted); transition:transform .2s}
+.sources[open] summary .chev{transform:rotate(180deg)}
+.src-item{padding:12px 14px; border-top:1px solid var(--line); display:grid; grid-template-columns:26px 1fr auto; gap:10px; align-items:flex-start; font-size:12.5px}
+.src-item .n{font-family:var(--font-mono);font-size:11px;color:#fff;background:var(--forest-deep);width:22px;height:22px;border-radius:6px;display:grid;place-items:center;font-weight:500}
+.src-item .s-body b{display:block;color:var(--ink);font-size:12.5px}
+.src-item .s-body span{color:var(--muted);font-size:11.5px;display:block;margin-top:2px;line-height:1.5}
+.src-item .s-tag{font-family:var(--font-mono);font-size:10px;padding:3px 7px;border-radius:99px;background:#fff;border:1px solid var(--line);color:var(--muted);letter-spacing:.04em;white-space:nowrap}
+
+.msg-actions{display:flex;gap:6px;margin-top:10px}
+.ma-btn{padding:5px 10px;border:1px solid var(--line);border-radius:8px;font-size:11.5px;color:var(--muted);background:#fff;cursor:pointer;font-family:var(--font-mono);letter-spacing:.02em}
+.ma-btn:hover{background:#F4FBF7;color:var(--ink-2)}
+
+/* Skeleton */
+.skeleton{padding:10px 0}
+.skeleton .line{height:12px; border-radius:6px; background:linear-gradient(90deg,#EAF3EC 0%, #F6FBF7 50%, #EAF3EC 100%); background-size:200% 100%; animation:shimmer 1.4s linear infinite; margin-bottom:8px}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+
+/* Composer */
+.composer{position:sticky;bottom:0;margin:0 -40px -120px; padding:16px 40px 24px; background:linear-gradient(180deg,rgba(250,252,249,0),rgba(250,252,249,.95) 40%); backdrop-filter:blur(10px)}
+.comp-in{display:flex; gap:10px; align-items:flex-end; padding:10px 12px; border:1px solid var(--line-strong); border-radius:14px; background:#fff; box-shadow:var(--shadow-sm); max-width:760px}
+.comp-in textarea{flex:1; border:0; resize:none; outline:none; font-family:inherit; font-size:14px; color:var(--ink); min-height:24px; padding:4px 0; line-height:1.4; max-height:120px}
+.comp-in .tool{padding:6px;border-radius:8px;color:var(--muted);cursor:pointer}
+.comp-in .tool:hover{background:#F4FBF7;color:var(--forest-deep)}
+.comp-in .tool svg{width:16px;height:16px}
+.comp-send{width:36px;height:36px;border-radius:10px;background:var(--forest-deep);color:#fff;display:grid;place-items:center;cursor:pointer;flex:none}
+.comp-send svg{width:16px;height:16px}
+.comp-hint{margin-top:8px;font-family:var(--font-mono);font-size:10.5px;color:var(--muted-2);max-width:760px}
+
+/* Suggestions */
+.sugg{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:0 0 30px;max-width:860px}
+.sugg-card{padding:14px;border:1px solid var(--line);border-radius:10px;background:#fff;cursor:pointer;font-size:12.5px;color:var(--ink-2);transition:border-color .15s,transform .15s}
+.sugg-card:hover{border-color:var(--line-strong); transform:translateY(-1px)}
+.sugg-card .s-cat{font-family:var(--font-mono);font-size:10px;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;margin-bottom:6px}
+.sugg-card b{font-weight:600;color:var(--ink);display:block;line-height:1.35}
+
+/* Side panel */
+.side{padding:24px 22px; background:#FBFDFB; overflow-y:auto}
+.side-sect{margin-bottom:24px}
+.side-sect h4{font-family:var(--font-mono);font-size:10.5px;letter-spacing:.12em;color:var(--muted);text-transform:uppercase;font-weight:500;margin-bottom:10px}
+.conv{padding:10px 12px;border-radius:8px;font-size:13px;color:var(--ink-2);cursor:pointer;margin-bottom:2px;position:relative}
+.conv.active{background:#fff;box-shadow:var(--shadow-sm)}
+.conv .c-t{font-size:11px;color:var(--muted-2);font-family:var(--font-mono);margin-top:2px}
+
+.corpus-item{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px dashed var(--line);font-size:12.5px}
+.corpus-item:last-child{border-bottom:0}
+.corpus-item .ci-c{font-family:var(--font-mono);color:var(--forest-deep);font-weight:500}
+
+.guardrail{padding:12px 14px;border:1px solid #FFD0B8;border-radius:10px;background:#FFF8F3;font-size:12px;color:#6B3D00;line-height:1.5;margin-top:10px}
+.guardrail b{display:block;font-size:12px;color:#6B2400;margin-bottom:4px}
+</style>
+</head>
+<body data-view="asesoria" data-crumb="Asesoría IA" data-accent="cyan">
+<div class="app"><main>
+
+<div class="chat-layout">
+  <div class="chat-main">
+    <div class="chat-head">
+      <div>
+        <div class="eyebrow" style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
+          <span style="width:18px;height:1px;background:var(--forest-deep);display:inline-block"></span>
+          Asesoría IA · RAG sobre 61 documentos
+        </div>
+        <h1>Pregunta lo que <em>quieras</em> sobre biorremediación.</h1>
+      </div>
+      <div class="status-banner">LLM · Claude Sonnet · online · 234 ms</div>
+    </div>
+
+    <!-- Suggestion cards (pre-chat) -->
+    <div class="sugg">
+      <div class="sugg-card"><div class="s-cat">Costos</div><b>¿Cuánto cuesta un piloto de 90 días para 200 m³ de suelo?</b></div>
+      <div class="sugg-card"><div class="s-cat">Seguridad</div><b>¿Qué es BSL-1 y por qué sólo usan ese nivel de bioseguridad?</b></div>
+      <div class="sugg-card"><div class="s-cat">Competencia</div><b>¿En qué se diferencian de Carbios?</b></div>
+      <div class="sugg-card"><div class="s-cat">Piloto</div><b>¿Qué incluye el piloto $3K con lab aliado?</b></div>
+      <div class="sugg-card"><div class="s-cat">Hidrocarburos</div><b>¿Cómo degradan TPH en suelo arcilloso con pH bajo?</b></div>
+      <div class="sugg-card"><div class="s-cat">Regulación</div><b>¿Cumplen con la Res. 631/2015 de ANLA?</b></div>
+    </div>
+
+    <!-- Conversation -->
+
+    <!-- User -->
+    <div class="msg u">
+      <div class="av">JM</div>
+      <div class="body">
+        <div class="meta"><b>José M. · HSEQ Refinería Andina</b> · hace 2 min</div>
+        <div class="bubble">Tengo 120 m³ de suelo con TPH ~4,800 mg/kg, pH 6.8, arcilloso. ANLA me dio plazo. ¿Qué consorcio me recomiendan, qué tan viable es, y cómo se compara vs. landfarming?</div>
+      </div>
+    </div>
+
+    <!-- Assistant -->
+    <div class="msg a">
+      <div class="av">BC</div>
+      <div class="body">
+        <div class="meta"><b>BioCycle IA</b> · generando · 4 fuentes citadas</div>
+        <div class="bubble">
+          <p>Para ese perfil (TPH 4,800 mg/kg · pH 6.8 · arcilloso · 120 m³), el consorcio óptimo que te propone el diseñador es:</p>
+          <ul>
+            <li><b>Pseudomonas putida</b> KT2440 (42%) — degradador primario de n-alcanos, rango óptimo 20–35 °C · pH 6–8 <span class="cite">1</span></li>
+            <li><b>Rhodococcus jostii</b> RHA1 (28%) — PAH livianos + emulsificante <span class="cite">2</span></li>
+            <li><b>Bacillus subtilis</b> 168 (20%) — surfactantes + biofilm <span class="cite">3</span></li>
+            <li><b>Trichoderma harzianum</b> (10%) — PAH pesados por co-metabolismo</li>
+          </ul>
+          <p>Todos BSL-1 / GRAS, encapsulados en alginato 2–4 mm. <b>Probabilidad de éxito: 52%</b> (moderada — viable con optimización). La restricción la pone el contenido de PAH pesados y la arcilla (difusión limitada).</p>
+          <p><b>Versus landfarming:</b> una publicación reciente en <i>Environmental Science &amp; Technology</i> con consorcio análogo reportó −78% TPH a 90 días in-situ con cápsulas <span class="cite">2</span>. Landfarming clásico típicamente llega a −55% en 6 meses y cuesta ~3.2× más para el mismo volumen.</p>
+          <p>Puedo abrir el diseñador con tus parámetros ya cargados — o podemos pasar a cotizar el piloto $3K con el lab aliado. ¿Qué prefieres?</p>
+
+          <!-- Sources -->
+          <details class="sources" open>
+            <summary>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="14" height="14" style="color:var(--forest-deep)"><path d="M4 19.5V4.5A1.5 1.5 0 015.5 3H19v18H5.5A1.5 1.5 0 014 19.5z"/><path d="M8 7h8M8 11h8M8 15h5"/></svg>
+              4 fuentes · TF-IDF retrieval · top similaridad 0.88
+              <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M6 9l6 6 6-6"/></svg>
+            </summary>
+            <div class="src-item">
+              <span class="n">1</span>
+              <div class="s-body"><b>Nelson et al. · P. putida KT2440 metabolic map</b><span>Appl. Environ. Microbiol. · 2020 · rangos óptimos de crecimiento y degradación de alcanos lineales C12–C24.</span></div>
+              <span class="s-tag">DOI · 0.88</span>
+            </div>
+            <div class="src-item">
+              <span class="n">2</span>
+              <div class="s-body"><b>Müller et al. · Consorcio encapsulado TPH campo</b><span>Environmental Sci. &amp; Technol. · 2023 · ETH Zürich — reportó −78% TPH a 90 días con protocolo casi idéntico al nuestro.</span></div>
+              <span class="s-tag">DOI · 0.84</span>
+            </div>
+            <div class="src-item">
+              <span class="n">3</span>
+              <div class="s-body"><b>Consorcio interno #C-07 · Impulso BioCycle</b><span>Base de datos interna · combinación validada en piloto Santander 2025 · compatibilidad 0.82.</span></div>
+              <span class="s-tag">Internal · 0.79</span>
+            </div>
+            <div class="src-item">
+              <span class="n">4</span>
+              <div class="s-body"><b>ANLA · Resolución 631/2015 Art. 10</b><span>Parámetros límite TPH para vertimientos e instrumento aceptable de cierre regulatorio.</span></div>
+              <span class="s-tag">Reg · 0.71</span>
+            </div>
+          </details>
+
+          <div class="msg-actions">
+            <button class="ma-btn">↻ Regenerar</button>
+            <button class="ma-btn">📋 Copiar</button>
+            <button class="ma-btn">→ Abrir en diseñador</button>
+            <button class="ma-btn">✎ Reservar piloto</button>
+            <button class="ma-btn">👍</button>
+            <button class="ma-btn">👎</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- User follow-up -->
+    <div class="msg u">
+      <div class="av">JM</div>
+      <div class="body">
+        <div class="meta"><b>José M.</b> · ahora</div>
+        <div class="bubble">¿Y para plástico en la costa de Cartagena? tenemos acumulación en playas concesionadas.</div>
+      </div>
+    </div>
+
+    <!-- Assistant thinking -->
+    <div class="msg a">
+      <div class="av">BC</div>
+      <div class="body">
+        <div class="meta"><b>BioCycle IA</b> · evaluando guardrails…</div>
+        <div class="bubble">
+          <div class="guardrail">
+            <b>⚠ Guardrail activado · pivote A+C</b>
+            No proponemos degradación de plástico en ambientes abiertos (playa, ecosistemas marinos). Eso rompe nuestra política de honestidad científica — la evidencia in-situ para PET en campo abierto no existe con rigor.
+          </div>
+          <p style="margin-top:12px">Lo que <b>sí</b> podemos hacer con tu caso:</p>
+          <ul>
+            <li>Recoger mecánicamente el plástico de la playa (logística externa)</li>
+            <li>Procesarlo en <b>biorreactor enzimático contenido</b> (LCC-ICCG o FAST-PETase <span class="cite">1</span>)</li>
+            <li>Recuperar monómeros TPA + EG vendibles a $800–1,600/ton <span class="cite">2</span></li>
+          </ul>
+          <p>Te puedo armar una estimación para el volumen recolectado si nos das un aproximado en toneladas.</p>
+
+          <div class="skeleton" style="display:none">
+            <div class="line" style="width:88%"></div>
+            <div class="line" style="width:72%"></div>
+            <div class="line" style="width:40%"></div>
+          </div>
+
+          <details class="sources">
+            <summary>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="14" height="14" style="color:var(--forest-deep)"><path d="M4 19.5V4.5A1.5 1.5 0 015.5 3H19v18H5.5A1.5 1.5 0 014 19.5z"/><path d="M8 7h8M8 11h8M8 15h5"/></svg>
+              2 fuentes · contención obligatoria
+              <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M6 9l6 6 6-6"/></svg>
+            </summary>
+            <div class="src-item">
+              <span class="n">1</span>
+              <div class="s-body"><b>Lu et al. · FAST-PETase</b><span>Nature 2022 · despolimerización 90% en 24h a 50°C · sólo en biorreactor contenido.</span></div>
+              <span class="s-tag">DOI · 0.91</span>
+            </div>
+            <div class="src-item">
+              <span class="n">2</span>
+              <div class="s-body"><b>Beckham et al. · PET upcycling</b><span>Science 2025 · rutas TPA→vanilina/ácidos · viabilidad comercial.</span></div>
+              <span class="s-tag">DOI · 0.82</span>
+            </div>
+          </details>
+        </div>
+      </div>
+    </div>
+
+    <!-- Composer -->
+    <div class="composer">
+      <div class="comp-in">
+        <textarea placeholder="Pregunta sobre microorganismos, contaminantes, papers del corpus, regulación LATAM/EU/USA…"></textarea>
+        <button class="tool" title="Adjuntar datos de sitio">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 12.5V7a4 4 0 00-8 0v9a2.5 2.5 0 005 0V8"/></svg>
+        </button>
+        <button class="tool" title="Plantilla de pregunta">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 12h6M9 8h6M5 21V5a2 2 0 012-2h7l5 5v13a2 2 0 01-2 2H7a2 2 0 01-2-2z"/></svg>
+        </button>
+        <button class="comp-send" title="Enviar">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </button>
+      </div>
+      <div class="comp-hint">Shift + ↵ para salto de línea · ⌘↵ para enviar · respuestas con citaciones a papers del corpus (61 docs).</div>
+    </div>
+  </div>
+
+  <!-- Side panel -->
+  <aside class="side">
+    <div class="side-sect">
+      <h4>Corpus activo · 61 docs</h4>
+      <div class="corpus-item"><span>Papers peer-reviewed</span><span class="ci-c">10</span></div>
+      <div class="corpus-item"><span>Consorcios validados</span><span class="ci-c">33</span></div>
+      <div class="corpus-item"><span>Bases internas</span><span class="ci-c">18</span></div>
+    </div>
+
+    <div class="side-sect">
+      <h4>Conversaciones recientes</h4>
+      <div class="conv active"><b>TPH Refinería Andina</b><div class="c-t">hace 2 min · 2 turns</div></div>
+      <div class="conv"><b>Textil · colorantes azo</b><div class="c-t">ayer · 5 turns</div></div>
+      <div class="conv"><b>Comparativo vs. Carbios</b><div class="c-t">hace 3 días · 8 turns</div></div>
+      <div class="conv"><b>Atrazina · Casanare</b><div class="c-t">hace 1 sem · 3 turns</div></div>
+    </div>
+
+    <div class="side-sect">
+      <h4>Guardrails activos</h4>
+      <div style="font-size:12px;color:var(--muted);line-height:1.6">
+        <div style="display:flex;gap:8px;align-items:center;margin-bottom:6px"><span style="width:6px;height:6px;border-radius:99px;background:var(--green-bright)"></span>No promete limpiar playas</div>
+        <div style="display:flex;gap:8px;align-items:center;margin-bottom:6px"><span style="width:6px;height:6px;border-radius:99px;background:var(--green-bright)"></span>No dice "plástico desaparece"</div>
+        <div style="display:flex;gap:8px;align-items:center;margin-bottom:6px"><span style="width:6px;height:6px;border-radius:99px;background:var(--green-bright)"></span>No cita AlphaFold comercial</div>
+        <div style="display:flex;gap:8px;align-items:center;margin-bottom:6px"><span style="width:6px;height:6px;border-radius:99px;background:var(--green-bright)"></span>Sólo especies BSL-1 / GRAS</div>
+        <div style="display:flex;gap:8px;align-items:center"><span style="width:6px;height:6px;border-radius:99px;background:var(--green-bright)"></span>Banned-phrase linter · post-gen</div>
+      </div>
+    </div>
+
+    <div class="side-sect">
+      <h4>Modelo</h4>
+      <div style="font-size:12px;color:var(--muted);line-height:1.6;font-family:var(--font-mono)">
+        <div style="display:flex;justify-content:space-between;padding:4px 0"><span>Router</span><b style="color:var(--ink-2);font-weight:500">OpenRouter</b></div>
+        <div style="display:flex;justify-content:space-between;padding:4px 0"><span>Primary</span><b style="color:var(--ink-2);font-weight:500">Claude Sonnet</b></div>
+        <div style="display:flex;justify-content:space-between;padding:4px 0"><span>Fallback</span><b style="color:var(--ink-2);font-weight:500">TF-IDF offline</b></div>
+        <div style="display:flex;justify-content:space-between;padding:4px 0"><span>Latencia p50</span><b style="color:var(--ink-2);font-weight:500">234 ms</b></div>
+        <div style="display:flex;justify-content:space-between;padding:4px 0"><span>Ventana</span><b style="color:var(--ink-2);font-weight:500">128k tokens</b></div>
+      </div>
+    </div>
+  </aside>
+</div>
+
+</main></div>
+<script src="shell.js"></script>
+</body></html>

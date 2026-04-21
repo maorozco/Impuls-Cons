@@ -1,0 +1,8 @@
+{
+  "id": "disenador-bg",
+  "aspect": "16:9",
+  "model": "gemini-2.5-flash-image",
+  "bytes": 1628524,
+  "generated_at": "2026-04-21T00:08:17.900Z",
+  "prompt": "Abstract poster-style render of molecules transforming into clean monomers inside a flowing cyan liquid. Organic filaments of hyphae weaving through the scene, lit from below with lime-green bioluminescence. No text, no labels. Evokes computation, chemistry, and movement. Paper-white negative space on the right third — space for UI to be overlaid. Editorial science visualization."
+}

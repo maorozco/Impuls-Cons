@@ -2,7 +2,41 @@
 
 > **Accelerating the Natural Cycle through Intelligence**
 
-Plataforma global de inteligencia artificial para diseño de soluciones biológicas de biorremediación. Conecta 2,000+ publicaciones científicas con empresas y laboratorios que necesitan tratar contaminantes.
+Plataforma global de inteligencia artificial para diseño de soluciones biológicas de biorremediación. Conecta literatura peer-reviewed agregada (4,700+ referencias) con empresas y laboratorios que necesitan tratar contaminantes.
+
+**Estado del repo (2026-04-20):** monorepo híbrido Python + TypeScript con tres servicios activos — app Streamlit (demo), landing Next.js (waitlist + admin) y pipeline multi-agente (5 agentes que minería quejas de Reddit). Target de deploy = Replit Core.
+
+---
+
+## 🚀 Setup en 5 minutos
+
+```bash
+# 1. Clonar
+git clone <repo-url> && cd Impuls-Cons
+
+# 2. Instalar deps Node (pnpm workspace)
+pnpm install
+
+# 3. Levantar TODO local con un solo comando
+./scripts/dev.sh
+```
+
+Esto arranca **los 3 servicios en paralelo**:
+- Streamlit app → http://127.0.0.1:5000
+- Next.js landing → http://127.0.0.1:3000 (redirige a `/es`)
+- Agents pipeline en fixture mode (tick cada 60s, logs visibles)
+
+Sin credenciales, el stack corre en **mock mode** — suficiente para desarrollo y demos visuales. Para datos reales, ver `.env.example` en cada `artifacts/*/`.
+
+### ✅ Validar que todo está sano
+
+```bash
+./scripts/smoke.sh
+```
+
+Pasa 16 checks: typecheck agents + landing, lint, sintaxis Python, pipeline agentes end-to-end, boot Streamlit + Next.js, endpoints `/api/insights` + `/admin/insights`, RAG retriever. Debe tardar <90s.
+
+---
 
 ---
 
@@ -67,27 +101,89 @@ artifact.toml     # Configuración de artefactos Replit (no modificar manualment
 
 ### Prerequisitos
 
-- Python 3.11+
-- pip
+- Node 20+ con **pnpm** (`npm i -g pnpm`)
+- Python 3.11+ (Homebrew Python recomendado; pyenv está roto en algunos macs de este equipo)
+- Git
 
-### Instalación
+### Opción 1 · One-command (recomendado)
 
 ```bash
-# 1. Clonar el repositorio
-git clone https://github.com/maorozco/impulso-biocycle.git
-cd impulso-biocycle
-
-# 2. Instalar dependencias
-pip install streamlit plotly pandas scikit-learn streamlit-lottie
-
-# 3. Ir a la carpeta de la app
-cd artifacts/impulso-biocycle
-
-# 4. Correr la app
-streamlit run app.py --server.port 5000 --server.address 0.0.0.0
+./scripts/dev.sh
 ```
 
-La app abre en `http://localhost:5000`
+Levanta **Streamlit + Landing + Agents pipeline** con logs tail en vivo. Ctrl+C detiene todo. Los `.venv` y `node_modules` se crean automáticamente en el primer run.
+
+### Opción 2 · Servicio individual
+
+**Solo Streamlit:**
+```bash
+cd artifacts/impulso-biocycle
+../../.venv/bin/streamlit run app.py --server.port 5000 --server.address 127.0.0.1 --server.headless true
+```
+
+**Solo landing:**
+```bash
+cd artifacts/landing
+pnpm dev
+```
+
+**Pipeline de agentes (fixture mode, no llama APIs):**
+```bash
+cd artifacts/agents
+pnpm pipeline:dev
+```
+
+**Pipeline con LLM real (OpenRouter o Anthropic):**
+```bash
+# Requiere OPENROUTER_API_KEY o ANTHROPIC_API_KEY en artifacts/agents/.env
+cd artifacts/agents
+AGENT_FIXTURE_MODE=false MOCK_DB=true pnpm pipeline:dev
+```
+
+---
+
+## 🌳 Estructura del monorepo
+
+```
+Impuls-Cons/
+├── artifacts/
+│   ├── impulso-biocycle/   ← App Streamlit (demo)
+│   ├── landing/            ← Next.js 14 + Drizzle + Neon Postgres
+│   ├── agents/             ← TS multi-agente: scraper, classifier, synthesizer, competitive, feeder
+│   ├── api-server/         ← (esqueleto, no operacional)
+│   └── mockup-sandbox/     ← (esqueleto, no operacional)
+├── scripts/
+│   ├── dev.sh              ← one-command dev
+│   ├── smoke.sh            ← healthcheck end-to-end
+│   └── post-merge.sh       ← git hook
+├── marketing/              ← docs de pitch, avatar, competencia, research
+├── .planning/              ← workspace GSD (si se inicializa)
+└── .research-synthesis.md  ← pivote A+C + no-prometer list (leer antes de tocar copy)
+```
+
+---
+
+## 🔌 Variables de entorno
+
+Cada servicio tiene su `.env.example`. Copiar a `.env` local y llenar:
+
+- `artifacts/impulso-biocycle/.env.example` — `ANTHROPIC_API_KEY`, `OPENROUTER_API_KEY`, `LLM_PROVIDER`, `DATABASE_URL`
+- `artifacts/landing/.env.example` — `DATABASE_URL`, `RESEND_API_KEY`, `APIFY_API_KEY`, `NEXT_PUBLIC_CALENDLY_URL`, `ADMIN_BASIC_AUTH`
+- `artifacts/agents/.env.example` — `APIFY_API_KEY`, `ANTHROPIC_API_KEY`, `OPENROUTER_API_KEY`, `DATABASE_URL`, `AGENT_FIXTURE_MODE`
+
+**Todo `.env` está gitignored.** Replit usa Secrets UI.
+
+---
+
+## ☁️ Deploy target = Replit Core
+
+Plan de producción: **1 Repl con este monorepo**, 3 deployments:
+
+1. **Reserved VM 0.5 vCPU / 2GB ($20/mo)** → Streamlit always-on
+2. **Autoscale** → Landing Next.js
+3. **5× Scheduled Deployments** → cada agente con su cron (scraper cada 6h, etc.)
+
+Ver `REPLIT-DEPLOY.md` (por crear) para el runbook completo. Azure quedó descartado por falta de créditos; Oracle Cloud Ampere ARM queda como Plan B diferido.
 
 ---
 

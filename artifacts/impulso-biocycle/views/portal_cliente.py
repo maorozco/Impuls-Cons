@@ -261,13 +261,27 @@ def render():
     st.markdown(CSS, unsafe_allow_html=True)
 
     st.markdown("""
-    <div class="hero-section">
-        <div class="hero-title">🧬 Impulso BioCycle</div>
-        <div class="hero-subtitle">Biorremediación Inteligente con IA</div>
-        <span class="hero-badge">🏭 Gestiona tus Residuos — Soluciones para empresas globales</span>
+    <div class="page-breadcrumb">
+        <div class="bc-dot"></div>
+        <div class="bc-title">Gestiona tus residuos</div>
+        <div class="bc-sub">b2b · cotiza + escucha activa</div>
     </div>
     """, unsafe_allow_html=True)
 
+    tab_cotizar, tab_escucha, tab_caso = st.tabs(
+        ["📋 Cotiza tu proyecto", "🎧 Escucha Activa — dolor del mercado", "📊 Caso ilustrativo"]
+    )
+
+    with tab_escucha:
+        _render_escucha_activa()
+    with tab_caso:
+        _render_caso_ilustrativo()
+
+    with tab_cotizar:
+        _render_cotizador()
+
+
+def _render_cotizador():
     st.markdown('<div class="result-section">', unsafe_allow_html=True)
     st.subheader("Datos de su operación")
 
@@ -449,6 +463,12 @@ def render():
             — Ahorro del <b>{round((1 - costos_r['biocycle']/costos_r['convencional'])*100)}%</b> por unidad tratada.
             Costos en USD a precios de referencia de mercado internacional 2024.
         </div>
+        <div style="background:#FFF8E1; border-radius:10px; padding:12px 18px; margin-top:10px;
+                    font-size:12px; color:#5D4037; border-left:4px solid #FFB300;">
+            ⚠️ <b>Estimación.</b> Rango basado en literatura peer-reviewed agregada y mercado internacional 2024.
+            Los costos reales dependen de caracterización del sitio (contaminante, concentración, volumen, regulación local).
+            Para cotización vinculante se requiere caracterización previa — esto NO es una oferta comercial.
+        </div>
         """, unsafe_allow_html=True)
         st.markdown('</div>', unsafe_allow_html=True)
 
@@ -537,3 +557,197 @@ def render():
                 </div>
             </div>
             """, unsafe_allow_html=True)
+
+
+# ══════════════════════════════════════════════════════════════════════
+# Panel Escucha Activa — dolor real del mercado
+# ══════════════════════════════════════════════════════════════════════
+
+def _render_escucha_activa():
+    from insights_client import get_insights_snapshot
+
+    snap = get_insights_snapshot()
+
+    source_label = {
+        "db": "📡 datos en vivo desde Postgres",
+        "cache": "💾 último snapshot cacheado (DB offline)",
+        "fixture": "🧪 modo demo · datos compuestos",
+        "api": "🌐 vía API pública",
+    }.get(snap.source, snap.source)
+
+    st.markdown(
+        f"""
+<div style="background:linear-gradient(135deg,#004D2C,#006633); border-radius:16px; padding:26px 30px; color:white; margin-bottom:18px;">
+    <div style="font-size:11px; opacity:.75; letter-spacing:2px; text-transform:uppercase;">
+        Escucha Activa · multi-agente de investigación
+    </div>
+    <div style="font-size:24px; font-weight:800; margin-top:6px;">
+        Lo que duele al mercado esta semana
+    </div>
+    <div style="font-size:13px; opacity:.85; margin-top:10px;">
+        Analizamos quejas públicas en Reddit + foros con un pipeline de 5 agentes
+        (Scraper → Classifier → Synthesizer → Competitive Intel → Pitch Feeder).
+        Cada quote es textual, con enlace a la fuente. <b>Fuente:</b> {source_label} · actualizado {snap.updated_at[:16]}
+    </div>
+</div>
+""",
+        unsafe_allow_html=True,
+    )
+
+    c1, c2, c3, c4 = st.columns(4)
+    c1.metric("Quejas clasificadas", f"{snap.posts_classified_total:,}")
+    c2.metric("Alta pena últimos 7d", f"{snap.high_pain_7d:,}")
+    c3.metric("Signups waitlist", f"{snap.signups_total:,}")
+    c4.metric("Países representados", snap.countries)
+
+    st.markdown("### 🔥 Top 3 dolores detectados")
+    if not snap.top_pains:
+        st.info("Sin temas sintetizados — el Pain Synthesizer corre semanalmente.")
+    for i, pain in enumerate(snap.top_pains[:3], start=1):
+        avatar_color = {
+            "remediation_pm_usa": "#1565C0",
+            "hseq_latam": "#2E7D32",
+            "compliance_eu": "#6A1B9A",
+            "apac": "#EF6C00",
+            "mixed": "#455A64",
+            "none": "#78909C",
+        }.get(pain.avatar_match, "#455A64")
+        quote_block = ""
+        if pain.top_quote:
+            sub = pain.top_quote.get("subreddit", "")
+            url = pain.top_quote.get("url", "#")
+            quote = pain.top_quote.get("quote", "")
+            quote_block = (
+                f'<div style="border-left:3px solid {avatar_color}; padding:8px 14px; '
+                f'background:#F4FBF7; margin-top:10px; font-style:italic; color:#1B4332; font-size:14px;">'
+                f'"{quote}"<br>'
+                f'<span style="font-size:11px; color:#6A8A74; font-style:normal;">— '
+                f'<a href="{url}" target="_blank" style="color:#6A8A74;">r/{sub}</a></span></div>'
+            )
+        # Staggered fade-in: cada card tiene delay progresivo (Fase 0 · E2.8)
+        stagger_delay = 0.05 + (i - 1) * 0.12
+        st.markdown(
+            f"""
+<div class="escucha-card" style="padding:16px 20px; background:white; border-radius:12px;
+            box-shadow:0 2px 8px rgba(0,0,0,.06); margin-bottom:12px; border-left:5px solid {avatar_color};
+            animation-delay: {stagger_delay:.2f}s;">
+    <div style="display:flex; justify-content:space-between; align-items:center;">
+        <div style="font-weight:700; color:#1B4332; font-size:16px;">{i}. {pain.theme}</div>
+        <div style="font-size:11px; background:{avatar_color}; color:white; padding:3px 10px; border-radius:12px;">
+            {pain.avatar_match}
+        </div>
+    </div>
+    <div style="font-size:12px; color:#6A8A74; margin-top:4px;">
+        {pain.quote_count} posts aportan a este tema
+    </div>
+    {quote_block}
+</div>
+""",
+            unsafe_allow_html=True,
+        )
+
+    if snap.top_competitors:
+        st.markdown("### 🎯 Top competidores mencionados (últimos 7 días)")
+        col_a, col_b, col_c = st.columns([2, 1, 1])
+        col_a.markdown("**Competidor**")
+        col_b.markdown("**Menciones**")
+        col_c.markdown("**Sentimiento**")
+        for comp in snap.top_competitors[:5]:
+            col_a, col_b, col_c = st.columns([2, 1, 1])
+            col_a.write(comp.name)
+            col_b.write(comp.mentions)
+            sent_color = (
+                "🟢" if comp.avg_sentiment > 0.1
+                else "🔴" if comp.avg_sentiment < -0.1
+                else "🟡"
+            )
+            col_c.write(f"{sent_color} {comp.avg_sentiment:+.2f}")
+
+    st.caption(
+        "El pipeline multi-agente procesa quejas públicas de Reddit cada 6 horas. "
+        "Los agentes están configurados para rechazar claims que violen nuestras reglas "
+        "narrativas (sin 'cápsulas en playas', sin 'plástico desaparece', sin AlphaFold comercial). "
+        "La síntesis semanal alimenta el deck de pitch + la landing build-in-public."
+    )
+
+
+# ══════════════════════════════════════════════════════════════════════
+# Caso Ilustrativo — flow completo de un cliente ficticio
+# ══════════════════════════════════════════════════════════════════════
+
+def _render_caso_ilustrativo():
+    st.warning(
+        "⚠️ **Caso ilustrativo · datos compuestos.** Este es un ejemplo basado en literatura "
+        "peer-reviewed y proyectos análogos — NO es un cliente real. Se usa para enseñar el "
+        "flujo completo de BioCycle al panel."
+    )
+
+    st.markdown("## 🏭 Refinería Andina S.A. (caso ilustrativo)")
+    st.markdown(
+        "**Contexto:** refinería mediana en Meta, Colombia. Derrame acumulado de diésel + PAHs "
+        "en 8,500 m³ de suelo arcilloso tras 6 años de operación sobre pasivo ambiental. "
+        "ANLA exige reducción de TPH a <500 mg/kg en 18 meses o multa escalada (Ley 2387)."
+    )
+
+    st.markdown("### 1️⃣ Caracterización del sitio")
+    c1, c2, c3, c4 = st.columns(4)
+    c1.metric("Contaminante primario", "Diésel + PAHs")
+    c2.metric("Concentración TPH", "3,200 mg/kg")
+    c3.metric("Volumen", "8,500 m³")
+    c4.metric("Clima", "Cálido tropical")
+
+    st.markdown("### 2️⃣ Consorcio diseñado por IA")
+    st.markdown(
+        """
+| Microorganismo | Rol | % | BSL |
+|---|---|---|---|
+| *Pseudomonas putida* | Degradador primario de diésel + BTEX | 35% | 🟢 BSL-1 |
+| *Bacillus subtilis* | Biosurfactante + productor oxidasas | 25% | 🟢 GRAS |
+| *Rhodococcus erythropolis* | Alcanos cadena larga | 25% | 🟢 BSL-1 |
+| *Acinetobacter baylyi* | Mineralizador final | 15% | 🟢 BSL-1 |
+"""
+    )
+    st.caption(
+        "Selección basada en `CONSORTIA_DATA[\"Diésel y gasolina\"]` — respaldado por "
+        "~183 publicaciones peer-reviewed. Probabilidad base ML: 72%."
+    )
+
+    st.markdown("### 3️⃣ Cronograma 90 días (piloto)")
+    steps = [
+        ("Semana 1–2", "Caracterización + baseline analítico", "#00C853"),
+        ("Semana 3–4", "Preparación del consorcio (alianza UTB/Javeriana)", "#00C853"),
+        ("Semana 5–8", "Aplicación + monitoreo bi-semanal", "#00D9F5"),
+        ("Semana 9–12", "Análisis final + informe ANLA-compatible", "#C4FF00"),
+    ]
+    cols = st.columns(len(steps))
+    for col, (week, label, color) in zip(cols, steps):
+        col.markdown(
+            f"""<div style="text-align:center; padding:14px 10px; background:white; border-radius:10px;
+                       border-top:4px solid {color}; box-shadow:0 2px 6px rgba(0,0,0,.06);">
+    <div style="font-size:12px; font-weight:700; color:{color};">{week}</div>
+    <div style="font-size:12px; color:#333; margin-top:6px; line-height:1.4;">{label}</div>
+</div>""",
+            unsafe_allow_html=True,
+        )
+
+    st.markdown("### 4️⃣ ROI estimado")
+    c1, c2, c3 = st.columns(3)
+    c1.metric("Convencional (excavar+disposición)", "$1.87M USD")
+    c2.metric("BioCycle piloto 90d + escalado", "$285K USD", "-85%")
+    c3.metric("Multa evitada", "$480K USD", "+riesgo legal 0")
+
+    st.info(
+        "📌 **Estimación** basada en costos promedio de 2024 (fuentes: CAR Meta 2023, AECOM "
+        "Colombia 2024, literatura peer-reviewed). Los costos reales dependen de la caracterización "
+        "específica del sitio. Esto no es una cotización vinculante."
+    )
+
+    st.markdown("### 5️⃣ Por qué este caso ilustra el pivote A+C")
+    st.markdown(
+        """
+- **NO es "cápsulas para playa"** — es cápsulas en suelo con hidrocarburos, donde hay décadas de evidencia in-situ.
+- **NO promete 0% contaminación** — promete cumplimiento ANLA (<500 mg/kg TPH) en 18 meses.
+- **NO promete "plástico desaparece"** — este caso no involucra plástico, ese va a biorreactor contenido aparte.
+- **Sí usa IA real:** Gradient Boosting + RAG sobre 4,797 referencias para optimizar el consorcio para *este* sitio específico.
+"""
+    )

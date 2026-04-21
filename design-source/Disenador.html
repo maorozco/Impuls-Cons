@@ -1,0 +1,430 @@
+<!doctype html>
+<html lang="es"><head>
+<meta charset="utf-8" /><meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Impulso BioCycle — Construye tu Consorcio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Geist+Mono:wght@400;500;600&family=Fraunces:opsz,wght@9..144,400;9..144,500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="shared.css" />
+<style>
+/* Diseñador */
+.page-head{padding:40px 0 24px; border-bottom:1px solid var(--line)}
+.page-head h1{font-size:42px; letter-spacing:-.028em}
+.page-head h1 em{font-family:var(--font-serif); font-style:italic; font-weight:400; color:var(--forest-deep)}
+
+.wizard{display:grid; grid-template-columns:280px 1fr; gap:32px; padding:40px 0 64px}
+.steps-rail{position:sticky; top:78px; align-self:start; display:flex; flex-direction:column; gap:8px}
+.rail-step{display:flex; gap:12px; padding:12px 14px; border:1px solid var(--line); border-radius:12px; background:#fff; font-size:13px; color:var(--ink-2); align-items:flex-start}
+.rail-step .n{width:22px;height:22px;border-radius:6px; display:grid;place-items:center; font-family:var(--font-mono); font-size:11px; font-weight:500; background:var(--line); color:var(--ink-2); flex:none}
+.rail-step.active{border-color:var(--forest-deep); box-shadow:var(--shadow-sm)}
+.rail-step.active .n{background:var(--forest-deep); color:#fff}
+.rail-step.done .n{background:var(--green-bright); color:#fff}
+.rail-step .t{font-weight:600; font-size:13px; color:var(--ink)}
+.rail-step .s{font-size:11.5px; color:var(--muted); margin-top:2px; font-family:var(--font-mono); letter-spacing:.02em}
+
+.w-step{padding:24px 28px; border:1px solid var(--line); border-radius:var(--r-lg); background:#fff; margin-bottom:16px}
+.w-step .w-head{display:flex; align-items:center; justify-content:space-between; margin-bottom:18px}
+.w-step .w-head h2{font-size:22px; letter-spacing:-.02em}
+.w-step .w-head .w-badge{font-family:var(--font-mono); font-size:10.5px; color:var(--muted-2); letter-spacing:.12em; text-transform:uppercase}
+
+.cat-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:8px}
+.cat-card{padding:14px; border:1px solid var(--line); border-radius:10px; background:#fff; cursor:pointer; font-size:12.5px; display:flex; flex-direction:column; gap:4px; transition:all .15s}
+.cat-card:hover{border-color:var(--line-strong); box-shadow:var(--shadow-sm)}
+.cat-card.selected{border-color:var(--forest-deep); background:linear-gradient(135deg,#F4FBF7 0%,#E8F5E9 100%); box-shadow:0 0 0 3px rgba(0,77,44,.08)}
+.cat-card .ct-icon{width:28px;height:28px; border-radius:8px; background:#F4FBF7; display:grid; place-items:center; color:var(--forest-deep); margin-bottom:4px}
+.cat-card .ct-icon svg{width:14px;height:14px}
+.cat-card .ct-name{font-weight:600; color:var(--ink)}
+.cat-card .ct-count{font-family:var(--font-mono); font-size:10.5px; color:var(--muted)}
+
+.sub-list{margin-top:14px; display:grid; grid-template-columns:repeat(3,1fr); gap:6px}
+.sub-pill{padding:6px 10px; border:1px solid var(--line); border-radius:999px; font-size:12px; background:#fff; cursor:pointer}
+.sub-pill.selected{background:var(--forest-deep); color:#fff; border-color:var(--forest-deep)}
+
+.mode-row{display:grid; grid-template-columns:repeat(5,1fr); gap:8px; margin-top:6px}
+.mode{padding:14px; border-radius:10px; border:1px solid var(--line); background:#fff; cursor:pointer; font-size:12.5px; display:flex; flex-direction:column; gap:6px}
+.mode.selected{border-color:var(--forest-deep); background:#F4FBF7; box-shadow:0 0 0 3px rgba(0,77,44,.08)}
+.mode.disabled{opacity:.45; cursor:not-allowed; background:#FAFAFA}
+.mode b{font-weight:600; font-size:12.5px}
+.mode span{font-family:var(--font-mono); font-size:10.5px; color:var(--muted)}
+
+.alert{display:flex; gap:12px; padding:14px 16px; border-radius:10px; margin-top:14px; font-size:13px; border:1px solid}
+.alert.error{background:#FFF2EE; border-color:#FFD0B8; color:#6B2400}
+.alert svg{flex:none; color:var(--warning)}
+.alert b{color:#6B2400}
+
+.cond-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-top:4px}
+.cond{border:1px solid var(--line); border-radius:10px; padding:14px; background:#FAFCF9}
+.cond label{font-family:var(--font-mono); font-size:10.5px; letter-spacing:.1em; color:var(--muted); text-transform:uppercase}
+.cond .val{font-family:var(--font-mono); font-size:22px; font-weight:500; letter-spacing:-.03em; margin-top:6px}
+.cond .slider{height:6px; border-radius:999px; background:var(--line); margin-top:10px; position:relative}
+.cond .slider::before{content:""; position:absolute; left:0; top:0; height:100%; border-radius:999px; background:linear-gradient(90deg,var(--green-bright), var(--accent)); width:var(--f, 40%)}
+.cond .slider::after{content:""; position:absolute; left:var(--f, 40%); top:-4px; transform:translateX(-50%); width:14px;height:14px; border-radius:99px; background:#fff; border:2px solid var(--forest-deep); box-shadow:var(--shadow-sm)}
+
+.cta-run{display:flex; gap:12px; align-items:center; margin-top:20px}
+.cta-run .meta{font-family:var(--font-mono); font-size:11.5px; color:var(--muted)}
+
+/* Results */
+.results{display:flex; flex-direction:column; gap:16px; margin-top:36px}
+.result-card{border:1px solid var(--line); border-radius:var(--r-lg); background:#fff; padding:26px}
+.result-card h3{font-size:17px; letter-spacing:-.015em}
+.result-card .rc-label{font-family:var(--font-mono); font-size:10.5px; color:var(--muted-2); letter-spacing:.12em; text-transform:uppercase; margin-bottom:8px}
+
+/* Data table */
+.df{width:100%; border-collapse:collapse; margin-top:12px; font-size:13px}
+.df th{font-family:var(--font-mono); font-size:10.5px; letter-spacing:.1em; text-align:left; color:var(--muted); padding:8px 10px; text-transform:uppercase; border-bottom:1px solid var(--line); font-weight:500}
+.df td{padding:12px 10px; border-bottom:1px solid var(--line); vertical-align:middle}
+.df td.species{font-weight:600; color:var(--ink)}
+.df .bar{height:6px; background:var(--line); border-radius:99px; width:80px; position:relative; display:inline-block; vertical-align:middle; margin-right:8px}
+.df .bar::before{content:""; position:absolute; inset:0 auto 0 0; border-radius:99px; background:linear-gradient(90deg,var(--green-bright), var(--accent)); width:var(--f)}
+.df .bsl{display:inline-flex;align-items:center;gap:4px;padding:2px 7px;border-radius:99px;background:#E8F5E9;color:#004D2C;font-family:var(--font-mono);font-size:10.5px;font-weight:500}
+
+/* Gauge */
+.gauge-row{display:grid; grid-template-columns:1.3fr 1fr; gap:24px; align-items:center}
+.gauge{position:relative; max-width:280px; margin:0 auto}
+.gauge svg{width:100%; display:block}
+.gauge .g-num{position:absolute; inset:auto 0 32px 0; text-align:center; font-family:var(--font-mono); font-size:54px; font-weight:500; letter-spacing:-.04em; color:var(--ink)}
+.gauge .g-pc{font-size:28px; color:var(--muted-2); margin-left:2px}
+.gauge .g-lbl{position:absolute; inset:auto 0 4px 0; text-align:center; font-family:var(--font-mono); font-size:11px; color:var(--muted); letter-spacing:.1em; text-transform:uppercase}
+.gauge-notes{font-size:13px; color:var(--muted); line-height:1.55}
+.gauge-notes .gbadge{display:inline-block; padding:3px 8px; border-radius:99px; background:#FFF4E5; color:#6B3D00; font-family:var(--font-mono); font-size:11px; font-weight:500; margin-bottom:8px}
+
+/* Compat matrix */
+.mx{display:grid; grid-template-columns:60px repeat(4,1fr); gap:4px; font-size:11.5px}
+.mx .h{font-family:var(--font-mono); font-size:10.5px; color:var(--muted); padding:8px 4px; text-align:center}
+.mx .rh{font-family:var(--font-mono); font-size:10.5px; color:var(--muted); padding:8px 4px; text-align:right}
+.mx .cell{height:44px; border-radius:6px; display:grid; place-items:center; font-family:var(--font-mono); font-weight:500; font-size:12px}
+.mx .c-good{background:#C5EFD0; color:#003820}
+.mx .c-ok{background:#F2F6DD; color:#3D4C0A}
+.mx .c-warn{background:#FFE4CC; color:#6B2B00}
+.mx .c-self{background:#F4F8F5; color:#B8C4BB}
+
+/* Degradation chart */
+.chart-wrap{position:relative; margin-top:12px}
+.chart-wrap .legend{display:flex; gap:16px; font-size:12px; margin-bottom:12px; flex-wrap:wrap}
+.chart-wrap .legend span{display:inline-flex; align-items:center; gap:6px; color:var(--ink-2)}
+.chart-wrap .legend .sw{width:14px; height:3px; border-radius:2px}
+
+/* KPI row */
+.kpis{display:grid; grid-template-columns:repeat(3,1fr); gap:12px}
+.kpi{padding:20px; border-radius:var(--r-lg); background:linear-gradient(135deg,#F4FBF7,#ECF9EF); border:1px solid var(--line); position:relative}
+.kpi .kl{font-family:var(--font-mono); font-size:10.5px; color:var(--muted); letter-spacing:.1em; text-transform:uppercase}
+.kpi .kv{font-family:var(--font-mono); font-size:40px; font-weight:500; letter-spacing:-.04em; margin-top:8px; color:var(--forest-deep)}
+.kpi .ks{font-size:12px; color:var(--muted); margin-top:4px}
+
+/* Cost bars */
+.cost-row{display:flex; align-items:center; gap:12px; padding:10px 0; border-bottom:1px solid var(--line); font-size:13px}
+.cost-row:last-child{border-bottom:0}
+.cost-row .cr-name{width:200px; font-weight:500}
+.cost-row .cr-bar{flex:1; height:22px; border-radius:6px; background:var(--line); position:relative; overflow:hidden}
+.cost-row .cr-bar::before{content:""; position:absolute; inset:0 auto 0 0; width:var(--f); background:linear-gradient(90deg, var(--forest-deep), var(--green-bright));}
+.cost-row.bad .cr-bar::before{background:linear-gradient(90deg, #E53935 0%, var(--warning) 100%)}
+.cost-row .cr-val{width:110px; text-align:right; font-family:var(--font-mono); font-variant-numeric:tabular-nums; font-weight:500}
+
+.savings{margin-top:16px; padding:20px; border-radius:var(--r-lg); background:linear-gradient(135deg, var(--forest-deep) 0%, #1B5E20 100%); color:#fff; display:flex; align-items:center; justify-content:space-between}
+.savings .sv-l{font-family:var(--font-mono); font-size:10.5px; letter-spacing:.12em; color:rgba(255,255,255,.7); text-transform:uppercase}
+.savings .sv-v{font-family:var(--font-mono); font-size:36px; font-weight:500; letter-spacing:-.04em; margin-top:4px}
+
+/* Capsule protocol */
+.proto{display:grid; grid-template-columns:repeat(5,1fr); gap:8px; margin-top:8px}
+.proto-step{padding:12px; border:1px solid var(--line); border-radius:10px; background:#FAFCF9; font-size:12px}
+.proto-step .p-n{font-family:var(--font-mono); font-size:10.5px; color:var(--forest-deep); font-weight:500}
+.proto-step b{display:block; margin:4px 0 2px; font-size:12.5px}
+
+.final-cta{border-radius:var(--r-xl); padding:32px; background:linear-gradient(135deg, var(--forest-deep) 0%, var(--forest-ink) 100%); color:#fff; display:flex; justify-content:space-between; align-items:center; gap:20px; margin-top:8px; position:relative; overflow:hidden}
+.final-cta::before{content:""; position:absolute; inset:0; background:radial-gradient(400px 200px at 90% 20%, rgba(0,217,245,.2), transparent 60%); pointer-events:none}
+.final-cta h3{color:#fff; font-size:22px}
+.final-cta p{color:rgba(255,255,255,.75); font-size:13.5px; max-width:440px; margin-top:6px}
+.final-cta .fc-form{display:flex; gap:8px; position:relative; z-index:1}
+.final-cta input{padding:0 14px; height:44px; border-radius:10px; border:1px solid rgba(255,255,255,.18); background:rgba(255,255,255,.08); color:#fff; font-family:inherit; width:240px}
+.final-cta .btn-primary{background:var(--lime); color:#0A2818}
+</style>
+</head>
+<body data-view="disenador" data-crumb="Construye tu Consorcio" data-accent="cyan">
+<div class="app"><main>
+
+<section class="container page-head">
+  <div class="eyebrow" style="display:flex;align-items:center;gap:8px;margin-bottom:14px">
+    <span style="width:18px;height:1px;background:var(--forest-deep);display:inline-block"></span>
+    Diseñador técnico · B2C
+  </div>
+  <h1>Construye tu <em>consorcio</em> óptimo.</h1>
+  <p style="color:var(--muted); font-size:15px; max-width:640px; margin-top:12px">
+    Wizard de 3 pasos. Selecciona contaminante, modo de aplicación y condiciones del sitio — te devolvemos receta, probabilidad, curva de degradación y protocolo listos para piloto.
+  </p>
+</section>
+
+<section class="container wizard">
+  <aside class="steps-rail">
+    <div class="rail-step done"><div class="n">✓</div><div><div class="t">Contaminante</div><div class="s">Hidrocarburo · TPH</div></div></div>
+    <div class="rail-step done"><div class="n">✓</div><div><div class="t">Aplicación</div><div class="s">In-situ · cápsulas</div></div></div>
+    <div class="rail-step active"><div class="n">3</div><div><div class="t">Condiciones del sitio</div><div class="s">28 °C · pH 6.8 · 120 m³</div></div></div>
+    <div class="rail-step"><div class="n">→</div><div><div class="t">Diseñar consorcio</div><div class="s">ML · 4,797 refs</div></div></div>
+    <div style="font-size:11px; color:var(--muted-2); font-family:var(--font-mono); padding:8px 4px; letter-spacing:.08em">
+      <div>TIEMPO EST. · 6 SEG</div>
+      <div style="margin-top:3px">MATRIZ · 28 × 33</div>
+    </div>
+  </aside>
+
+  <div>
+
+    <!-- STEP 1 -->
+    <div class="w-step">
+      <div class="w-head">
+        <h2>1 · Selecciona el contaminante</h2>
+        <span class="w-badge">33 subtipos · 7 categorías</span>
+      </div>
+      <div class="cat-grid">
+        <div class="cat-card"><div class="ct-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 2h6l2 4v14a2 2 0 01-2 2H9a2 2 0 01-2-2V6l2-4z"/></svg></div><div class="ct-name">Plásticos</div><div class="ct-count">5 subtipos</div></div>
+        <div class="cat-card selected"><div class="ct-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2C8 7 6 12 6 15a6 6 0 0012 0c0-3-2-8-6-13z"/></svg></div><div class="ct-name">Hidrocarburos</div><div class="ct-count">7 subtipos</div></div>
+        <div class="cat-card"><div class="ct-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 19c4-2 7-1 9 0s5 2 9 0M3 13c4-2 7-1 9 0s5 2 9 0"/></svg></div><div class="ct-name">Aguas residuales</div><div class="ct-count">4 subtipos</div></div>
+        <div class="cat-card"><div class="ct-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 3l18 18M3 21L21 3"/></svg></div><div class="ct-name">Pesticidas</div><div class="ct-count">4 subtipos</div></div>
+        <div class="cat-card"><div class="ct-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2L2 22h20L12 2z"/></svg></div><div class="ct-name">Minería</div><div class="ct-count">5 subtipos</div></div>
+        <div class="cat-card"><div class="ct-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4h16M4 10h16M4 16h10"/></svg></div><div class="ct-name">Textiles</div><div class="ct-count">3 subtipos</div></div>
+        <div class="cat-card"><div class="ct-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2v20M2 12h20"/></svg></div><div class="ct-name">Farmacéuticos</div><div class="ct-count">3 subtipos</div></div>
+        <div class="cat-card"><div class="ct-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/></svg></div><div class="ct-name">Otros</div><div class="ct-count">2 subtipos</div></div>
+      </div>
+      <div class="sub-list">
+        <div class="sub-pill">Diesel / gasolina</div>
+        <div class="sub-pill selected">TPH (totales)</div>
+        <div class="sub-pill">BTEX</div>
+        <div class="sub-pill">PAH — livianos</div>
+        <div class="sub-pill">PAH — pesados</div>
+        <div class="sub-pill">Crudo sintético</div>
+        <div class="sub-pill">Aceites lubricantes</div>
+      </div>
+    </div>
+
+    <!-- STEP 2 -->
+    <div class="w-step">
+      <div class="w-head">
+        <h2>2 · Modo de aplicación</h2>
+        <span class="w-badge">5 modos · bloqueo inteligente</span>
+      </div>
+      <div class="mode-row">
+        <div class="mode"><b>Biorreactor lab</b><span>5–50 L · contenido</span></div>
+        <div class="mode"><b>Biorreactor industrial</b><span>m³ · contenido</span></div>
+        <div class="mode selected"><b>In-situ · suelo</b><span>cápsula alginato</span></div>
+        <div class="mode"><b>In-situ · agua</b><span>columna saturada</span></div>
+        <div class="mode"><b>Compostaje</b><span>pila controlada</span></div>
+      </div>
+      <div class="alert error" style="display:none">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M12 9v4M12 17h.01M4.9 19h14.2a2 2 0 001.7-3L13.7 4a2 2 0 00-3.4 0L3.2 16a2 2 0 001.7 3z"/></svg>
+        <div><b>Plástico + in-situ no permitido.</b> Esta combinación rompe el pivote A+C. Redirigiendo a biorreactor enzimático contenido…</div>
+      </div>
+    </div>
+
+    <!-- STEP 3 -->
+    <div class="w-step">
+      <div class="w-head">
+        <h2>3 · Condiciones del sitio</h2>
+        <span class="w-badge">Afectan probabilidad de éxito</span>
+      </div>
+      <div class="cond-grid">
+        <div class="cond"><label>Temperatura</label><div class="val">28 <span style="font-size:13px;color:var(--muted-2)">°C</span></div><div class="slider" style="--f:56%"></div></div>
+        <div class="cond"><label>pH</label><div class="val">6.8</div><div class="slider" style="--f:62%"></div></div>
+        <div class="cond"><label>Volumen a tratar</label><div class="val">120 <span style="font-size:13px;color:var(--muted-2)">m³</span></div><div class="slider" style="--f:40%"></div></div>
+        <div class="cond"><label>Medio</label><div class="val" style="font-size:14px;font-family:var(--font-sans);font-weight:600">Suelo arcilloso</div><div style="font-family:var(--font-mono);font-size:11px;color:var(--muted);margin-top:10px">arenoso · franco · arcilloso · orgánico</div></div>
+        <div class="cond"><label>Contaminación mixta</label><div class="val">12 <span style="font-size:13px;color:var(--muted-2)">%</span></div><div class="slider" style="--f:28%"></div></div>
+        <div class="cond"><label>Deadline regulatorio</label><div class="val" style="font-size:14px;font-family:var(--font-sans);font-weight:600">90 días</div><div style="font-family:var(--font-mono);font-size:11px;color:var(--muted);margin-top:10px">piloto · standard · complejo</div></div>
+      </div>
+      <div class="cta-run">
+        <button class="btn btn-primary">Diseñar Consorcio Óptimo
+          <span class="arr"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        </button>
+        <span class="meta">⏱ ~6s · 4,797 refs · 28 MOs · BSL-1/GRAS</span>
+      </div>
+    </div>
+
+    <!-- ═══ RESULTS ═══ -->
+    <div style="display:flex;align-items:center;gap:10px;margin:40px 0 8px">
+      <span class="eyebrow">Resultado · piloto 90 días</span>
+      <div style="flex:1;height:1px;background:var(--line)"></div>
+      <span style="font-family:var(--font-mono);font-size:11px;color:var(--muted);letter-spacing:.04em">ID · BC-2026-0418-A37</span>
+    </div>
+
+    <div class="results">
+
+      <!-- 1. Consorcio -->
+      <div class="result-card">
+        <div class="rc-label">01 · Consorcio recomendado</div>
+        <h3>4 microorganismos BSL-1/GRAS — compatible con pH 6.8 · 28 °C · suelo arcilloso.</h3>
+        <table class="df">
+          <thead><tr><th>Especie</th><th>%</th><th>Rol</th><th>Rango óptimo</th><th>Seguridad</th></tr></thead>
+          <tbody>
+            <tr><td class="species"><i>Pseudomonas putida</i> KT2440</td><td><span class="bar" style="--f:42%"></span>42%</td><td>Degradador primario · n-alcanos</td><td>20–35 °C · pH 6–8</td><td><span class="bsl">BSL-1</span></td></tr>
+            <tr><td class="species"><i>Rhodococcus jostii</i> RHA1</td><td><span class="bar" style="--f:28%"></span>28%</td><td>PAH livianos · emulsificante</td><td>15–32 °C · pH 5.5–8.5</td><td><span class="bsl">BSL-1</span></td></tr>
+            <tr><td class="species"><i>Bacillus subtilis</i> 168</td><td><span class="bar" style="--f:20%"></span>20%</td><td>Surfactantes · biofilm</td><td>25–40 °C · pH 6–8.5</td><td><span class="bsl">GRAS</span></td></tr>
+            <tr><td class="species"><i>Trichoderma harzianum</i></td><td><span class="bar" style="--f:10%"></span>10%</td><td>PAH pesados · co-metabolismo</td><td>22–30 °C · pH 5.5–7.5</td><td><span class="bsl">BSL-1</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- 2. Matrix + 3. Gauge -->
+      <div style="display:grid; grid-template-columns:1fr 1.1fr; gap:16px">
+        <div class="result-card">
+          <div class="rc-label">02 · Matriz de compatibilidad</div>
+          <h3 style="font-size:15px">Sin antagonismo entre las 4 especies.</h3>
+          <div class="mx" style="margin-top:14px">
+            <div></div><div class="h">Pp</div><div class="h">Rj</div><div class="h">Bs</div><div class="h">Th</div>
+            <div class="rh">Pp</div><div class="cell c-self">—</div><div class="cell c-good">0.91</div><div class="cell c-good">0.88</div><div class="cell c-ok">0.74</div>
+            <div class="rh">Rj</div><div class="cell c-good">0.91</div><div class="cell c-self">—</div><div class="cell c-good">0.85</div><div class="cell c-ok">0.72</div>
+            <div class="rh">Bs</div><div class="cell c-good">0.88</div><div class="cell c-good">0.85</div><div class="cell c-self">—</div><div class="cell c-good">0.86</div>
+            <div class="rh">Th</div><div class="cell c-ok">0.74</div><div class="cell c-ok">0.72</div><div class="cell c-good">0.86</div><div class="cell c-self">—</div>
+          </div>
+          <div style="display:flex;gap:12px;margin-top:12px;font-family:var(--font-mono);font-size:10.5px;color:var(--muted)">
+            <span><span style="display:inline-block;width:10px;height:10px;background:#C5EFD0;border-radius:2px;vertical-align:middle"></span> ≥0.80 sinergia</span>
+            <span><span style="display:inline-block;width:10px;height:10px;background:#F2F6DD;border-radius:2px;vertical-align:middle"></span> 0.60–0.79 neutro</span>
+          </div>
+        </div>
+
+        <div class="result-card">
+          <div class="rc-label">03 · Probabilidad de éxito</div>
+          <div class="gauge-row">
+            <div class="gauge">
+              <svg viewBox="0 0 200 130" xmlns="http://www.w3.org/2000/svg">
+                <defs><linearGradient id="gauG" x1="0" x2="1"><stop offset="0" stop-color="#EF6C00"/><stop offset=".5" stop-color="#F4A100"/><stop offset="1" stop-color="#00C853"/></linearGradient></defs>
+                <path d="M20 110 A 80 80 0 0 1 180 110" fill="none" stroke="#E2ECE5" stroke-width="14" stroke-linecap="round"/>
+                <path d="M20 110 A 80 80 0 0 1 124 42" fill="none" stroke="url(#gauG)" stroke-width="14" stroke-linecap="round"/>
+                <circle cx="124" cy="42" r="6" fill="#fff" stroke="#1B4332" stroke-width="2"/>
+              </svg>
+              <div class="g-num">52<span class="g-pc">%</span></div>
+              <div class="g-lbl">Moderada · viable</div>
+            </div>
+            <div class="gauge-notes">
+              <span class="gbadge">⚠ Moderada</span>
+              <p style="margin-bottom:8px">Viable con optimización. El límite lo pone el contenido de PAH pesados y la temperatura media del sitio.</p>
+              <div style="font-family:var(--font-mono);font-size:11px;color:var(--muted);line-height:1.55">
+                <div>• +8pp con precalentamiento</div>
+                <div>• +12pp con nutrientes N:P 10:1</div>
+                <div>• −5pp si pH cae &lt;6</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4. Cápsula -->
+      <div class="result-card">
+        <div class="rc-label">04 · Formulación de cápsula</div>
+        <h3>Alginato de sodio 2% · CaCl₂ 0.1M · Ø 2–4 mm.</h3>
+        <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-top:14px">
+          <div><div class="eyebrow" style="font-size:10px">Material</div><div style="font-family:var(--font-mono);font-size:16px;margin-top:4px">Alginato Na</div><div style="font-size:11.5px;color:var(--muted);font-family:var(--font-mono)">Brenntag CO</div></div>
+          <div><div class="eyebrow" style="font-size:10px">Costo / cápsula</div><div style="font-family:var(--font-mono);font-size:16px;margin-top:4px;color:var(--forest-deep)">$0.00082</div><div style="font-size:11.5px;color:var(--muted);font-family:var(--font-mono)">USD · FOB Bogotá</div></div>
+          <div><div class="eyebrow" style="font-size:10px">Diámetro</div><div style="font-family:var(--font-mono);font-size:16px;margin-top:4px">Ø 2–4 mm</div><div style="font-size:11.5px;color:var(--muted);font-family:var(--font-mono)">densidad 1.03 g/cm³</div></div>
+          <div><div class="eyebrow" style="font-size:10px">Liberación sostenida</div><div style="font-family:var(--font-mono);font-size:16px;margin-top:4px">21 días</div><div style="font-size:11.5px;color:var(--muted);font-family:var(--font-mono)">half-life matriz</div></div>
+        </div>
+      </div>
+
+      <!-- 5. Protocolo -->
+      <div class="result-card">
+        <div class="rc-label">05 · Protocolo de preparación</div>
+        <h3>5 pasos · tiempo total estimado 48h en lab aliado.</h3>
+        <div class="proto">
+          <div class="proto-step"><div class="p-n">01</div><b>Activar inóculos</b>Cultivo axénico 24h · LB + nutrientes</div>
+          <div class="proto-step"><div class="p-n">02</div><b>Mezcla consorcio</b>Proporciones 42/28/20/10 · OD₆₀₀ 1.2</div>
+          <div class="proto-step"><div class="p-n">03</div><b>Encapsulación</b>Goteo en CaCl₂ · 150 rpm · 20 min</div>
+          <div class="proto-step"><div class="p-n">04</div><b>Endurecimiento</b>Reposo 30 min · lavado PBS 2×</div>
+          <div class="proto-step"><div class="p-n">05</div><b>Despliegue</b>Distribución manual · 2 kg/m³ suelo</div>
+        </div>
+      </div>
+
+      <!-- 6. Degradation chart -->
+      <div class="result-card">
+        <div class="rc-label">06 · Predicción de degradación</div>
+        <h3>−78% TPH proyectado a 12 semanas vs. −12% atenuación natural.</h3>
+        <div class="chart-wrap">
+          <div class="legend">
+            <span><span class="sw" style="background:var(--forest-deep)"></span>BioCycle · consorcio óptimo</span>
+            <span><span class="sw" style="background:var(--warning)"></span>Método convencional (excavación)</span>
+            <span><span class="sw" style="background:var(--muted-2)"></span>Atenuación natural</span>
+          </div>
+          <svg viewBox="0 0 720 240" style="width:100%; height:260px">
+            <defs><linearGradient id="biog" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#00C853" stop-opacity=".18"/><stop offset="1" stop-color="#00C853" stop-opacity="0"/></linearGradient></defs>
+            <g stroke="#E2ECE5" stroke-dasharray="2 4">
+              <line x1="40" y1="40" x2="700" y2="40"/><line x1="40" y1="90" x2="700" y2="90"/>
+              <line x1="40" y1="140" x2="700" y2="140"/><line x1="40" y1="190" x2="700" y2="190"/>
+            </g>
+            <g font-family="Geist Mono, monospace" font-size="10" fill="#6A8A74">
+              <text x="6" y="44">100%</text><text x="6" y="94">75%</text><text x="6" y="144">50%</text><text x="6" y="194">25%</text>
+              <text x="50" y="220">0</text><text x="225" y="220">S3</text><text x="400" y="220">S6</text><text x="575" y="220">S9</text><text x="690" y="220">S12</text>
+            </g>
+            <!-- BioCycle -->
+            <path d="M40 190 Q 200 180 340 120 T 700 58 L 700 200 L 40 200 Z" fill="url(#biog)"/>
+            <path d="M40 190 Q 200 180 340 120 T 700 58" fill="none" stroke="#004D2C" stroke-width="2.5"/>
+            <!-- Conventional -->
+            <path d="M40 190 L 200 188 L 360 100 L 520 92 L 700 88" fill="none" stroke="#EF6C00" stroke-width="2" stroke-dasharray="5 3"/>
+            <!-- Natural -->
+            <path d="M40 190 Q 200 188 360 178 T 700 170" fill="none" stroke="#8EA598" stroke-width="2"/>
+            <!-- Endpoints -->
+            <circle cx="700" cy="58" r="4" fill="#004D2C"/><text x="610" y="46" font-family="Geist Mono,monospace" font-size="11" fill="#004D2C" font-weight="500">−78% ↓</text>
+            <circle cx="700" cy="88" r="4" fill="#EF6C00"/><text x="610" y="104" font-family="Geist Mono,monospace" font-size="10" fill="#EF6C00">−58%*</text>
+            <circle cx="700" cy="170" r="4" fill="#8EA598"/><text x="610" y="164" font-family="Geist Mono,monospace" font-size="10" fill="#6A8A74">−12%</text>
+          </svg>
+          <div style="font-family:var(--font-mono);font-size:10.5px;color:var(--muted);margin-top:8px">* Convencional asume excavación semana 6 + disposición. BioCycle: Müller 2023 (Env. Sci. Technol.) — consorcio análogo.</div>
+        </div>
+      </div>
+
+      <!-- 7. KPIs -->
+      <div class="kpis">
+        <div class="kpi"><div class="kl">Degradación 12 sem</div><div class="kv">78<span style="font-size:22px;color:var(--muted-2)">%</span></div><div class="ks">vs. −12% atenuación natural</div></div>
+        <div class="kpi"><div class="kl">Tiempo a 50%</div><div class="kv">32<span style="font-size:22px;color:var(--muted-2)"> d</span></div><div class="ks">ventana de acción regulatoria</div></div>
+        <div class="kpi"><div class="kl">Aceleración vs. natural</div><div class="kv">6.5×</div><div class="ks">según curva ajustada (R²=0.94)</div></div>
+      </div>
+
+      <!-- 8. Costs -->
+      <div class="result-card">
+        <div class="rc-label">08 · Comparación de costos · 120 m³</div>
+        <h3>BioCycle piloto vs. alternativas — 4 métodos evaluados.</h3>
+        <div style="margin-top:18px">
+          <div class="cost-row bad"><div class="cr-name">Excavación + relleno</div><div class="cr-bar" style="--f:100%"></div><div class="cr-val">$287,500</div></div>
+          <div class="cost-row bad"><div class="cr-name">Lavado fisicoquímico</div><div class="cr-bar" style="--f:72%"></div><div class="cr-val">$206,400</div></div>
+          <div class="cost-row"><div class="cr-name">Landfarming clásico</div><div class="cr-bar" style="--f:38%"></div><div class="cr-val">$108,800</div></div>
+          <div class="cost-row"><div class="cr-name">BioCycle · piloto 90 d</div><div class="cr-bar" style="--f:12%"></div><div class="cr-val">$34,600</div></div>
+        </div>
+        <div class="savings">
+          <div><div class="sv-l">Ahorro vs. excavación</div><div class="sv-v">$252,900 USD <span style="font-size:14px;color:rgba(255,255,255,.6);font-weight:400">· −88%</span></div></div>
+          <div style="font-family:var(--font-mono);font-size:11px;color:rgba(255,255,255,.6);text-align:right;line-height:1.5">+ 38 t CO₂ evitadas<br/>+ ANLA Res. 631/2015 ✓</div>
+        </div>
+      </div>
+
+      <!-- 9. Limitations expander -->
+      <div class="result-card" style="padding:18px 26px;">
+        <details>
+          <summary style="cursor:pointer; display:flex; justify-content:space-between; list-style:none; align-items:center">
+            <span><span class="rc-label" style="display:inline;margin-right:10px">09 · Protocolo de despliegue + limitaciones</span><b>Ver detalle completo</b></span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16" style="color:var(--muted)"><path d="M6 9l6 6 6-6"/></svg>
+          </summary>
+          <div style="margin-top:14px; display:grid;grid-template-columns:1fr 1fr;gap:20px;font-size:13px;color:var(--muted);line-height:1.6">
+            <div>
+              <b style="color:var(--ink);display:block;margin-bottom:6px">Cronograma de monitoreo</b>
+              Muestreo semanal TPH · quincenal pH/humedad · mensual recuento viable. Reencapsulación opcional en semana 8.
+            </div>
+            <div>
+              <b style="color:var(--ink);display:block;margin-bottom:6px">Limitaciones conocidas</b>
+              Temperaturas &lt;15°C reducen tasa a la mitad. No validado en suelos con &gt;3% As. Si mezcla con BTEX &gt;25%, pre-aireación recomendada.
+            </div>
+          </div>
+        </details>
+      </div>
+
+    </div>
+
+    <!-- FINAL CTA -->
+    <div class="final-cta">
+      <div>
+        <h3>¿Llevamos este consorcio a un piloto de 90 días?</h3>
+        <p>$3K USD con lab universitario aliado · cronograma completo · reporte ANLA. Recibirás una respuesta en 48h.</p>
+      </div>
+      <form class="fc-form" onsubmit="event.preventDefault()">
+        <input type="email" placeholder="tu@empresa.com" />
+        <button class="btn btn-primary" type="submit">Reservar piloto
+          <span class="arr"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        </button>
+      </form>
+    </div>
+
+  </div>
+</section>
+
+</main></div>
+<script src="shell.js"></script>
+</body></html>

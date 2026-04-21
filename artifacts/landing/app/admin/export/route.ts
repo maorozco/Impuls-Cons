@@ -3,6 +3,9 @@ import { db, isMockMode } from '@/lib/db';
 import { waitlist, waitlistResponses } from '@/drizzle/schema';
 import { desc } from 'drizzle-orm';
 
+// Skip prerender — reads live DB at request time.
+export const dynamic = 'force-dynamic';
+
 export async function GET() {
   if (isMockMode) {
     return new NextResponse('Base de datos no disponible en modo mock', { status: 503 });
