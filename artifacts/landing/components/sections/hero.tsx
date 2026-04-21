@@ -27,7 +27,7 @@ export function Hero({
   const [success, setSuccess] = useState(false);
   const [isPending, startTransition] = useTransition();
 
-  const baselineCount = Math.max(initialCount, 25);
+  const baselineCount = Math.max(initialCount, 10);
   const baselineCountries = Math.max(initialCountries, 8);
 
   const hasLine2 = Boolean(t.headlineLine2 || t.headlineLine2Accent);
@@ -171,6 +171,7 @@ export function Hero({
 
           <div className="mt-12 flex items-center gap-2 text-xs text-muted-foreground">
             <span className="live-dot" aria-hidden />
+            <span>{t.counterPrefix}</span>
             <AnimatedCount value={baselineCount} />
             <span>{t.counter}</span>
             <AnimatedCount value={baselineCountries} />

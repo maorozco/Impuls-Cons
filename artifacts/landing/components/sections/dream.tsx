@@ -22,12 +22,16 @@ export function Dream({ t }: { t: Messages['dream'] }) {
                 {line}
               </p>
             ))}
-            <p className="pt-4 text-lg text-foreground leading-relaxed">
-              {t.closer}
-            </p>
-            <p className="text-2xl sm:text-3xl font-semibold tracking-tight gradient-text">
-              {t.tagline}
-            </p>
+            {t.closer && (
+              <p className="pt-4 text-lg text-foreground leading-relaxed">
+                {t.closer}
+              </p>
+            )}
+            {t.tagline && (
+              <p className="text-2xl sm:text-3xl font-semibold tracking-tight gradient-text">
+                {t.tagline}
+              </p>
+            )}
           </Reveal>
           <Reveal delay={0.2} className="lg:col-span-2">
             <div className="relative aspect-square rounded-xl overflow-hidden border border-border bg-black">

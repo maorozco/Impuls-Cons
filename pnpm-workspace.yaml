@@ -157,3 +157,8 @@ overrides:
   "rollup>@rollup/rollup-win32-ia32-msvc": "-"
   "rollup>@rollup/rollup-win32-x64-gnu": "-"
   "rollup>@rollup/rollup-win32-x64-msvc": "-"
+  # Security: pin transitive dependencies to patched versions (from main)
+  lodash: ">=4.18.0"
+  path-to-regexp: ">=8.4.0"
+  "picomatch@2": ">=2.3.2"
+  "picomatch@4": ">=4.0.4"

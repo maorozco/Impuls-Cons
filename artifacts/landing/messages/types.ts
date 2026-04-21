@@ -46,6 +46,7 @@ export type Messages = {
     submit: string;
     submitting: string;
     subCta: string;
+    counterPrefix: string;
     counter: string;
     countriesLabel: string;
     errors: {
@@ -65,6 +66,7 @@ export type Messages = {
   };
   video: {
     h2: string;
+    h2Accent: string;
     placeholderLabel: string;
   };
   dream: {
@@ -80,6 +82,7 @@ export type Messages = {
     bullets: string[];
   };
   solutions: {
+    tagline: string;
     h2: string;
     cards: SolutionCard[];
   };

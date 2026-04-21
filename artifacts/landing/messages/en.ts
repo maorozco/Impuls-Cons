@@ -14,19 +14,20 @@ const en: Messages = {
     languageToggle: 'ES',
   },
   hero: {
-    kicker: 'IMPULSO BIOCYCLE · WAITLIST OPEN',
-    headlineLine1: 'Waste management is still a headache.',
-    headlineLine1Accent: '',
-    headlineLine2: 'Your contractor has been at it 3 years and',
-    headlineLine2Accent: 'the site is still contaminated.',
-    sub: "We're not launching another consulting firm. We're building the AI that designs the exact microbial consortium for each site — integrating multi-agent AI systems and the science published between 2024 and 2026. The product is currently being validated. The first 100 see it born from the inside.",
+    kicker: 'Discover the power of microorganisms',
+    headlineLine1: 'Is managing your waste still',
+    headlineLine1Accent: 'a problem without a clear solution?',
+    headlineLine2: '',
+    headlineLine2Accent: '',
+    sub: 'If you believe intelligent bioremediation is the future — and you want to experience it firsthand while it\'s being built — your place is here.',
     emailPlaceholder: 'you@work.com',
     submit: 'Join',
     submitting: 'Submitting...',
     subCta:
-      'Reserved for those who believe science can close what contractors left open.',
-    counter: 'professionals joined from',
-    countriesLabel: 'countries this week',
+      'Reserved for those who want to see how science and AI transform the way we care for the planet.',
+    counterPrefix: 'more than',
+    counter: 'professionals from',
+    countriesLabel: 'different countries have joined',
     errors: {
       invalidEmail: "That email doesn't look valid. Try again.",
       generic: 'Something went wrong. Please try again in a moment.',
@@ -65,7 +66,8 @@ const en: Messages = {
     ],
   },
   video: {
-    h2: "Why we're building this (and why it can't wait)",
+    h2: "Why we're building this",
+    h2Accent: "(and why it can't wait)",
     placeholderLabel: 'Video coming soon',
   },
   dream: {
@@ -75,13 +77,11 @@ const en: Messages = {
       'In 90 seconds she gets the exact recipe for her case.',
     ],
     bullets: [],
-    closer:
-      'In 90 days the site closes. The VP signs the bonus. The team moves to the next site.',
-    tagline: "That's what we're building.",
+    closer: '',
+    tagline: '',
   },
   whatYouGet: {
-    intro:
-      'In 90 seconds, with a single click after entering YOUR specific contaminant and the specific conditions of YOUR environment into the platform.',
+    intro: '',
     subtitle: 'You receive:',
     bullets: [
       'The exact combination of BSL-1 microorganisms (human-safe) that degrade it.',
@@ -95,6 +95,7 @@ const en: Messages = {
     ],
   },
   solutions: {
+    tagline: "That's what we're building.",
     h2: 'Three ways to join the change:',
     cards: [
       {
@@ -142,12 +143,6 @@ const en: Messages = {
     intro:
       'The best biology models in the world were published between 2024 and 2026.',
     stack: [
-      {
-        name: 'AlphaFold 3',
-        label: 'Predicts 3D protein structure and enzyme-substrate affinity',
-        source: 'DeepMind',
-        status: 'Open source',
-      },
       {
         name: 'RFDiffusion 2',
         label: 'Designs proteins and enzymes de novo with generative diffusion',

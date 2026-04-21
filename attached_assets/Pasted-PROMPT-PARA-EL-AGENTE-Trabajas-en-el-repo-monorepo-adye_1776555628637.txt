@@ -1,0 +1,151 @@
+PROMPT PARA EL AGENTE:
+
+  Trabajas en el repo monorepo
+  `adyen-reconciliation-queries/Impuls-Cons`.                          
+  La app de landing vive en `artifacts/landing/` (Next.js App Router,
+  i18n                                                                 
+  ES/EN vía messages/es.ts y messages/en.ts + messages/types.ts).
+                                                                       
+  Objetivo: refactorizar el hero y reordenar secciones de la landing   
+  para que                                                             
+  el copy arranque con una pregunta (no con un statement de dolor), y  
+  mover                                                                
+  "Eso es lo que estamos construyendo" a pre-heading de la sección
+  Solutions.                                                           
+  
+  Haz EXACTAMENTE los siguientes cambios:                              
+  
+  1. `artifacts/landing/messages/types.ts` — extiende el tipo Messages:
+     - En `hero`: añade campo `counterPrefix: string` (junto a
+  counter/countriesLabel).                                             
+     - En `video`: añade campo `h2Accent: string`.
+     - En `solutions`: añade campo `tagline: string` (antes de h2).    
+  
+  2. `artifacts/landing/messages/es.ts`:                               
+     - hero.kicker → "Conoce el poder de los Microorganismos"
+     - hero.headlineLine1 → "¿La gestión de tus residuos sigue siendo" 
+     - hero.headlineLine1Accent → "un problema sin solución clara?"    
+     - hero.headlineLine2 → "" (vacío)                                 
+     - hero.headlineLine2Accent → "" (vacío)                           
+     - hero.sub → "Si crees que la biorremediación inteligente es el   
+  futuro — y quieres vivirlo de primera mano mientras se construye — tu
+   lugar está aquí."
+     - hero.subCta → "Reservado para quienes quieren ver cómo la       
+  ciencia y la IA transforman la forma de cuidar el planeta."          
+     - hero.counterPrefix → "más de"
+     - hero.counter → "profesionales provenientes de"                  
+     - hero.countriesLabel → "diferentes países se han unido"
+     - video.h2 → "Por qué estamos construyendo esto"                  
+     - video.h2Accent → "(y por qué no puede esperar)"
+     - dream.body → ["En 90 segundos, a solo un click luego de ingresar
+   TU contaminante específico a tratar y las características           
+  específicas de TU entorno a la plataforma."]                         
+     - dream.closer → ""                                               
+     - dream.tagline → ""
+     - whatYouGet.intro → ""
+     - solutions.tagline → "Eso es lo que estamos construyendo."       
+                                                                       
+  3. `artifacts/landing/messages/en.ts` (paralelos):                   
+     - hero.kicker → "Discover the power of microorganisms"            
+     - hero.headlineLine1 → "Is managing your waste still"             
+     - hero.headlineLine1Accent → "a problem without a clear solution?"
+     - hero.headlineLine2 → ""                                         
+     - hero.headlineLine2Accent → ""
+     - hero.sub → "If you believe intelligent bioremediation is the    
+  future — and you want to experience it firsthand while it's being    
+  built — your place is here."
+     - hero.subCta → "Reserved for those who want to see how science   
+  and AI transform the way we care for the planet."                    
+     - hero.counterPrefix → "more than"
+     - hero.counter → "professionals from"                             
+     - hero.countriesLabel → "different countries have joined"
+     - video.h2 → "Why we're building this"
+     - video.h2Accent → "(and why it can't wait)"                      
+     - dream.body → ["In 90 seconds, with a single click after entering
+   YOUR specific contaminant and the specific conditions of YOUR       
+  environment into the platform."]
+     - dream.closer → ""                                               
+     - dream.tagline → ""
+     - whatYouGet.intro → ""
+     - solutions.tagline → "That's what we're building."
+
+  4. `artifacts/landing/app/[lang]/page.tsx` — reordena los <section/> 
+  dentro del main:
+     Orden nuevo: Hero → Problem → Video → Dream → WhatYouGet →        
+  Solutions → How → SocialProof → What → Founder → Alliances …         
+     (antes SocialProof iba justo después de Hero; ahora va después de
+  How).                                                                
+  
+  5. `artifacts/landing/components/sections/hero.tsx`:                 
+     - Cambia `const baselineCount = Math.max(initialCount, 25);` a
+  `Math.max(initialCount, 10);`.                                       
+     - En el contador, entre el `live-dot` y el `{baselineCount}`,
+  inserta                                                              
+       `<span>{t.counterPrefix}</span>` para que lea "● más de N
+  profesionales provenientes de M diferentes países se han unido".     
+  
+  6. `artifacts/landing/components/sections/dream.tsx` — envuelve los  
+  bloques
+     `closer` y `tagline` en guards `{t.closer && (...)}` y `{t.tagline
+   && (...)}`                                                          
+     para que no rendericen párrafos vacíos cuando las strings son "".
+                                                                       
+  7. `artifacts/landing/components/sections/what-you-get.tsx` —        
+  envuelve el                                                          
+     párrafo `intro` en `{t.intro && (...)}` (misma razón).            
+                                                                       
+  8. `artifacts/landing/components/sections/solutions.tsx`:            
+     - Añade arriba del <h2>, dentro del container, un `{t.tagline && (
+         <p className="mb-6 text-2xl sm:text-3xl font-semibold         
+  tracking-tight gradient-text">{t.tagline}</p>                        
+       )}`.                                                            
+     - Elimina el `<div className="text-4xl">{card.icon}</div>` de cada
+   card                                                                
+       (quita los emojis 🔬🧬🏭 visualmente; deja el campo `icon` en
+  data                                                                 
+       para restaurar fácil).
+                                                                       
+  9. `artifacts/landing/components/sections/video.tsx` — dentro del    
+  <h2>, después                                                        
+     de `{t.h2}` agrega:                                               
+       {t.h2Accent && (<>{' '}<span
+  className="gradient-text">{t.h2Accent}</span></>)}                   
+  
+  10. `artifacts/landing/tests/landing.spec.ts` — actualiza los asserts
+   del
+      hero ES y EN:                                                    
+      ES: h1 contiene "¿La gestión de tus residuos sigue siendo";
+  accent                                                               
+          gradient-text contiene "un problema sin solución clara?";
+  visible                                                              
+          "Si crees que la biorremediación inteligente" y "Reservado
+  para                                                                 
+          quienes quieren ver cómo la ciencia y la IA".
+      EN: h1 contiene "Is managing your waste still"; accent contiene  
+          "a problem without a clear solution?"; visible "If you       
+  believe
+          intelligent bioremediation is the future" y "Reserved for    
+  those                                                                
+          who want to see how science and AI".
+      Elimina los asserts viejos ("Tu consultor lleva 3 años", "We're  
+  not                                                                  
+      launching another consulting firm", etc.).
+                                                                       
+  Validación:                                                          
+  - `pnpm --filter landing typecheck` (o `tsc --noEmit` dentro de
+    `artifacts/landing/`) debe pasar — el tipo Messages se amplió y    
+  todos                                                                
+    los usos deben compilar.                                           
+  - `pnpm --filter landing test` (Playwright) debe pasar con el copy   
+  nuevo.                                                               
+                                                                       
+  Contexto de producto (NO rompas esto): el copy debe quedar en tono   
+  "plataforma de IA para biorremediación, waitlist abierta". No uses
+  jerga de "consultoría" ni prometas resultados en campo. Nada de      
+  emojis                                                               
+  en el texto visible.                                                 
+                                                                       
+  Commit message sugerido:                                             
+    Refactor landing hero copy, restructure sections, drop solution
+  emojis                                                               
+   

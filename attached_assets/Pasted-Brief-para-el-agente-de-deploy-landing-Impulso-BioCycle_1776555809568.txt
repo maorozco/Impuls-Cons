@@ -1,0 +1,114 @@
+Brief para el agente de deploy — landing Impulso BioCycle
+
+  Acabo de mergear un cambio grande a main (commit 86656a5). Ahora el landing tiene dos
+  variantes en paralelo corriendo en la misma app Next.js (A/B test de estética). Antes
+  de redeployar, necesito que verifiques lo siguiente:
+
+  1. Endpoints que deben quedar vivos después del deploy
+
+  Variante A (dark B2B, la que ya existía):
+  - / → 307 redirect → /es
+  - /es y /en → landing A (200)
+  - /es/thank-you?email=... y /en/thank-you?email=... → form de discovery
+
+  Variante B (light editorial, NUEVA — hoy devuelve 404):
+  - /es/v2 y /en/v2 → landing B (200)
+  - /es/v2/thank-you?email=... y /en/v2/thank-you?email=... → mismo form, scope light
+
+  Assets nuevos que también deben servir:
+  - /imagenes/hero-dashboard-dark.png
+  - /imagenes/hero-dashboard-light.png
+  - /imagenes/molecule-enzyme.png
+  - /imagenes/petri-culture.png
+  - /imagenes/consortium-abstract.png
+
+  Viven en artifacts/landing/public/imagenes/ — Next.js los debe servir como estáticos
+  automáticamente. Son ~1 MB cada uno, no hay que optimizarlos en el deploy (ya entran
+  por <Image> con lazy/priority).
+
+  2. Migración de base de datos OBLIGATORIA antes del primer request
+
+  Agregué una columna nueva a la tabla waitlist para etiquetar cada signup con su
+  variante:
+
+  -- drizzle/schema.ts
+  ALTER TABLE waitlist ADD COLUMN variant varchar(4) NOT NULL DEFAULT 'a';
+  CREATE INDEX waitlist_variant_idx ON waitlist(variant);
+
+  Corre esto una sola vez después del build, antes de abrir tráfico:
+
+  cd artifacts/landing && npm install && npm run db:push
+
+  Si no se corre, los POST del form de /es/v2 y /en/v2 van a fallar con column "variant"
+   does not exist. Los POST de /es y /en también van a fallar por la misma razón (el
+  action es compartido y escribe la columna con default 'a').
+
+  3. Captura de email — cómo funciona en ambas variantes
+
+  Ambos landings llaman al mismo server action (app/actions.ts::signupForWaitlist), pero
+   cada uno manda un variant distinto:
+
+  - Forms en /es, /en → no mandan variant → se guarda con default 'a'
+  - Forms en /es/v2, /en/v2 → mandan variant: 'b' explícito
+
+  El payload que llega al server incluye: email, locale, variant,
+  utm_source/medium/campaign/content, referrer, user_agent, created_at.
+
+  Por favor verifica end-to-end después del deploy:
+
+  # Variante A
+  curl -X POST https://impuls-cons.replit.app/es \
+    -H "Content-Type: text/x-component" \
+    --data 'test@example.com'
+  # debería insertar row con variant='a'
+
+  # Variante B
+  curl https://impuls-cons.replit.app/es/v2  # 200
+  # luego submit manual del form y confirmar variant='b'
+
+  O más simple: hacer signup manual desde el browser en /es y /es/v2 y correr en la DB:
+
+  SELECT email, locale, variant, created_at
+  FROM waitlist
+  ORDER BY created_at DESC
+  LIMIT 5;
+
+  Debe haber rows con variant='a' y variant='b' según de dónde vino el signup.
+
+  4. Variables de entorno (Secrets) que ya deberían existir
+
+  - DATABASE_URL — Postgres (Neon o Replit DB). Sin esto el landing corre en mock mode y
+   no persiste nada.
+  - NEXT_PUBLIC_SITE_URL = https://impuls-cons.replit.app (o el custom domain final).
+  - NEXT_PUBLIC_PLAUSIBLE_DOMAIN (opcional)
+  - NEXT_PUBLIC_CALENDLY_URL (opcional, para el CTA de tier verde en thank-you)
+
+  Si alguna falta, Secrets tab del Repl.
+
+  5. Build + run comandos (ya están en .replit, sólo para referencia)
+
+  [deployment]
+  deploymentTarget = "autoscale"
+  build = ["npm", "run", "build"]
+  run  = ["npm", "run", "start"]
+  [[ports]] localPort = 3000  externalPort = 80
+
+  Local verifiqué: npm run build genera 12 páginas estáticas (4 locales × 3 rutas) sin
+  errores, npm run lint ✓, npm run typecheck ✓, Playwright 14/14 ✓.
+
+  6. Checklist de smoke test post-deploy
+
+  - curl -sI https://impuls-cons.replit.app/es → 200
+  - curl -sI https://impuls-cons.replit.app/es/v2 → 200 (hoy devuelve 404)
+  - curl -sI https://impuls-cons.replit.app/en/v2 → 200
+  - curl -sI https://impuls-cons.replit.app/imagenes/hero-dashboard-dark.png → 200,
+  content-type: image/png
+  - Signup manual en /es → row en DB con variant='a'
+  - Signup manual en /es/v2 → row en DB con variant='b'
+  - Thank-you redirect funciona desde ambas variantes (preserva ?email=)
+  - Form de discovery en /es/thank-you y /es/v2/thank-you cargan y submiten OK
+
+  Cuando los 8 estén verdes, el A/B está operacional y listo para mandar tráfico con UTM
+   distintos a cada variante.
+
+  Gracias 🙏
