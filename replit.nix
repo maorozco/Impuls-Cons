@@ -1,16 +1,18 @@
 { pkgs }: {
   deps = [
-    # Node 20 + pnpm (pnpm is provisioned by the PNPM_WORKSPACE agent stack)
+    # Node 20 + corepack (Node's built-in package manager switcher provides
+    # pnpm without needing a separate nixpkgs attribute — `pkgs.pnpm` does
+    # not exist on the stable-24_05 channel).
     pkgs.nodejs_20
-    pkgs.pnpm
+    pkgs.corepack_20
 
     # Python 3.11 + pip for FastAPI ml-api dependencies
     pkgs.python311
     pkgs.python311Packages.pip
 
-    # Postgres client libs (needed by psycopg2-binary build + psql CLI for diagnostics)
+    # Postgres client libs — needed by psycopg2-binary build + psql CLI for
+    # diagnostics. libpq (not libpqxx) is what the Python driver links.
     pkgs.postgresql_16
-    pkgs.libpqxx
 
     # Build tools for sharp (image optimization) + scientific Python wheels
     pkgs.pkg-config
@@ -24,6 +26,9 @@
 
     # curl for healthchecks during deploy
     pkgs.curl
+
+    # git for fetchgit sources (some transitive deps pull from git)
+    pkgs.git
   ];
 
   env = {

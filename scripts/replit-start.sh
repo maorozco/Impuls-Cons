@@ -13,6 +13,10 @@ cd "$REPO_ROOT"
 
 echo "▸ Impulso BioCycle · starting services"
 
+# Ensure pnpm is on PATH via corepack (same pattern as the build script).
+corepack enable --install-directory "$HOME/.local/bin" pnpm 2>/dev/null || true
+export PATH="$HOME/.local/bin:$PATH"
+
 # ── ml-api · FastAPI on loopback ────────────────────────────────────
 # Uses the consolidated requirements.txt installed during build.
 # Only reachable by the Next.js server via ML_API_URL=http://127.0.0.1:5001.
