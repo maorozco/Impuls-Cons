@@ -12,6 +12,7 @@ import {
   type ResponseInput,
 } from '@/drizzle/schema';
 import { computeScore } from '@/lib/scoring';
+import { sendWelcomeEmail, sendTierGreenInvite } from '@/lib/email';
 
 // ─────────────────────────────────────────────────────────────────
 // Hero / Final-CTA email opt-in
@@ -32,6 +33,8 @@ export async function signupForWaitlist(input: WaitlistInput): Promise<HeroSignu
       locale: parsed.data.locale,
       variant: parsed.data.variant,
     });
+    // Still fire the welcome email in mock — it logs to stdout, validates the flow
+    void sendWelcomeEmail({ to: parsed.data.email, locale: parsed.data.locale });
     return { ok: true, alreadySignedUp: false };
   }
 
@@ -58,6 +61,13 @@ export async function signupForWaitlist(input: WaitlistInput): Promise<HeroSignu
       userAgent: ua ?? null,
       variant: parsed.data.variant ?? 'a',
     });
+
+    // Fire-and-forget welcome email — never block the signup on email delivery.
+    void sendWelcomeEmail({ to: parsed.data.email, locale: parsed.data.locale }).catch((e) => {
+      // eslint-disable-next-line no-console
+      console.error('[welcome email] non-fatal', e);
+    });
+
     return { ok: true, alreadySignedUp: false };
   } catch (err) {
     // eslint-disable-next-line no-console
@@ -88,6 +98,9 @@ export async function submitWaitlistResponse(
     callIntent: parsed.data.callIntent,
   });
 
+  // Find the locale the signup was captured with so emails match it
+  const locale = await _getLocaleForEmail(parsed.data.email);
+
   if (isMockMode) {
     // eslint-disable-next-line no-console
     console.log('[mock] submitWaitlistResponse', {
@@ -96,6 +109,9 @@ export async function submitWaitlistResponse(
       score,
       tier,
     });
+    if (tier === 'green') {
+      void _fireTierGreenInvite(parsed.data.email, locale);
+    }
     return { ok: true, tier, score };
   }
 
@@ -111,12 +127,45 @@ export async function submitWaitlistResponse(
       score,
       tier,
     });
+
+    if (tier === 'green') {
+      void _fireTierGreenInvite(parsed.data.email, locale).catch((e) => {
+        // eslint-disable-next-line no-console
+        console.error('[tier-green invite] non-fatal', e);
+      });
+    }
+
     return { ok: true, tier, score };
   } catch (err) {
     // eslint-disable-next-line no-console
     console.error('[waitlist response] db error:', err);
     return { ok: false, error: 'db_error' };
   }
+}
+
+async function _getLocaleForEmail(email: string): Promise<'es' | 'en'> {
+  if (isMockMode) return 'es';
+  try {
+    const rows = await db
+      .select({ locale: waitlist.locale })
+      .from(waitlist)
+      .where(eq(waitlist.email, email))
+      .limit(1);
+    const l = rows[0]?.locale;
+    return l === 'en' ? 'en' : 'es';
+  } catch {
+    return 'es';
+  }
+}
+
+async function _fireTierGreenInvite(email: string, locale: 'es' | 'en') {
+  const calendlyUrl = process.env.NEXT_PUBLIC_CALENDLY_URL ?? process.env.CALENDLY_GREEN_LINK;
+  if (!calendlyUrl) {
+    // eslint-disable-next-line no-console
+    console.warn('[tier-green invite] no CALENDLY url set — skipping');
+    return;
+  }
+  await sendTierGreenInvite({ to: email, locale, calendlyUrl });
 }
 
 // ─────────────────────────────────────────────────────────────────

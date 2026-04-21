@@ -1,0 +1,1248 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Impulso BioCycle — Inicio</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Geist+Mono:wght@400;500;600&family=Fraunces:opsz,wght@9..144,400;9..144,500&display=swap" rel="stylesheet" />
+
+<script>
+// ── Tweakable defaults (persisted by host) ────────────────────────────
+const TWEAKS = /*EDITMODE-BEGIN*/{
+  "accent": "cyan",
+  "density": "comfortable",
+  "heroStyle": "mesh",
+  "showGrid": true,
+  "showSpanish": true
+}/*EDITMODE-END*/;
+</script>
+
+<style>
+/* ───────────────── DESIGN TOKENS ───────────────── */
+:root{
+  /* Brand palette (from brief) */
+  --forest-deep:#004D2C;
+  --forest-mid:#1B5E20;
+  --forest-ink:#0A2818;
+  --green-bright:#00C853;
+  --green-soft:#7BD48A;
+  --cyan-electric:#00D9F5;
+  --lime:#C4FF00;
+  --off-white:#F4FBF7;
+  --paper:#FAFCF9;
+  --ink:#0E2A1C;
+  --ink-2:#1B4332;
+  --muted:#6A8A74;
+  --muted-2:#8EA598;
+  --line:#E2ECE5;
+  --line-strong:#CBDAD0;
+  --warning:#EF6C00;
+  --amber:#F4A100;
+
+  /* Accent (Tweak target) */
+  --accent:var(--cyan-electric);
+  --accent-ink:#003A44;
+
+  /* Spacing scale (8-pt) */
+  --s-1:4px; --s-2:8px; --s-3:12px; --s-4:16px; --s-5:24px;
+  --s-6:32px; --s-7:48px; --s-8:64px; --s-9:96px; --s-10:128px;
+
+  /* Radii */
+  --r-xs:6px; --r-sm:8px; --r-md:12px; --r-lg:14px; --r-xl:20px; --r-2xl:28px;
+
+  /* Type */
+  --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'Geist Mono', ui-monospace, monospace;
+  --font-serif: 'Fraunces', ui-serif, serif;
+
+  /* Elevation */
+  --shadow-sm: 0 1px 2px rgba(10,40,24,.04), 0 2px 4px rgba(10,40,24,.03);
+  --shadow-md: 0 2px 12px rgba(10,40,24,.05), 0 20px 40px -20px rgba(27,94,32,.12);
+  --shadow-lg: 0 8px 24px rgba(10,40,24,.08), 0 32px 64px -24px rgba(27,94,32,.18);
+
+  /* Layout */
+  --container: 1240px;
+  --sidebar-w: 240px;
+}
+
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  font-family:var(--font-sans);
+  color:var(--ink);
+  background:var(--paper);
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+  font-feature-settings:"ss01","cv11";
+  line-height:1.5;
+}
+a{color:inherit;text-decoration:none}
+button{font-family:inherit;cursor:pointer;border:0;background:none}
+
+/* Numbers: tabular, tight */
+.mono,.num{
+  font-family:var(--font-mono);
+  font-variant-numeric:tabular-nums;
+  letter-spacing:-.02em;
+}
+.display-num{
+  font-family:var(--font-mono);
+  font-variant-numeric:tabular-nums;
+  letter-spacing:-.04em;
+  font-weight:500;
+}
+
+/* Headings */
+h1,h2,h3,h4{font-family:var(--font-sans);letter-spacing:-.02em;margin:0;line-height:1.08;color:var(--ink)}
+h1{font-weight:700;font-size:72px;letter-spacing:-.035em}
+h2{font-weight:700;font-size:44px;letter-spacing:-.028em}
+h3{font-weight:600;font-size:22px;letter-spacing:-.02em}
+h4{font-weight:600;font-size:15px;letter-spacing:-.01em}
+p{margin:0;color:var(--ink-2)}
+
+/* Utility */
+.container{max-width:var(--container);margin:0 auto;padding:0 32px}
+.eyebrow{
+  font-family:var(--font-mono);
+  font-size:11px; font-weight:500;
+  letter-spacing:.14em; text-transform:uppercase;
+  color:var(--muted);
+}
+.chip{
+  display:inline-flex; align-items:center; gap:6px;
+  height:24px; padding:0 10px;
+  border:1px solid var(--line-strong);
+  background:#fff;
+  border-radius:999px;
+  font-size:11.5px; font-weight:500; color:var(--ink-2);
+  font-family:var(--font-mono);
+  letter-spacing:.02em;
+}
+.chip .dot{width:6px;height:6px;border-radius:99px;background:var(--green-bright);box-shadow:0 0 0 3px rgba(0,200,83,.15)}
+.chip.warn .dot{background:var(--warning);box-shadow:0 0 0 3px rgba(239,108,0,.15)}
+.chip.info .dot{background:var(--accent);box-shadow:0 0 0 3px rgba(0,217,245,.15)}
+
+.divider{height:1px;background:linear-gradient(90deg,transparent,var(--line),transparent)}
+
+/* ───────────────── APP SHELL ───────────────── */
+.app{
+  display:grid;
+  grid-template-columns: var(--sidebar-w) 1fr;
+  min-height:100vh;
+  background:var(--paper);
+}
+.sidebar{
+  position:sticky; top:0; height:100vh;
+  padding:22px 14px 18px;
+  border-right:1px solid var(--line);
+  background: linear-gradient(180deg, #FBFDFB 0%, #F4FBF7 100%);
+  display:flex; flex-direction:column;
+}
+.brand{
+  display:flex; align-items:center; gap:10px;
+  padding:6px 10px 16px;
+}
+.brand-mark{
+  width:28px; height:28px; border-radius:8px;
+  background:
+    radial-gradient(circle at 30% 30%, #7BD48A 0 35%, transparent 36%),
+    radial-gradient(circle at 70% 70%, #C4FF00 0 25%, transparent 26%),
+    linear-gradient(135deg, var(--forest-deep) 0%, var(--forest-mid) 100%);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.08), 0 6px 14px -6px rgba(0,77,44,.5);
+}
+.brand-name{font-weight:700; font-size:14px; letter-spacing:-.01em}
+.brand-sub{font-size:10.5px; color:var(--muted); font-family:var(--font-mono); letter-spacing:.02em; margin-top:1px}
+
+.nav{display:flex;flex-direction:column;gap:2px;margin-top:8px}
+.nav-label{font-family:var(--font-mono);font-size:10.5px;letter-spacing:.12em;color:var(--muted-2);text-transform:uppercase;padding:10px 10px 6px}
+.nav-item{
+  display:flex; align-items:center; gap:10px;
+  padding:8px 10px; border-radius:8px;
+  color:var(--ink-2); font-size:13.5px; font-weight:500;
+  position:relative;
+}
+.nav-item svg{width:16px;height:16px;color:var(--muted);flex:none}
+.nav-item.active{background:#fff;box-shadow:var(--shadow-sm);color:var(--ink)}
+.nav-item.active svg{color:var(--forest-deep)}
+.nav-item.active::before{
+  content:""; position:absolute; left:-14px; top:8px; bottom:8px;
+  width:2px; background:var(--forest-deep); border-radius:2px;
+}
+.nav-item:hover:not(.active){background:rgba(0,77,44,.04)}
+.nav-kbd{margin-left:auto; font-family:var(--font-mono); font-size:10px; color:var(--muted-2); border:1px solid var(--line); padding:1px 5px; border-radius:4px; background:#fff}
+
+.side-foot{margin-top:auto; padding:12px 10px; display:flex; flex-direction:column; gap:10px}
+.side-card{
+  border:1px solid var(--line); border-radius:12px;
+  padding:12px; background:#fff;
+  font-size:12px; color:var(--muted);
+}
+.side-card b{color:var(--ink);display:block;font-size:12.5px;margin-bottom:2px}
+.side-stat{display:flex;justify-content:space-between;font-family:var(--font-mono);font-size:11px;color:var(--muted-2);padding:2px 0}
+.side-stat b{color:var(--ink-2);font-weight:500}
+
+/* ───────────────── TOPBAR ───────────────── */
+.topbar{
+  position:sticky;top:0;z-index:20;
+  display:flex;align-items:center;gap:12px;
+  height:54px;padding:0 32px;
+  background:rgba(250,252,249,.82);
+  backdrop-filter:saturate(1.2) blur(16px);
+  -webkit-backdrop-filter:saturate(1.2) blur(16px);
+  border-bottom:1px solid var(--line);
+}
+.crumbs{display:flex;align-items:center;gap:6px;font-family:var(--font-mono);font-size:11.5px;color:var(--muted)}
+.crumbs b{color:var(--ink);font-weight:500}
+.crumbs .sep{color:var(--muted-2)}
+.tb-spacer{flex:1}
+.tb-search{
+  display:flex; align-items:center; gap:8px;
+  height:30px; padding:0 10px;
+  border:1px solid var(--line); border-radius:8px;
+  background:#fff; color:var(--muted-2); font-size:12.5px;
+  min-width:280px;
+}
+.tb-search .kbd{margin-left:auto; font-family:var(--font-mono); font-size:10px; border:1px solid var(--line); padding:1px 5px; border-radius:4px}
+.tb-btn{
+  display:inline-flex; align-items:center; gap:6px;
+  height:30px; padding:0 10px; border-radius:8px;
+  font-size:12.5px; font-weight:500; color:var(--ink-2);
+  border:1px solid var(--line); background:#fff;
+}
+.tb-btn.primary{background:var(--forest-deep); color:#fff; border-color:var(--forest-deep)}
+.tb-btn svg{width:14px;height:14px}
+
+/* ───────────────── HERO ───────────────── */
+.hero{
+  position:relative;
+  padding:64px 0 72px;
+  border-bottom:1px solid var(--line);
+  overflow:hidden;
+}
+.hero-bg{
+  position:absolute; inset:0; z-index:0; pointer-events:none;
+}
+/* Grid + radial mesh */
+.hero-bg::before{
+  content:""; position:absolute; inset:0;
+  background-image:
+    linear-gradient(to right, rgba(27,94,32,.055) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(27,94,32,.055) 1px, transparent 1px);
+  background-size:48px 48px;
+  mask-image: radial-gradient(ellipse 80% 60% at 70% 30%, #000 30%, transparent 75%);
+}
+.hero-bg::after{
+  content:""; position:absolute; inset:0;
+  background:
+    radial-gradient(600px 380px at 80% 10%, rgba(0,217,245,.18), transparent 60%),
+    radial-gradient(680px 420px at 100% 40%, rgba(0,200,83,.22), transparent 65%),
+    radial-gradient(500px 300px at 20% 90%, rgba(196,255,0,.12), transparent 60%);
+}
+
+.hero-inner{position:relative;z-index:1; display:grid; grid-template-columns: 1.05fr .95fr; gap:48px; align-items:center}
+.hero-tag{
+  display:inline-flex; align-items:center; gap:8px;
+  padding:5px 10px 5px 6px;
+  border:1px solid var(--line-strong); background:#fff;
+  border-radius:999px; font-size:12px; color:var(--ink-2);
+  box-shadow:var(--shadow-sm);
+}
+.hero-tag .t-badge{
+  background:var(--forest-deep); color:#fff;
+  font-family:var(--font-mono); font-size:10px; font-weight:500;
+  padding:2px 7px; border-radius:999px; letter-spacing:.04em;
+}
+.hero-tag .t-arrow{color:var(--muted-2)}
+.hero h1{margin:22px 0 0}
+.hero h1 .accent{
+  background: linear-gradient(92deg, var(--forest-deep) 10%, var(--green-bright) 55%, var(--accent) 95%);
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+}
+.hero h1 em{
+  font-family:var(--font-serif); font-style:italic; font-weight:400;
+  color:var(--forest-deep);
+}
+.hero-lede{
+  margin-top:22px; font-size:18px; line-height:1.55; max-width:540px;
+  color:var(--ink-2);
+}
+
+.cta-row{display:flex;gap:10px;margin-top:28px;flex-wrap:wrap}
+.btn{
+  display:inline-flex; align-items:center; gap:10px;
+  height:44px; padding:0 18px; border-radius:10px;
+  font-size:14px; font-weight:600;
+  transition:transform .15s ease, box-shadow .2s ease, background .2s ease;
+}
+.btn:hover{transform:translateY(-1px)}
+.btn-primary{
+  background:var(--forest-deep); color:#fff;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.12), 0 1px 0 rgba(0,0,0,.04), 0 10px 24px -12px rgba(0,77,44,.55);
+}
+.btn-primary:hover{background:#003820}
+.btn-primary .arr{background:rgba(255,255,255,.12); border-radius:6px; display:inline-grid; place-items:center; width:22px; height:22px; margin-left:4px}
+.btn-ghost{
+  background:#fff; color:var(--ink); border:1px solid var(--line-strong);
+  box-shadow:var(--shadow-sm);
+}
+.btn-ghost:hover{border-color:var(--ink-2)}
+.btn svg{width:16px;height:16px}
+
+.hero-meta{
+  display:flex; align-items:center; gap:18px; margin-top:24px;
+  font-family:var(--font-mono); font-size:11.5px; color:var(--muted);
+  letter-spacing:.02em;
+}
+.hero-meta b{color:var(--ink-2); font-weight:500}
+.hero-meta .sep{color:var(--line-strong)}
+
+/* Hero right: capsule viz */
+.hero-viz{
+  position:relative;
+  aspect-ratio: 1 / 1;
+  max-width:520px; margin-left:auto;
+}
+
+/* ───────────────── SECTION ───────────────── */
+.section{padding:88px 0; position:relative}
+.section.tight{padding:64px 0}
+.section-head{display:flex; align-items:flex-end; justify-content:space-between; gap:24px; margin-bottom:40px}
+.section-head .left .eyebrow{display:flex;align-items:center;gap:8px}
+.section-head .left .eyebrow::before{content:"";width:18px;height:1px;background:var(--forest-deep)}
+.section-head h2{margin-top:12px; max-width:760px}
+.section-head .lede{color:var(--muted); font-size:15px; max-width:440px; margin:0}
+
+/* What-is value grid */
+.value-grid{
+  display:grid; grid-template-columns:repeat(3,1fr); gap:1px;
+  background:var(--line);
+  border:1px solid var(--line); border-radius:var(--r-lg); overflow:hidden;
+}
+.value-cell{background:#fff; padding:28px 28px 32px; position:relative}
+.value-cell .v-num{
+  font-family:var(--font-mono); font-size:11px; letter-spacing:.1em;
+  color:var(--muted-2); text-transform:uppercase;
+}
+.value-cell h3{font-size:20px; margin:16px 0 8px}
+.value-cell p{font-size:14px; color:var(--muted); line-height:1.55}
+.value-cell .v-icon{
+  width:36px; height:36px; border-radius:10px;
+  display:grid; place-items:center;
+  background: linear-gradient(135deg, #ECF9EF 0%, #E0F7FA 100%);
+  border:1px solid var(--line);
+  color:var(--forest-deep);
+  margin-bottom:12px;
+}
+.value-cell .v-icon svg{width:18px;height:18px}
+
+/* Two paths */
+.paths{display:grid; grid-template-columns:1fr 1fr; gap:20px}
+.path{
+  position:relative;
+  padding:32px;
+  border-radius:var(--r-xl);
+  border:1px solid var(--line);
+  background:#fff;
+  box-shadow:var(--shadow-sm);
+  overflow:hidden;
+  transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+}
+.path:hover{transform:translateY(-2px); box-shadow:var(--shadow-md); border-color:var(--line-strong)}
+.path .p-glow{
+  position:absolute; right:-60px; top:-60px; width:220px; height:220px;
+  border-radius:50%;
+  filter:blur(20px); opacity:.5; pointer-events:none;
+}
+.path.lab .p-glow{background:radial-gradient(circle, rgba(0,217,245,.55), transparent 70%)}
+.path.biz .p-glow{background:radial-gradient(circle, rgba(0,200,83,.45), transparent 70%)}
+.path .p-head{display:flex; align-items:center; justify-content:space-between; position:relative; z-index:1}
+.path .p-badge{
+  display:inline-flex; align-items:center; gap:6px;
+  font-family:var(--font-mono); font-size:11px; font-weight:500;
+  color:var(--ink-2);
+  background:#fff; padding:4px 9px; border-radius:999px;
+  border:1px solid var(--line-strong);
+}
+.path .p-badge .dot{width:6px;height:6px;border-radius:99px}
+.path.lab .p-badge .dot{background:var(--accent)}
+.path.biz .p-badge .dot{background:var(--green-bright)}
+.path .p-role{font-family:var(--font-mono);font-size:11px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase}
+.path h3{font-size:28px; margin:22px 0 10px; letter-spacing:-.025em; font-weight:700}
+.path .p-desc{color:var(--muted); font-size:14.5px; line-height:1.55; max-width:90%}
+.path .p-list{list-style:none; padding:0; margin:20px 0 24px; display:flex; flex-direction:column; gap:10px}
+.path .p-list li{display:flex; gap:10px; align-items:flex-start; font-size:13.5px; color:var(--ink-2)}
+.path .p-list svg{width:16px; height:16px; color:var(--forest-deep); flex:none; margin-top:1px}
+.path .p-cta{
+  display:inline-flex; align-items:center; gap:8px;
+  font-size:13.5px; font-weight:600; color:var(--forest-deep);
+  padding-top:14px; border-top:1px solid var(--line);
+  width:100%;
+}
+.path .p-cta svg{width:14px;height:14px; transition:transform .2s}
+.path:hover .p-cta svg{transform:translateX(3px)}
+
+.path .p-tag{
+  position:absolute; top:22px; right:22px;
+  font-family:var(--font-mono); font-size:10.5px; letter-spacing:.08em;
+  color:var(--muted-2); text-transform:uppercase;
+}
+
+/* Problems — 4 stat cards */
+.problems{
+  display:grid; grid-template-columns:repeat(4,1fr); gap:1px;
+  background:var(--line); border:1px solid var(--line);
+  border-radius:var(--r-lg); overflow:hidden;
+}
+.prob{background:#fff; padding:26px 24px 28px; position:relative}
+.prob .p-cat{
+  font-family:var(--font-mono); font-size:10.5px; letter-spacing:.12em;
+  color:var(--muted-2); text-transform:uppercase; display:flex; align-items:center; gap:8px;
+}
+.prob .p-cat::before{content:""; width:8px; height:8px; border-radius:2px}
+.prob.p1 .p-cat::before{background:var(--warning)}
+.prob.p2 .p-cat::before{background:var(--forest-deep)}
+.prob.p3 .p-cat::before{background:var(--accent)}
+.prob.p4 .p-cat::before{background:var(--amber)}
+.prob .p-stat{font-family:var(--font-mono); font-size:44px; font-weight:500; letter-spacing:-.04em; margin:18px 0 6px; color:var(--ink)}
+.prob .p-stat .u{font-size:14px; color:var(--muted-2); font-weight:500; margin-left:2px}
+.prob .p-headline{font-weight:600; font-size:14.5px; color:var(--ink); margin-bottom:4px}
+.prob .p-body{font-size:13px; color:var(--muted); line-height:1.5}
+.prob .p-src{
+  position:absolute; bottom:10px; left:24px;
+  font-family:var(--font-mono); font-size:10px; letter-spacing:.04em;
+  color:var(--muted-2);
+}
+
+/* Cómo funciona — 3 steps */
+.steps{display:grid; grid-template-columns:1.1fr 1fr 1fr; gap:20px; align-items:stretch}
+.step{
+  position:relative; padding:28px;
+  border:1px solid var(--line); border-radius:var(--r-lg); background:#fff;
+  display:flex; flex-direction:column;
+}
+.step .s-num{
+  font-family:var(--font-mono); font-size:11px; letter-spacing:.1em;
+  color:var(--muted-2); text-transform:uppercase;
+  display:flex; align-items:center; gap:8px;
+}
+.step .s-num .bullet{
+  width:20px; height:20px; border-radius:6px;
+  display:grid; place-items:center;
+  background:var(--forest-deep); color:#fff;
+  font-family:var(--font-mono); font-size:11px; font-weight:500;
+}
+.step h3{font-size:19px; margin:16px 0 8px; font-weight:600}
+.step p{font-size:13.5px; color:var(--muted); line-height:1.55}
+.step .s-vis{
+  margin-top:auto; padding-top:22px;
+  border-top:1px dashed var(--line); margin-top:20px;
+}
+.step.featured{grid-row:span 1}
+.step.featured .s-vis{border-top:none; padding-top:0; margin-top:18px}
+
+/* Metrics banner */
+.metrics{
+  display:grid; grid-template-columns:repeat(4,1fr);
+  background: linear-gradient(180deg, var(--forest-ink) 0%, #061A10 100%);
+  color:#fff;
+  border-radius:var(--r-xl);
+  overflow:hidden;
+  position:relative;
+}
+.metrics::before{
+  content:""; position:absolute; inset:0; pointer-events:none;
+  background:
+    radial-gradient(400px 200px at 15% 0%, rgba(0,217,245,.18), transparent 60%),
+    radial-gradient(500px 260px at 90% 100%, rgba(0,200,83,.22), transparent 60%);
+}
+.metric{padding:36px 28px; border-right:1px solid rgba(255,255,255,.06); position:relative; z-index:1}
+.metric:last-child{border-right:0}
+.metric .m-label{font-family:var(--font-mono); font-size:10.5px; color:rgba(255,255,255,.55); letter-spacing:.14em; text-transform:uppercase}
+.metric .m-num{font-family:var(--font-mono); font-size:54px; font-weight:500; letter-spacing:-.045em; margin-top:14px; color:#fff}
+.metric .m-sub{font-size:13px; color:rgba(255,255,255,.6); margin-top:6px}
+
+/* Footer */
+footer{
+  border-top:1px solid var(--line);
+  padding:48px 0 60px;
+  background:linear-gradient(180deg, var(--paper) 0%, #F0F8F3 100%);
+}
+.footer-grid{display:grid; grid-template-columns: 1.4fr repeat(3, 1fr); gap:40px}
+.footer-brand p{color:var(--muted); font-size:13px; line-height:1.55; margin-top:12px; max-width:320px}
+.footer-col h5{font-family:var(--font-mono); font-size:10.5px; letter-spacing:.14em; color:var(--muted); text-transform:uppercase; font-weight:500; margin:0 0 12px}
+.footer-col a{display:block; padding:5px 0; font-size:13.5px; color:var(--ink-2)}
+.footer-col a:hover{color:var(--forest-deep)}
+.legal{
+  margin-top:36px; padding-top:20px; border-top:1px solid var(--line);
+  display:flex; justify-content:space-between; gap:16px; flex-wrap:wrap;
+  font-family:var(--font-mono); font-size:11px; color:var(--muted-2);
+}
+.legal .disclaimer{max-width:780px; line-height:1.5; color:var(--muted)}
+
+/* ───────────────── TWEAKS PANEL ───────────────── */
+.tweaks-btn{
+  position:fixed; bottom:22px; right:22px; z-index:50;
+  display:none; /* toggled on by host */
+  align-items:center; gap:8px;
+  height:38px; padding:0 14px; border-radius:999px;
+  background:var(--forest-deep); color:#fff;
+  font-size:13px; font-weight:500;
+  box-shadow:0 10px 24px -6px rgba(0,77,44,.5);
+}
+.tweaks-btn.visible{display:inline-flex}
+.tweaks-panel{
+  position:fixed; bottom:70px; right:22px; z-index:51;
+  width:300px; padding:18px 18px 16px;
+  background:#fff; border:1px solid var(--line);
+  border-radius:14px;
+  box-shadow:0 30px 60px -20px rgba(10,40,24,.25), 0 10px 24px -8px rgba(10,40,24,.12);
+  display:none;
+}
+.tweaks-panel.open{display:block}
+.tweaks-panel h4{font-size:13px; font-weight:600; letter-spacing:-.01em; display:flex; justify-content:space-between; align-items:center}
+.tweaks-panel h4 .close{color:var(--muted-2); cursor:pointer; font-size:18px; line-height:1}
+.tw-group{margin-top:14px}
+.tw-group label{display:block; font-family:var(--font-mono); font-size:10.5px; letter-spacing:.1em; color:var(--muted); text-transform:uppercase; margin-bottom:6px}
+.tw-row{display:flex; gap:6px; flex-wrap:wrap}
+.tw-swatch{width:26px; height:26px; border-radius:8px; border:2px solid #fff; box-shadow:0 0 0 1px var(--line); cursor:pointer; transition:transform .15s}
+.tw-swatch:hover{transform:scale(1.08)}
+.tw-swatch.active{box-shadow:0 0 0 2px var(--ink)}
+.tw-chip{
+  padding:5px 10px; border-radius:8px; font-size:12px; font-weight:500;
+  border:1px solid var(--line); background:#fff; color:var(--ink-2); cursor:pointer;
+}
+.tw-chip.active{background:var(--forest-deep); color:#fff; border-color:var(--forest-deep)}
+
+/* Density variants */
+body[data-density="compact"] .section{padding:64px 0}
+body[data-density="compact"] .hero{padding:48px 0 56px}
+body[data-density="compact"] h1{font-size:60px}
+body[data-density="compact"] h2{font-size:36px}
+body[data-density="roomy"] .section{padding:112px 0}
+body[data-density="roomy"] .hero{padding:96px 0 112px}
+
+/* Grid toggle */
+body[data-grid="off"] .hero-bg::before{display:none}
+
+/* Accent variants */
+body[data-accent="cyan"]{--accent:var(--cyan-electric); --accent-ink:#003A44}
+body[data-accent="lime"]{--accent:var(--lime); --accent-ink:#3A4800}
+body[data-accent="green"]{--accent:var(--green-bright); --accent-ink:#003820}
+body[data-accent="amber"]{--accent:var(--amber); --accent-ink:#4A3100}
+
+/* Hero style variants */
+body[data-hero="mesh"] .hero-bg::after{opacity:1}
+body[data-hero="clean"] .hero-bg::after{opacity:.35}
+body[data-hero="dark"] .hero{background:var(--forest-ink); color:#fff}
+body[data-hero="dark"] .hero::before,
+body[data-hero="dark"] .hero .hero-bg::before{opacity:.35}
+body[data-hero="dark"] .hero h1, body[data-hero="dark"] .hero p{color:#fff}
+body[data-hero="dark"] .hero-lede{color:rgba(255,255,255,.75)}
+body[data-hero="dark"] .hero h1 em{color:var(--lime)}
+body[data-hero="dark"] .hero-tag{background:rgba(255,255,255,.08); border-color:rgba(255,255,255,.18); color:#fff}
+body[data-hero="dark"] .btn-ghost{background:rgba(255,255,255,.06); border-color:rgba(255,255,255,.2); color:#fff}
+body[data-hero="dark"] .btn-primary{background:var(--lime); color:#0A2818}
+body[data-hero="dark"] .hero-meta b, body[data-hero="dark"] .hero-meta{color:rgba(255,255,255,.7)}
+body[data-hero="dark"] .hero-meta .sep{color:rgba(255,255,255,.15)}
+
+/* Smooth intro */
+@keyframes rise{from{opacity:0; transform:translateY(8px)} to{opacity:1; transform:none}}
+.rise > *{animation:rise .6s ease both}
+.rise > *:nth-child(2){animation-delay:.08s}
+.rise > *:nth-child(3){animation-delay:.16s}
+.rise > *:nth-child(4){animation-delay:.24s}
+@media (prefers-reduced-motion: reduce){
+  *{animation:none !important; transition:none !important}
+}
+
+/* Focus */
+:focus-visible{outline:2px solid var(--forest-deep); outline-offset:3px; border-radius:6px}
+</style>
+</head>
+<body data-accent="cyan" data-density="comfortable" data-hero="mesh" data-grid="on">
+
+<!-- ═══════════════════ APP SHELL ═══════════════════ -->
+<div class="app">
+
+  <!-- ─── SIDEBAR ─── -->
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-mark" aria-hidden="true"></div>
+      <div>
+        <div class="brand-name">Impulso <span style="color:var(--forest-deep)">BioCycle</span></div>
+        <div class="brand-sub">v0.3 · Piloto</div>
+      </div>
+    </div>
+
+    <div class="nav-label">Producto</div>
+    <nav class="nav">
+      <a class="nav-item active" href="#">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 12l9-8 9 8M5 10v10h14V10"/></svg>
+        Inicio
+        <span class="nav-kbd">1</span>
+      </a>
+      <a class="nav-item" href="#">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19.5V4.5A1.5 1.5 0 015.5 3H19v18H5.5A1.5 1.5 0 014 19.5zM8 7h8M8 11h8M8 15h5"/></svg>
+        Descubrimientos
+        <span class="nav-kbd">2</span>
+      </a>
+      <a class="nav-item" href="#">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M7 2v4a5 5 0 0010 0V2M7 22v-4a5 5 0 0110 0v4M7 6h10M7 18h10"/></svg>
+        Construye tu Consorcio
+        <span class="nav-kbd">3</span>
+      </a>
+      <a class="nav-item" href="#">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 21h18M5 21V7l7-4 7 4v14M10 10h4M10 14h4M10 18h4"/></svg>
+        Gestiona tus Residuos
+        <span class="nav-kbd">4</span>
+      </a>
+      <a class="nav-item" href="#">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 12a8 8 0 11-3.2-6.4L21 3v6h-6"/><circle cx="12" cy="12" r="2.5"/></svg>
+        Asesoría IA
+        <span class="nav-kbd">5</span>
+      </a>
+    </nav>
+
+    <div class="nav-label" style="margin-top:18px">Recursos</div>
+    <nav class="nav">
+      <a class="nav-item" href="#">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3l9 4.5-9 4.5-9-4.5L12 3zM3 12l9 4.5 9-4.5M3 16.5L12 21l9-4.5"/></svg>
+        Corpus (61 docs)
+      </a>
+      <a class="nav-item" href="#">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2a10 10 0 100 20 10 10 0 000-20zM2 12h20M12 2a15 15 0 010 20M12 2a15 15 0 000 20"/></svg>
+        30+ países
+      </a>
+      <a class="nav-item" href="#">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 8v5l3 2M3 12a9 9 0 1018 0 9 9 0 00-18 0z"/></svg>
+        Changelog
+      </a>
+    </nav>
+
+    <div class="side-foot">
+      <div class="side-card">
+        <b>Pivote A+C activo</b>
+        <div style="font-size:11.5px;line-height:1.5;color:var(--muted)">Plástico sólo en biorreactor contenido. Hidrocarburos in-situ vía cápsulas alginato.</div>
+        <div style="margin-top:10px; padding-top:10px; border-top:1px dashed var(--line)">
+          <div class="side-stat"><span>TRL sistema</span><b>3–4</b></div>
+          <div class="side-stat"><span>Microorganismos</span><b>28</b></div>
+          <div class="side-stat"><span>Referencias</span><b>4,797</b></div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ─── MAIN ─── -->
+  <main>
+
+    <!-- Topbar -->
+    <div class="topbar">
+      <div class="crumbs">
+        <b>Impulso BioCycle</b>
+        <span class="sep">/</span>
+        <span>Producto</span>
+        <span class="sep">/</span>
+        <b style="color:var(--forest-deep)">Inicio</b>
+      </div>
+      <div class="tb-spacer"></div>
+      <div class="tb-search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="14" height="14"><circle cx="11" cy="11" r="7"/><path d="m20 20-3-3"/></svg>
+        Buscar contaminante, microorganismo, paper…
+        <span class="kbd">⌘K</span>
+      </div>
+      <button class="tb-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13 21a2 2 0 01-4 0"/></svg>
+        Novedades
+      </button>
+      <button class="tb-btn primary">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        Reservar piloto
+      </button>
+    </div>
+
+    <!-- ═══════════════════ HERO ═══════════════════ -->
+    <section class="hero">
+      <div class="hero-bg"></div>
+
+      <div class="container hero-inner">
+        <div class="rise">
+          <div class="hero-tag">
+            <span class="t-badge">NUEVO</span>
+            <span>Escucha Activa — dolor verbatim del mercado, 4,797 posts</span>
+            <svg class="t-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M9 6l6 6-6 6"/></svg>
+          </div>
+
+          <h1>
+            Diseñamos la <em>receta microbiana</em><br/>
+            <span class="accent">óptima</span> para degradar un<br/>
+            contaminante específico.
+          </h1>
+
+          <p class="hero-lede">
+            Impulso BioCycle es la plataforma de IA que diseña consorcios
+            de bacterias y hongos BSL‑1/GRAS para biorremediación — apoyada
+            en 4,797 referencias peer‑reviewed y 33 contaminantes modelados.
+          </p>
+
+          <div class="cta-row">
+            <a class="btn btn-primary" href="#">
+              Construye tu Consorcio
+              <span class="arr">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+              </span>
+            </a>
+            <a class="btn btn-ghost" href="#">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 21h18M5 21V7l7-4 7 4v14"/></svg>
+              Gestiona tus Residuos
+            </a>
+          </div>
+
+          <div class="hero-meta">
+            <span><b>BSL‑1 / GRAS</b> sólo</span>
+            <span class="sep">·</span>
+            <span>Primer piloto · <b>$3K USD</b> · 90 días</span>
+            <span class="sep">·</span>
+            <span><b>Bogotá</b> → LATAM</span>
+          </div>
+        </div>
+
+        <!-- Microbial Capsule Visualization -->
+        <div class="hero-viz">
+          <svg viewBox="0 0 520 520" xmlns="http://www.w3.org/2000/svg" style="width:100%; height:auto; display:block">
+            <defs>
+              <radialGradient id="capsule-core" cx="50%" cy="45%" r="55%">
+                <stop offset="0%" stop-color="#E8FBEE"/>
+                <stop offset="50%" stop-color="#C5F3D1" stop-opacity="0.8"/>
+                <stop offset="100%" stop-color="#7BD48A" stop-opacity="0.15"/>
+              </radialGradient>
+              <radialGradient id="capsule-outer" cx="50%" cy="50%" r="50%">
+                <stop offset="60%" stop-color="#004D2C" stop-opacity="0"/>
+                <stop offset="100%" stop-color="#004D2C" stop-opacity="0.18"/>
+              </radialGradient>
+              <linearGradient id="halo" x1="0" x2="1" y1="0" y2="1">
+                <stop offset="0" stop-color="#00D9F5" stop-opacity="0.6"/>
+                <stop offset="1" stop-color="#00C853" stop-opacity="0.0"/>
+              </linearGradient>
+              <filter id="soft" x="-20%" y="-20%" width="140%" height="140%">
+                <feGaussianBlur stdDeviation="8"/>
+              </filter>
+              <pattern id="dots" width="16" height="16" patternUnits="userSpaceOnUse">
+                <circle cx="1.5" cy="1.5" r="0.8" fill="#1B5E20" fill-opacity="0.14"/>
+              </pattern>
+            </defs>
+
+            <!-- Background grid inside circle only -->
+            <clipPath id="cclip"><circle cx="260" cy="260" r="240"/></clipPath>
+            <g clip-path="url(#cclip)">
+              <rect x="0" y="0" width="520" height="520" fill="url(#dots)"/>
+            </g>
+
+            <!-- Outer aura -->
+            <circle cx="260" cy="260" r="242" fill="url(#halo)" opacity="0.35" filter="url(#soft)"/>
+
+            <!-- Orbit rings -->
+            <circle cx="260" cy="260" r="230" fill="none" stroke="#CBDAD0" stroke-width="1" stroke-dasharray="2 4"/>
+            <circle cx="260" cy="260" r="195" fill="none" stroke="#CBDAD0" stroke-width="1"/>
+
+            <!-- Capsule shell -->
+            <circle cx="260" cy="260" r="170" fill="url(#capsule-core)" stroke="#00C853" stroke-width="1.2"/>
+            <circle cx="260" cy="260" r="170" fill="url(#capsule-outer)"/>
+
+            <!-- Alginate matrix hex-ish mesh -->
+            <g stroke="#1B5E20" stroke-opacity="0.22" stroke-width="0.8" fill="none">
+              <path d="M170 220 L 210 200 L 250 220 L 250 260 L 210 280 L 170 260 Z"/>
+              <path d="M250 220 L 290 200 L 330 220 L 330 260 L 290 280 L 250 260 Z"/>
+              <path d="M330 220 L 370 200 L 360 240"/>
+              <path d="M170 300 L 210 280 L 250 300 L 250 340 L 210 360 L 170 340 Z"/>
+              <path d="M250 300 L 290 280 L 330 300 L 330 340 L 290 360 L 250 340 Z"/>
+              <path d="M290 360 L 310 390"/>
+            </g>
+
+            <!-- Microbes inside -->
+            <g>
+              <!-- Bacterium 1 (rod) -->
+              <g transform="translate(210 220) rotate(-18)">
+                <rect x="-26" y="-8" width="52" height="16" rx="8" fill="#004D2C"/>
+                <rect x="-22" y="-5" width="30" height="4" rx="2" fill="#7BD48A" opacity="0.55"/>
+              </g>
+              <!-- Bacterium 2 (rod) -->
+              <g transform="translate(305 285) rotate(28)">
+                <rect x="-22" y="-7" width="44" height="14" rx="7" fill="#1B5E20"/>
+                <rect x="-18" y="-4" width="22" height="3" rx="1.5" fill="#C4FF00" opacity="0.7"/>
+              </g>
+              <!-- Fungus (branched) -->
+              <g stroke="#1B5E20" stroke-width="2.2" fill="none" stroke-linecap="round">
+                <path d="M240 325 Q 230 310 215 308 Q 200 306 192 295"/>
+                <path d="M230 310 Q 225 298 212 292"/>
+                <path d="M240 325 Q 248 338 260 340"/>
+              </g>
+              <circle cx="192" cy="295" r="4" fill="#1B5E20"/>
+              <circle cx="215" cy="308" r="3" fill="#1B5E20"/>
+              <circle cx="260" cy="340" r="3.5" fill="#1B5E20"/>
+
+              <!-- Coccus cluster -->
+              <g fill="#00C853" opacity="0.9">
+                <circle cx="305" cy="215" r="5"/>
+                <circle cx="315" cy="222" r="4"/>
+                <circle cx="300" cy="224" r="3.5"/>
+                <circle cx="312" cy="208" r="3"/>
+              </g>
+
+              <!-- Contaminant blobs (amorphous) -->
+              <path d="M275 260 Q 285 252 293 258 Q 298 266 290 272 Q 278 274 272 268 Z" fill="#EF6C00" opacity="0.75"/>
+              <path d="M200 265 Q 208 260 213 266 Q 215 272 208 275 Q 200 272 198 268 Z" fill="#EF6C00" opacity="0.55"/>
+            </g>
+
+            <!-- Satellite microbe approaching -->
+            <g transform="translate(380 180) rotate(-30)">
+              <rect x="-14" y="-4" width="28" height="8" rx="4" fill="#0A2818"/>
+            </g>
+
+            <!-- Callouts -->
+            <g font-family="Geist Mono, monospace" font-size="10.5" fill="#1B4332">
+              <!-- top -->
+              <line x1="260" y1="90" x2="260" y2="55" stroke="#1B4332" stroke-width="0.8"/>
+              <circle cx="260" cy="90" r="3" fill="#1B4332"/>
+              <text x="260" y="44" text-anchor="middle" letter-spacing="0.1em" font-weight="500">CÁPSULA ALGINATO · Ø 2–4 mm</text>
+
+              <!-- right -->
+              <line x1="395" y1="230" x2="440" y2="230" stroke="#1B4332" stroke-width="0.8"/>
+              <circle cx="395" cy="230" r="3" fill="#00D9F5" stroke="#1B4332"/>
+              <text x="446" y="227" font-weight="500">4 especies</text>
+              <text x="446" y="240" fill="#6A8A74">BSL‑1 / GRAS</text>
+
+              <!-- bottom -->
+              <line x1="235" y1="370" x2="160" y2="430" stroke="#1B4332" stroke-width="0.8"/>
+              <circle cx="235" cy="370" r="3" fill="#EF6C00" stroke="#1B4332"/>
+              <text x="60" y="445" font-weight="500">Contaminante objetivo</text>
+              <text x="60" y="458" fill="#6A8A74">hidrocarburos · TPH</text>
+
+              <!-- left stats -->
+              <line x1="95" y1="260" x2="55" y2="260" stroke="#1B4332" stroke-width="0.8"/>
+              <circle cx="95" cy="260" r="3" fill="#00C853" stroke="#1B4332"/>
+              <text x="50" y="257" text-anchor="end" font-weight="500">Costo</text>
+              <text x="50" y="270" text-anchor="end" fill="#6A8A74">&lt; $0.001 USD/u</text>
+            </g>
+
+            <!-- Orbit markers -->
+            <g>
+              <circle cx="490" cy="260" r="5" fill="#00C853"/>
+              <circle cx="30" cy="260" r="5" fill="#00D9F5"/>
+            </g>
+          </svg>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════ ¿QUÉ ES? ═══════════════════ -->
+    <section class="section container tight">
+      <div class="section-head">
+        <div class="left">
+          <div class="eyebrow">01 · ¿Qué es?</div>
+          <h2>Una alternativa a excavar, transportar y enterrar.</h2>
+        </div>
+        <p class="lede">
+          Cuando una empresa tiene suelo con hidrocarburos o una planta vierte
+          colorantes azo, el camino convencional es costoso y fisicoquímico.
+          BioCycle diseña la receta biológica — y predice su desempeño.
+        </p>
+      </div>
+
+      <div class="value-grid">
+        <article class="value-cell">
+          <div class="v-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 11l3-8 3 8M6 11h12M8 21l2-10M16 21l-2-10"/></svg>
+          </div>
+          <div class="v-num">01 / Diseño</div>
+          <h3>Consorcio óptimo por sitio</h3>
+          <p>4 microorganismos con proporción, rol y rango de tolerancia — ajustados a temperatura, pH y contaminación mixta del sitio real.</p>
+        </article>
+        <article class="value-cell">
+          <div class="v-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 3v18h18M7 14l4-4 3 3 5-6"/></svg>
+          </div>
+          <div class="v-num">02 / Predicción</div>
+          <h3>Curva de degradación</h3>
+          <p>Predicción a 12 semanas vs. método convencional y atenuación natural, con citaciones a papers y tooltips cuantitativos.</p>
+        </article>
+        <article class="value-cell">
+          <div class="v-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2v6m0 8v6M2 12h6m8 0h6M5 5l4 4m6 6l4 4M5 19l4-4m6-6l4-4"/></svg>
+          </div>
+          <div class="v-num">03 / Protocolo</div>
+          <h3>Cápsula + despliegue</h3>
+          <p>Formulación de cápsula alginato, pasos de preparación, proveedor local y cronograma de monitoreo para el piloto de 90 días.</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- ═══════════════════ DOS CAMINOS ═══════════════════ -->
+    <section class="section container tight">
+      <div class="section-head">
+        <div class="left">
+          <div class="eyebrow">02 · Dos caminos, un objetivo</div>
+          <h2>Laboratorios diseñan. Empresas cotizan.</h2>
+        </div>
+        <p class="lede">
+          Dos productos distintos sobre el mismo motor de IA. Ambos parten del
+          mismo corpus de 4,797 referencias y los mismos 28 microorganismos aprobados.
+        </p>
+      </div>
+
+      <div class="paths">
+        <article class="path lab">
+          <div class="p-glow"></div>
+          <span class="p-tag">B2C</span>
+          <div class="p-head">
+            <div class="p-badge"><span class="dot"></span> Laboratorio</div>
+            <div class="p-role">Para investigadores</div>
+          </div>
+          <h3>Construye tu Consorcio</h3>
+          <p class="p-desc">Wizard de 3 pasos con selector de 33 contaminantes, condiciones del entorno y validación de compatibilidad. Diseñado para papers, tesis y pilotos académicos.</p>
+          <ul class="p-list">
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l4 4L19 7"/></svg>
+              Matriz de compatibilidad entre 4 especies
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l4 4L19 7"/></svg>
+              Probabilidad de éxito con gauge animado
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l4 4L19 7"/></svg>
+              Citación exportable a BibTeX · DOIs
+            </li>
+          </ul>
+          <a class="p-cta" href="#">
+            Abrir diseñador
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </a>
+        </article>
+
+        <article class="path biz">
+          <div class="p-glow"></div>
+          <span class="p-tag">B2B</span>
+          <div class="p-head">
+            <div class="p-badge"><span class="dot"></span> Empresa</div>
+            <div class="p-role">Para HSEQ / Remediation PM</div>
+          </div>
+          <h3>Gestiona tus Residuos</h3>
+          <p class="p-desc">Cotiza por tipo de operación, país y volumen. Obtén plan, inversión mensual, ROI, CO₂ evitado y mapeo a ANLA · EPA · Res. 631/2015.</p>
+          <ul class="p-list">
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l4 4L19 7"/></svg>
+              Escucha Activa: 4,797 posts clasificados
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l4 4L19 7"/></svg>
+              Caso ilustrativo: Refinería Andina S.A.
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l4 4L19 7"/></svg>
+              Piloto 90 días — $3K USD con lab aliado
+            </li>
+          </ul>
+          <a class="p-cta" href="#">
+            Cotizar operación
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </a>
+        </article>
+      </div>
+    </section>
+
+    <!-- ═══════════════════ PROBLEMAS ═══════════════════ -->
+    <section class="section container tight">
+      <div class="section-head">
+        <div class="left">
+          <div class="eyebrow">03 · Problemas que resolvemos</div>
+          <h2>El costo de no actuar es más alto que el piloto.</h2>
+        </div>
+        <p class="lede">Cifras actuales del mercado LATAM y global que enmarcan por qué la biorremediación basada en datos es el siguiente paso.</p>
+      </div>
+
+      <div class="problems">
+        <article class="prob p1">
+          <div class="p-cat">Residuos · Colombia</div>
+          <div class="p-stat">11.6<span class="u">M t/año</span></div>
+          <div class="p-headline">Residuos sólidos sin tratamiento</div>
+          <div class="p-body">Solo 17% se aprovecha; el resto termina en rellenos al borde de su vida útil regulatoria.</div>
+          <div class="p-src">Fuente · Supersevicios 2024</div>
+        </article>
+        <article class="prob p2">
+          <div class="p-cat">Hidrocarburos</div>
+          <div class="p-stat">3.8<span class="u">M t/año</span></div>
+          <div class="p-headline">Suelos contaminados global</div>
+          <div class="p-body">Derrames y operación crónica. Mercado de remediación: USD $110 B proyectado al 2030.</div>
+          <div class="p-src">Fuente · USEPA · Grand View</div>
+        </article>
+        <article class="prob p3">
+          <div class="p-cat">Textiles</div>
+          <div class="p-stat">20<span class="u">%</span></div>
+          <div class="p-headline">De la contaminación hídrica industrial</div>
+          <div class="p-body">Colorantes azo resistentes. Tratamiento fisicoquímico costoso; la vía biológica reduce lodos.</div>
+          <div class="p-src">Fuente · UN Environment 2019</div>
+        </article>
+        <article class="prob p4">
+          <div class="p-cat">Regulación</div>
+          <div class="p-stat">2027<span class="u"> · deadline</span></div>
+          <div class="p-headline">Cierre de rellenos en LATAM</div>
+          <div class="p-body">13 de las 32 capitales sin plan B. Presión regulatoria crea ventana de adopción para vías biológicas.</div>
+          <div class="p-src">Fuente · BID, 2024</div>
+        </article>
+      </div>
+    </section>
+
+    <!-- ═══════════════════ CÓMO FUNCIONA ═══════════════════ -->
+    <section class="section container tight">
+      <div class="section-head">
+        <div class="left">
+          <div class="eyebrow">04 · Cómo funciona</div>
+          <h2>De contaminante a cápsula desplegable en tres pasos.</h2>
+        </div>
+        <a class="btn btn-ghost" href="#" style="height:36px">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M8 5v14l11-7z"/></svg>
+          Ver demo (1:40)
+        </a>
+      </div>
+
+      <div class="steps">
+        <article class="step featured">
+          <div class="s-num"><span class="bullet">01</span> Describe el sitio</div>
+          <h3>Contaminante · condiciones · volumen</h3>
+          <p>33 subtipos organizados en 7 categorías. Condiciones de campo: temperatura, pH, medio, mezcla, volumen a tratar.</p>
+          <div class="s-vis">
+            <!-- Mini form -->
+            <div style="display:flex;flex-direction:column;gap:8px">
+              <div style="display:flex;gap:6px;flex-wrap:wrap">
+                <span class="chip"><span class="dot"></span>Hidrocarburo · TPH</span>
+                <span class="chip info"><span class="dot"></span>In-situ suelo</span>
+              </div>
+              <div style="display:flex;gap:6px;flex-wrap:wrap">
+                <span class="chip">pH 6.8</span>
+                <span class="chip">28 °C</span>
+                <span class="chip">120 m³</span>
+                <span class="chip warn"><span class="dot"></span>Mixto 12%</span>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="step">
+          <div class="s-num"><span class="bullet">02</span> Motor de diseño</div>
+          <h3>ML + verificación de compatibilidad</h3>
+          <p>Crunching sobre 4,797 referencias, filtros BSL‑1/GRAS y predicción de degradación con intervalos de confianza.</p>
+          <div class="s-vis">
+            <svg viewBox="0 0 260 80" style="width:100%; height:70px">
+              <defs>
+                <linearGradient id="curveG" x1="0" x2="1"><stop offset="0" stop-color="#00C853"/><stop offset="1" stop-color="#00D9F5"/></linearGradient>
+              </defs>
+              <path d="M4 70 Q 70 55 120 30 T 256 12" fill="none" stroke="url(#curveG)" stroke-width="2"/>
+              <path d="M4 70 Q 70 55 120 30 T 256 12 L 256 74 L 4 74 Z" fill="url(#curveG)" opacity="0.12"/>
+              <g font-family="Geist Mono, monospace" font-size="9" fill="#6A8A74">
+                <text x="4" y="10">degradación</text>
+                <text x="230" y="10" font-weight="500" fill="#1B4332">78%</text>
+              </g>
+              <g stroke="#E2ECE5" stroke-dasharray="2 3">
+                <line x1="4" y1="36" x2="256" y2="36"/>
+              </g>
+            </svg>
+          </div>
+        </article>
+
+        <article class="step">
+          <div class="s-num"><span class="bullet">03</span> Cápsula + protocolo</div>
+          <h3>Receta, costo y plan de monitoreo</h3>
+          <p>Alginato de sodio · proveedor local · 5 pasos de preparación · cronograma de muestreo semanal para el piloto de 90 días.</p>
+          <div class="s-vis">
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px">
+              <div>
+                <div class="eyebrow" style="font-size:9.5px">Costo / cápsula</div>
+                <div class="display-num" style="font-size:26px; color:var(--forest-deep); margin-top:4px">$0.0008</div>
+              </div>
+              <div>
+                <div class="eyebrow" style="font-size:9.5px">Éxito previsto</div>
+                <div class="display-num" style="font-size:26px; color:var(--forest-deep); margin-top:4px">52%</div>
+              </div>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- ═══════════════════ MÉTRICAS ═══════════════════ -->
+    <section class="section container">
+      <div class="metrics">
+        <div class="metric">
+          <div class="m-label">Microorganismos</div>
+          <div class="m-num">28</div>
+          <div class="m-sub">BSL‑1 / GRAS curados</div>
+        </div>
+        <div class="metric">
+          <div class="m-label">Referencias</div>
+          <div class="m-num">4,797</div>
+          <div class="m-sub">Peer‑reviewed · 2019–2025</div>
+        </div>
+        <div class="metric">
+          <div class="m-label">Contaminantes</div>
+          <div class="m-num">33</div>
+          <div class="m-sub">En 7 categorías</div>
+        </div>
+        <div class="metric">
+          <div class="m-label">Cobertura</div>
+          <div class="m-num">30+</div>
+          <div class="m-sub">Países referenciados</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════ FOOTER ═══════════════════ -->
+    <footer>
+      <div class="container footer-grid">
+        <div class="footer-brand">
+          <div style="display:flex; align-items:center; gap:10px">
+            <div class="brand-mark" style="width:32px;height:32px"></div>
+            <div>
+              <div class="brand-name" style="font-size:15px">Impulso BioCycle</div>
+              <div class="brand-sub">Accelerating the Natural Cycle through Intelligence</div>
+            </div>
+          </div>
+          <p>Plataforma de IA para biorremediación basada en datos. Bogotá · operando en LATAM.</p>
+        </div>
+        <div class="footer-col">
+          <h5>Producto</h5>
+          <a href="#">Construye tu Consorcio</a>
+          <a href="#">Gestiona tus Residuos</a>
+          <a href="#">Asesoría IA</a>
+          <a href="#">Descubrimientos</a>
+        </div>
+        <div class="footer-col">
+          <h5>Empresa</h5>
+          <a href="#">Sobre · Pivote A+C</a>
+          <a href="#">Piloto 90 días</a>
+          <a href="#">Lab aliado</a>
+          <a href="#">Contacto</a>
+        </div>
+        <div class="footer-col">
+          <h5>Legal</h5>
+          <a href="#">Disclaimer científico</a>
+          <a href="#">ANLA · Res. 631/2015</a>
+          <a href="#">EPA compliance</a>
+          <a href="#">Privacidad</a>
+        </div>
+      </div>
+      <div class="container legal">
+        <div class="disclaimer">
+          BioCycle diseña recetas microbianas — no fabrica ni comercializa los microorganismos.
+          Todo trabajo se realiza dentro de biorreactores contenidos o cápsulas de alginato in‑situ, con
+          especies BSL‑1/GRAS. No prometemos limpiar playas ni ecosistemas abiertos sin contención.
+        </div>
+        <div>© 2026 · TRL 3–4 · v0.3 piloto</div>
+      </div>
+    </footer>
+
+  </main>
+</div>
+
+<!-- ─── TWEAKS ─── -->
+<button class="tweaks-btn" id="tweaksBtn">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="14" height="14"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.6 1.6 0 00.3 1.8l.1.1a2 2 0 11-2.8 2.8l-.1-.1a1.6 1.6 0 00-1.8-.3 1.6 1.6 0 00-1 1.5V21a2 2 0 11-4 0v-.1A1.6 1.6 0 008 19.4a1.6 1.6 0 00-1.8.3l-.1.1a2 2 0 11-2.8-2.8l.1-.1a1.6 1.6 0 00.3-1.8 1.6 1.6 0 00-1.5-1H2a2 2 0 110-4h.1A1.6 1.6 0 003.6 9a1.6 1.6 0 00-.3-1.8l-.1-.1a2 2 0 112.8-2.8l.1.1a1.6 1.6 0 001.8.3H8a1.6 1.6 0 001-1.5V3a2 2 0 114 0v.1a1.6 1.6 0 001 1.5 1.6 1.6 0 001.8-.3l.1-.1a2 2 0 112.8 2.8l-.1.1a1.6 1.6 0 00-.3 1.8V9a1.6 1.6 0 001.5 1H21a2 2 0 110 4h-.1a1.6 1.6 0 00-1.5 1z"/></svg>
+  Tweaks
+</button>
+<div class="tweaks-panel" id="tweaksPanel">
+  <h4>Tweaks <span class="close" id="twClose">×</span></h4>
+
+  <div class="tw-group">
+    <label>Color de acento</label>
+    <div class="tw-row" id="twAccent">
+      <div class="tw-swatch" data-val="cyan" style="background:#00D9F5"></div>
+      <div class="tw-swatch" data-val="lime" style="background:#C4FF00"></div>
+      <div class="tw-swatch" data-val="green" style="background:#00C853"></div>
+      <div class="tw-swatch" data-val="amber" style="background:#F4A100"></div>
+    </div>
+  </div>
+  <div class="tw-group">
+    <label>Densidad</label>
+    <div class="tw-row" id="twDensity">
+      <div class="tw-chip" data-val="compact">Compact</div>
+      <div class="tw-chip" data-val="comfortable">Comfortable</div>
+      <div class="tw-chip" data-val="roomy">Roomy</div>
+    </div>
+  </div>
+  <div class="tw-group">
+    <label>Estilo hero</label>
+    <div class="tw-row" id="twHero">
+      <div class="tw-chip" data-val="mesh">Mesh</div>
+      <div class="tw-chip" data-val="clean">Clean</div>
+      <div class="tw-chip" data-val="dark">Dark</div>
+    </div>
+  </div>
+  <div class="tw-group">
+    <label>Rejilla hero</label>
+    <div class="tw-row" id="twGrid">
+      <div class="tw-chip" data-val="on">On</div>
+      <div class="tw-chip" data-val="off">Off</div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  const body = document.body;
+  const state = Object.assign({
+    accent:"cyan", density:"comfortable", heroStyle:"mesh", showGrid:true
+  }, window.TWEAKS || {});
+
+  function apply(){
+    body.dataset.accent = state.accent;
+    body.dataset.density = state.density;
+    body.dataset.hero = state.heroStyle;
+    body.dataset.grid = state.showGrid ? "on" : "off";
+    // reflect active UI
+    document.querySelectorAll('#twAccent .tw-swatch').forEach(el=>el.classList.toggle('active', el.dataset.val===state.accent));
+    document.querySelectorAll('#twDensity .tw-chip').forEach(el=>el.classList.toggle('active', el.dataset.val===state.density));
+    document.querySelectorAll('#twHero .tw-chip').forEach(el=>el.classList.toggle('active', el.dataset.val===state.heroStyle));
+    document.querySelectorAll('#twGrid .tw-chip').forEach(el=>el.classList.toggle('active', (el.dataset.val==='on')===state.showGrid));
+  }
+  apply();
+
+  function persist(keys){
+    try { window.parent.postMessage({type:'__edit_mode_set_keys', edits:keys}, '*'); } catch(e){}
+  }
+
+  function bindGroup(sel, key, handler){
+    document.querySelectorAll(sel).forEach(el => {
+      el.addEventListener('click', () => {
+        const val = el.dataset.val;
+        handler(val);
+        apply();
+        const e = {}; e[key] = key==='showGrid' ? (val==='on') : val;
+        persist(e);
+      });
+    });
+  }
+  bindGroup('#twAccent .tw-swatch','accent', v => state.accent = v);
+  bindGroup('#twDensity .tw-chip','density', v => state.density = v);
+  bindGroup('#twHero .tw-chip','heroStyle', v => state.heroStyle = v);
+  bindGroup('#twGrid .tw-chip','showGrid', v => state.showGrid = (v==='on'));
+
+  // Edit-mode host integration
+  const btn = document.getElementById('tweaksBtn');
+  const panel = document.getElementById('tweaksPanel');
+  const close = document.getElementById('twClose');
+  let active = false;
+  window.addEventListener('message', (ev) => {
+    const d = ev.data || {};
+    if (d.type === '__activate_edit_mode'){ active = true; btn.classList.add('visible'); }
+    if (d.type === '__deactivate_edit_mode'){ active = false; btn.classList.remove('visible'); panel.classList.remove('open'); }
+  });
+  btn.addEventListener('click', ()=> panel.classList.toggle('open'));
+  close.addEventListener('click', ()=> panel.classList.remove('open'));
+  try { window.parent.postMessage({type:'__edit_mode_available'}, '*'); } catch(e){}
+})();
+</script>
+
+</body>
+</html>

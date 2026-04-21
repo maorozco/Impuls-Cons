@@ -95,7 +95,7 @@ def render_gauge(probability):
         title={"text": "Probabilidad de Éxito", "font": {"size": 18, "color": "#1B4332"}},
         gauge={
             "axis": {"range": [0, 100], "tickwidth": 1, "tickcolor": "#1B4332"},
-            "bar": {"color": color},
+            "bar": {"color": color, "thickness": 0.75},
             "bgcolor": "white",
             "borderwidth": 2,
             "bordercolor": "#E0E0E0",
@@ -106,18 +106,28 @@ def render_gauge(probability):
             ],
             "threshold": {
                 "line": {"color": color, "width": 4},
-                "thickness": 0.75,
+                "thickness": 0.85,
                 "value": probability,
             },
         },
-        number={"suffix": "%", "font": {"size": 40, "color": color}},
+        number={
+            "suffix": "%",
+            "font": {"size": 44, "color": color},
+            "valueformat": ".0f",
+        },
     ))
+    # Fase 0 · E2.7 — gauge animado 0→N
+    fig.update_traces(
+        gauge_bar_line={"color": color, "width": 0},
+        selector=dict(type="indicator"),
+    )
     fig.update_layout(
         height=360,
         margin=dict(l=30, r=30, t=50, b=10),
         paper_bgcolor="white",
         plot_bgcolor="white",
         font={"color": "#1B4332"},
+        transition={"duration": 800, "easing": "cubic-in-out"},
     )
     return fig, label, color
 
@@ -151,27 +161,42 @@ def render_degradation_chart(cat_type, probability, ml_timeline=None):
         biocycle = [min(100, v * scale) for v in curves["biocycle"]]
 
     fig = go.Figure()
+    # Fase 0 · E2.7 — hovertemplate ricos con delta vs natural + mensaje de fuente
+    biocycle_deltas = [f"+{b - n:.1f}% vs atenuación natural" for b, n in zip(biocycle, natural)]
     fig.add_trace(go.Scatter(
         x=weeks, y=biocycle,
         mode="lines+markers",
         name="Con consorcio BioCycle",
         line=dict(color="#00C853", width=3),
-        marker=dict(size=6),
+        marker=dict(size=7, line=dict(color="white", width=2)),
+        hovertemplate=(
+            "<b>Semana %{x}</b><br>"
+            "Degradación: <b>%{y:.1f}%</b><br>"
+            "%{customdata}<br>"
+            "<i>Estimación ML+literatura — requiere caracterización del sitio</i>"
+            "<extra>BioCycle</extra>"
+        ),
+        customdata=biocycle_deltas,
     ))
     fig.add_trace(go.Scatter(
         x=weeks, y=natural,
         mode="lines",
         name="Sin tratamiento / atenuación natural",
         line=dict(color="#9E9E9E", width=2, dash="dash"),
+        hovertemplate="<b>Semana %{x}</b><br>Degradación natural: %{y:.1f}%<extra>Natural</extra>",
     ))
     fig.add_trace(go.Scatter(
         x=weeks, y=convencional,
         mode="lines",
         name="Método convencional",
         line=dict(color="#FF9800", width=2, dash="dot"),
+        hovertemplate="<b>Semana %{x}</b><br>Convencional: %{y:.1f}%<extra>Método convencional</extra>",
     ))
     fig.update_layout(
-        title="Predicción de Degradación Acumulada",
+        title={
+            "text": "Predicción de Degradación Acumulada",
+            "font": {"size": 16, "color": "#1B4332"},
+        },
         xaxis_title="Semanas",
         yaxis_title="Degradación acumulada (%)",
         xaxis=dict(showgrid=True, gridcolor="#F0F0F0", zeroline=False),
@@ -182,39 +207,54 @@ def render_degradation_chart(cat_type, probability, ml_timeline=None):
         font=dict(color="#1B4332", size=13),
         legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
         margin=dict(l=50, r=20, t=70, b=50),
+        hoverlabel=dict(bgcolor="white", bordercolor="#00C853", font=dict(color="#1B4332")),
+        hovermode="x unified",
+        transition={"duration": 500, "easing": "cubic-in-out"},
     )
     return fig, biocycle
 
 
 def render_cost_chart(category, volume):
+    # Paleta brand BioCycle:
+    #   primary (BioCycle)     → #00C853 verde brillante
+    #   muted (convencional)   → #78909C azul-gris discreto
+    #   warning (costoso)      → #EF6C00 naranja quemado (no rojo puro)
+    #   accent (high-value)    → #00D9F5 cyan brand
+    #   highlight (revenue)    → #C4FF00 lima brand
+    C_BIO   = "#00C853"
+    C_MUTED = "#78909C"
+    C_WARN  = "#EF6C00"
+    C_ACCENT = "#00D9F5"
+    C_LIME  = "#C4FF00"
+
     if category == "Plásticos":
         methods = ["BioCycle (biorreactor enzimático)", "Reciclaje mecánico", "Incineración", "PET virgen (referencia)", "Valor monómeros recuperados"]
         costs = [675, 275, 225, 1000, 675]
-        colors = ["#00C853", "#9E9E9E", "#F44336", "#1565C0", "#FFD600"]
+        colors = [C_BIO, C_MUTED, C_WARN, C_ACCENT, C_LIME]
         unit = "USD/ton"
         savings = max(0, 1000 - 675) * volume / 1000
     elif category == "Hidrocarburos y petróleo":
         methods = ["BioCycle (biorremediación in situ)", "Excavación + disposición", "Oxidación química", "Atenuación natural"]
         costs = [180, 1150, 325, 0]
-        colors = ["#00C853", "#F44336", "#FF9800", "#9E9E9E"]
+        colors = [C_BIO, C_WARN, "#FFB300", C_MUTED]
         unit = "USD/m³"
         savings = max(0, 1150 - 180) * volume
     elif category == "Suelos agrícolas contaminados":
         methods = ["BioCycle (bioaumentación)", "Excavación + disposición", "Fitorremediación", "Oxidación química"]
         costs = [75, 365, 70, 120]
-        colors = ["#00C853", "#F44336", "#FFC107", "#FF9800"]
+        colors = [C_BIO, C_WARN, C_LIME, "#FFB300"]
         unit = "USD/ton"
         savings = max(0, 365 - 75) * volume / 1000
     elif category == "Aguas residuales industriales":
         methods = ["BioCycle (tratamiento biológico)", "Coagulación/floculación", "Ozono", "Carbón activado"]
         costs = [1.00, 0.35, 2.25, 3.50]
-        colors = ["#00C853", "#9E9E9E", "#FF9800", "#F44336"]
+        colors = [C_BIO, C_MUTED, "#FFB300", C_WARN]
         unit = "USD/m³"
         savings = max(0, 2.25 - 1.00) * volume
     else:
         methods = ["BioCycle (biorremediación)", "Tratamiento químico", "Disposición final", "Sin tratamiento"]
         costs = [150, 400, 600, 0]
-        colors = ["#00C853", "#FF9800", "#F44336", "#9E9E9E"]
+        colors = [C_BIO, "#FFB300", C_WARN, C_MUTED]
         unit = "USD/ton"
         savings = max(0, 400 - 150) * volume / 1000
 
@@ -222,20 +262,46 @@ def render_cost_chart(category, volume):
         y=methods,
         x=costs,
         orientation="h",
-        marker_color=colors,
-        text=[f"${c:,.2f} {unit}" for c in costs],
+        marker=dict(
+            color=colors,
+            line=dict(color="rgba(0,0,0,0.08)", width=1),
+        ),
+        text=[f"${c:,.0f} {unit}" if c >= 10 else f"${c:,.2f} {unit}" for c in costs],
         textposition="outside",
+        textfont=dict(color="#1B4332", size=12, family="system-ui, -apple-system, sans-serif"),
+        hovertemplate="<b>%{y}</b><br>Costo: <b>%{x:,.2f} " + unit + "</b><extra></extra>",
     ))
     fig.update_layout(
-        title=f"Comparación de Costos — {category}",
-        xaxis_title=f"Costo ({unit})",
-        xaxis=dict(showgrid=True, gridcolor="#F0F0F0", zeroline=False),
-        yaxis=dict(showgrid=False),
-        height=400,
+        title={
+            "text": f"Comparación de costos · {category}",
+            "font": {"size": 15, "color": "#1B4332", "family": "system-ui, -apple-system, sans-serif"},
+            "x": 0.02,
+            "xanchor": "left",
+        },
+        xaxis=dict(
+            title=dict(text=f"Costo ({unit})", font=dict(size=12, color="#6A8A74")),
+            showgrid=True,
+            gridcolor="#EEF4EF",
+            zeroline=False,
+            tickfont=dict(color="#6A8A74", size=11),
+        ),
+        yaxis=dict(
+            showgrid=False,
+            tickfont=dict(color="#1B4332", size=12),
+            autorange="reversed",  # BioCycle first on top
+        ),
+        height=360,
         paper_bgcolor="white",
         plot_bgcolor="white",
-        font=dict(color="#1B4332", size=13),
-        margin=dict(l=40, r=130, t=60, b=40),
+        font=dict(color="#1B4332", size=13, family="system-ui, -apple-system, sans-serif"),
+        margin=dict(l=40, r=160, t=60, b=50),
+        bargap=0.45,
+        hoverlabel=dict(
+            bgcolor="white",
+            bordercolor="#00C853",
+            font=dict(color="#1B4332", family="system-ui, -apple-system, sans-serif"),
+        ),
+        transition={"duration": 600, "easing": "cubic-in-out"},
     )
     return fig, savings, unit
 
@@ -312,10 +378,10 @@ CSS = """
 def render():
     st.markdown(CSS, unsafe_allow_html=True)
     st.markdown("""
-    <div class="hero-section">
-        <div class="hero-title">🧬 Impulso BioCycle</div>
-        <div class="hero-subtitle">Biorremediación Inteligente con IA</div>
-        <span class="hero-badge">🧪 Diseñador de Consorcios Microbianos</span>
+    <div class="page-breadcrumb">
+        <div class="bc-dot"></div>
+        <div class="bc-title">Construye tu consorcio</div>
+        <div class="bc-sub">diseño asistido por IA</div>
     </div>
     """, unsafe_allow_html=True)
 
@@ -355,7 +421,14 @@ def render():
         is_plastic = categoria == "Plásticos"
 
         if is_plastic and is_insitu:
-            st.warning("⚠️ La degradación de plásticos requiere biorreactor (condiciones controladas). Para tratamiento in situ, recomendamos hidrocarburos, suelos agrícolas o aguas residuales.")
+            st.error(
+                "🚫 **Combinación no soportada.** La degradación in-situ de plásticos no es el modelo "
+                "que vendemos — geometría sin triturar + UV + temperatura variable reducen la eficiencia "
+                "a 10–20%. El pivote actual de BioCycle ofrece plástico sólo en **biorreactor contenido** "
+                "(produce monómeros TPA+EG vendibles a $800–1,600/ton). Para tratamiento in-situ, "
+                "recomendamos hidrocarburos, suelos agrícolas, aguas residuales o minería — donde existen "
+                "décadas de evidencia de campo."
+            )
 
         pretreatment_ok = False
         if is_plastic:
@@ -415,13 +488,17 @@ def render():
         st.markdown('</div>', unsafe_allow_html=True)
 
     st.markdown("---")
+    _invalid_combo = is_plastic and is_insitu
     col_btn = st.columns([1, 2, 1])
     with col_btn[1]:
         design_clicked = st.button(
             "🧬 Diseñar Consorcio Óptimo",
             use_container_width=True,
             type="primary",
-            key="design_btn"
+            key="design_btn",
+            disabled=_invalid_combo,
+            help=("Cambie a biorreactor (plásticos) o elija otro tipo de contaminante para continuar."
+                  if _invalid_combo else None),
         )
 
     if design_clicked or st.session_state.get("consorcio_diseñado"):
@@ -437,9 +514,10 @@ def render():
             st.session_state["tipo_medio_result"] = tipo_medio
             st.session_state["pretreatment_ok_result"] = pretreatment_ok
 
+            from data import UNIQUE_MICROORGANISMS
             loading_steps = [
                 ("🔍 Analizando contaminante y condiciones...", 2.0),
-                ("🧫 Consultando 847 microorganismos catalogados...", 2.0),
+                (f"🧫 Consultando {UNIQUE_MICROORGANISMS} microorganismos BSL-1/GRAS catalogados...", 2.0),
                 ("🔗 Verificando compatibilidad entre especies...", 1.5),
                 ("🧬 Optimizando con modelo ML (Gradient Boosting)...", 2.0),
                 ("💊 Seleccionando formulación de cápsula...", 1.5),
@@ -763,7 +841,28 @@ def render():
         st.plotly_chart(cost_fig, use_container_width=True)
 
         if savings > 0:
-            st.success(f"💡 Ahorro estimado para {volumen_r:,.0f} {vol_unit_r}: **${savings:,.0f} USD** vs. método convencional más usado")
+            st.markdown(
+                f"""
+<div style="margin-top:14px; padding:18px 22px; border-radius:14px;
+            background:linear-gradient(135deg,#E8F5E9 0%,#F1F8E9 100%);
+            border-left:5px solid #00C853; display:flex; align-items:center; gap:18px;
+            animation: fadeInUp 0.5s ease both;">
+    <div style="font-size:34px; line-height:1;">💰</div>
+    <div style="flex:1;">
+        <div style="font-size:11px; color:#1B5E20; text-transform:uppercase; letter-spacing:1.2px; font-weight:700;">
+            Ahorro estimado · volumen {volumen_r:,.0f} {vol_unit_r}
+        </div>
+        <div style="font-size:28px; font-weight:900; color:#1B5E20; line-height:1.1; margin-top:4px;">
+            ${savings:,.0f} <span style="font-size:14px; font-weight:600; color:#2E7D32;">USD</span>
+        </div>
+        <div style="font-size:12px; color:#3A5A45; margin-top:4px;">
+            vs. método convencional más usado · rango basado en literatura peer-reviewed
+        </div>
+    </div>
+</div>
+""",
+                unsafe_allow_html=True,
+            )
         st.markdown('</div>', unsafe_allow_html=True)
 
         with st.expander("📋 Protocolo de Despliegue — Guía paso a paso"):
@@ -821,8 +920,32 @@ def render():
             6. **Los costos son estimaciones de referencia** basadas en literatura y mercado actual. Cotizar con proveedores locales para precios exactos.
             """)
 
-        st.markdown("---")
-        col_dl = st.columns([1, 2, 1])
-        with col_dl[1]:
-            if st.button("📥 Descargar reporte", use_container_width=True, key="download_btn"):
-                st.toast("📥 Función de descarga disponible próximamente — Contacta a nuestro equipo para el reporte completo en PDF.", icon="ℹ️")
+        # Fase 0 · E2 — CTA final en vez de botón muerto "Descargar reporte"
+        # (El botón antiguo solo mostraba un toast "Próximamente" — bug #3 CLAUDE.md.)
+        st.markdown(
+            """
+<div style="margin: 28px auto 8px; max-width:680px; background:linear-gradient(135deg,#004D2C,#1B5E20);
+            border-radius:16px; padding:22px 28px; color:white; text-align:center;
+            box-shadow:0 8px 24px rgba(27,94,32,0.22); animation: fadeInUp 0.45s ease both;">
+    <div style="font-size:11px; letter-spacing:2px; text-transform:uppercase; color:#C4FF00; font-weight:700;">
+        Siguiente paso
+    </div>
+    <div style="font-size:22px; font-weight:800; margin-top:8px; line-height:1.35;">
+        ¿Quieres llevar este consorcio a un piloto de 90 días?
+    </div>
+    <div style="font-size:14px; opacity:0.85; margin:12px auto 0; max-width:520px; line-height:1.55;">
+        Entregamos el reporte completo en PDF, protocolo operativo por sitio y cotización de
+        caracterización — directamente con el equipo técnico.
+        <br>
+        <span style="font-size:12px; opacity:0.75;">Piloto 90d desde $3,000 USD con lab universitario aliado.</span>
+    </div>
+    <div style="margin-top:16px; font-size:14px; font-weight:600;">
+        📧 <a href="mailto:contacto@impulso-biocycle.com?subject=Piloto%2090%20d%C3%ADas"
+             style="color:#00D9F5; text-decoration:none; border-bottom:1px solid rgba(0,217,245,0.4);">
+            contacto@impulso-biocycle.com
+        </a>
+    </div>
+</div>
+""",
+            unsafe_allow_html=True,
+        )

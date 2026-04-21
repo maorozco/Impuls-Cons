@@ -1,0 +1,8 @@
+{
+  "id": "featured-paper",
+  "aspect": "16:9",
+  "model": "gemini-2.5-flash-image",
+  "bytes": 1224970,
+  "generated_at": "2026-04-21T00:08:10.756Z",
+  "prompt": "Abstract editorial illustration of a PET-degrading enzyme (FAST-PETase) captured at the moment of cleaving a plastic polymer chain. Ribbon diagram of the protein rendered in forest green and electric cyan, with the substrate chain unraveling into smaller monomer beads glowing lime. A soft bokeh of scientific paper pages blurs behind. Dark paper-white background. Feels like the cover of Nature Chemical Biology."
+}

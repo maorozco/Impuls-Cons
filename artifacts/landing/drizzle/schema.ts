@@ -6,6 +6,9 @@ import {
   integer,
   jsonb,
   varchar,
+  boolean,
+  real,
+  uniqueIndex,
   index,
 } from 'drizzle-orm/pg-core';
 import { z } from 'zod';
@@ -142,3 +145,141 @@ export type ResponseInput = z.infer<typeof insertResponseSchema>;
 
 export type WaitlistRow = typeof waitlist.$inferSelect;
 export type ResponseRow = typeof waitlistResponses.$inferSelect;
+
+// ─── Reddit / multi-agent research pipeline ──────────────────────────────
+// Feeds the Escucha Activa panel in the Streamlit portal, plus the daily
+// /api/insights endpoint that powers build-in-public posts.
+
+/**
+ * reddit_posts — raw posts fetched from Apify (trudax/reddit-scraper).
+ * Deduplicated by (subreddit, postId).
+ */
+export const redditPosts = pgTable(
+  'reddit_posts',
+  {
+    id: serial('id').primaryKey(),
+    postId: text('post_id').notNull(),
+    subreddit: text('subreddit').notNull(),
+    title: text('title').notNull(),
+    body: text('body'),
+    author: text('author'),
+    url: text('url').notNull(),
+    upvotes: integer('upvotes').default(0),
+    numComments: integer('num_comments').default(0),
+    postedAt: timestamp('posted_at', { withTimezone: true }),
+    fetchedAt: timestamp('fetched_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => ({
+    uniq: uniqueIndex('reddit_posts_uniq').on(t.subreddit, t.postId),
+    subIdx: index('reddit_posts_sub_idx').on(t.subreddit),
+    fetchedIdx: index('reddit_posts_fetched_idx').on(t.fetchedAt),
+  }),
+);
+
+/**
+ * reddit_classifications — per-post tags from the Classifier Agent (Haiku).
+ * One-to-one with reddit_posts via postRef.
+ */
+export const redditClassifications = pgTable(
+  'reddit_classifications',
+  {
+    id: serial('id').primaryKey(),
+    postRef: integer('post_ref')
+      .notNull()
+      .references(() => redditPosts.id, { onDelete: 'cascade' }),
+    contaminantType: text('contaminant_type'), // e.g. "hydrocarbons" | "pfas" | "plastics" | "soil_ag" | "mining" | "water_treatment" | "none"
+    region: text('region'), // "USA" | "LATAM" | "EU" | "APAC" | "global"
+    severity: integer('severity').default(0), // 1-5
+    painIntensity: integer('pain_intensity').default(0), // 1-5
+    avatarMatch: text('avatar_match'), // "remediation_pm_usa" | "hseq_latam" | "compliance_eu" | "apac" | "none"
+    bannedPhraseHits: jsonb('banned_phrase_hits').$type<string[]>().default([]),
+    classifierModel: text('classifier_model'),
+    classifiedAt: timestamp('classified_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => ({
+    uniq: uniqueIndex('reddit_classifications_uniq').on(t.postRef),
+    avatarIdx: index('reddit_classifications_avatar_idx').on(t.avatarMatch),
+    painIdx: index('reddit_classifications_pain_idx').on(t.painIntensity),
+  }),
+);
+
+/**
+ * pain_synthesis — weekly roll-up from the Pain Synthesizer Agent (Sonnet).
+ * Each row is a snapshot of the top N themes for a given week.
+ */
+export const painSynthesis = pgTable(
+  'pain_synthesis',
+  {
+    id: serial('id').primaryKey(),
+    windowStart: timestamp('window_start', { withTimezone: true }).notNull(),
+    windowEnd: timestamp('window_end', { withTimezone: true }).notNull(),
+    themes: jsonb('themes')
+      .$type<
+        Array<{
+          theme: string;
+          avatarMatch: string;
+          quoteCount: number;
+          topQuotes: Array<{ quote: string; url: string; subreddit: string }>;
+        }>
+      >()
+      .notNull()
+      .default([]),
+    sourcePostsCount: integer('source_posts_count').default(0),
+    synthesizerModel: text('synthesizer_model'),
+    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => ({
+    windowIdx: index('pain_synthesis_window_idx').on(t.windowEnd),
+  }),
+);
+
+/**
+ * competitor_mentions — detected references to competitors
+ * (Carbios, Novozymes, Veolia, AECOM, Genomatica, Pivot Bio, Aquatech…).
+ */
+export const competitorMentions = pgTable(
+  'competitor_mentions',
+  {
+    id: serial('id').primaryKey(),
+    postRef: integer('post_ref')
+      .notNull()
+      .references(() => redditPosts.id, { onDelete: 'cascade' }),
+    competitor: text('competitor').notNull(),
+    context: text('context'),
+    sentiment: real('sentiment'), // -1..1
+    detectedAt: timestamp('detected_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => ({
+    compIdx: index('competitor_mentions_comp_idx').on(t.competitor),
+  }),
+);
+
+/**
+ * agent_drafts — human-approval queue for the Pitch Feeder Agent.
+ * Drafts include slide quotes, tweet drafts, newsletter snippets.
+ * Never auto-posted; humans review, set `approved=true`, then publish.
+ */
+export const agentDrafts = pgTable(
+  'agent_drafts',
+  {
+    id: serial('id').primaryKey(),
+    kind: text('kind').notNull(), // "slide_quote" | "tweet" | "newsletter"
+    content: text('content').notNull(),
+    sources: jsonb('sources').$type<string[]>().default([]),
+    bannedPhraseHits: jsonb('banned_phrase_hits').$type<string[]>().default([]),
+    approved: boolean('approved').default(false),
+    rejected: boolean('rejected').default(false),
+    reviewerNotes: text('reviewer_notes'),
+    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => ({
+    kindIdx: index('agent_drafts_kind_idx').on(t.kind),
+    approvedIdx: index('agent_drafts_approved_idx').on(t.approved),
+  }),
+);
+
+export type RedditPostRow = typeof redditPosts.$inferSelect;
+export type RedditClassificationRow = typeof redditClassifications.$inferSelect;
+export type PainSynthesisRow = typeof painSynthesis.$inferSelect;
+export type CompetitorMentionRow = typeof competitorMentions.$inferSelect;
+export type AgentDraftRow = typeof agentDrafts.$inferSelect;

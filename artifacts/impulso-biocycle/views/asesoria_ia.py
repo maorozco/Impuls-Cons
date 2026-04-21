@@ -45,7 +45,7 @@ El PET (tereftalato de polietileno) es degradado por un consorcio de microorgani
 - 📦 TPA (ácido tereftálico): $680–850/ton — materia prima para nuevo PET
 - 📦 EG (etilenglicol): $500–650/ton — solvente y anticongelante industrial
 
-**Dato clave:** La enzima FAST-PETase (2022, Universidad de Texas) opera a 50°C y degrada PET en días. BioCycle incorpora cepas con ingeniería enzimática compatible.
+**Dato clave:** La enzima FAST-PETase (2022, Universidad de Texas) opera a 50°C y degrada PET **en días bajo condiciones controladas de laboratorio — PET amorfo, triturado fino, biorreactor termostatizado**. En campo abierto (geometría sin triturar + UV + temperatura variable) la degradación cae a 10–20%. BioCycle incorpora cepas con ingeniería enzimática compatible y vende **biorreactor contenido**, no degradación in-situ de plástico.
 
 📚 *Más de 150 publicaciones peer-reviewed respaldan la degradación enzimática del PET.*""",
 
@@ -125,7 +125,7 @@ Los colorantes azo representan el 70% de los tintes textiles y son altamente rec
     "diferencia": """🚀 **¿Qué diferencia a BioCycle de otras soluciones?**
 
 **1. 🤖 Diseño asistido por IA — no empírico**
-La mayoría de proveedores usan inóculos genéricos probados en campo. BioCycle usa un modelo de **Gradient Boosting** entrenado con **+2,000 publicaciones científicas peer-reviewed** para predecir la combinación óptima de microorganismos para *sus* condiciones exactas.
+La mayoría de proveedores usan inóculos genéricos probados en campo. BioCycle usa un modelo de **Gradient Boosting** calibrado con muestras curadas extraídas de literatura peer-reviewed (**4,700+ referencias científicas agregadas**) para predecir la combinación óptima de microorganismos para *sus* condiciones exactas. *R²≈0.55 sobre 43 muestras de entrenamiento; mejora con cada proyecto real integrado.*
 
 **2. 🧬 Consorcios multi-especie, no monocultivos**
 Los monocultivos son frágiles y se inhiben ante variaciones de pH o temperatura. Los consorcios BioCycle son robustos: si una especie falla, las otras compensan.
@@ -255,7 +255,8 @@ Estoy aquí para responder sus preguntas sobre biorremediación, consorcios micr
 }
 
 
-def get_response(msg: str) -> str:
+def _keyword_response(msg: str) -> str:
+    """Legacy keyword-matched fallback (also feeds the RAG system as hint)."""
     m = msg.lower()
     if any(k in m for k in ["pet", "plástico", "plastico", "polietileno", "hdpe", "ldpe", "pp ", "poliuretano"]):
         return RESPONSES["pet_plastic"]
@@ -276,16 +277,65 @@ def get_response(msg: str) -> str:
     return RESPONSES["default"]
 
 
+def get_response(msg: str) -> tuple[str, list[dict]]:
+    """Returns (markdown_answer, source_citations).
+
+    - If ANTHROPIC_API_KEY is present → RAG (TF-IDF retrieval + Claude answer).
+    - Else → TF-IDF-backed offline summary OR legacy keyword response.
+
+    `source_citations` is a list of {doc_id, title, source, score, url?} dicts
+    — rendered below the assistant message as a source footer in the UI.
+    """
+    try:
+        # Lazy import so Streamlit startup doesn't pay the sklearn cost if never used
+        import rag  # type: ignore
+        legacy = _keyword_response(msg)
+        text, retrievals = rag.answer(msg, legacy_fallback=legacy)
+        sources = [
+            {
+                "doc_id": r.doc.doc_id,
+                "title": r.doc.title,
+                "source": r.doc.source,
+                "score": r.score,
+                "url": r.doc.url,
+            }
+            for r in retrievals
+        ]
+        return text, sources
+    except Exception as e:  # noqa: BLE001 — rag failure must never break the chat
+        return _keyword_response(msg), []
+
+
 def render():
     st.markdown(CSS, unsafe_allow_html=True)
 
     st.markdown("""
-    <div class="hero-section">
-        <div class="hero-title">🧬 Impulso BioCycle</div>
-        <div class="hero-subtitle">Biorremediación Inteligente con IA</div>
-        <span class="hero-badge">💬 Asesoría IA — Respuestas basadas en ciencia</span>
+    <div class="page-breadcrumb">
+        <div class="bc-dot"></div>
+        <div class="bc-title">Asesoría IA</div>
+        <div class="bc-sub">RAG sobre literatura peer-reviewed</div>
     </div>
     """, unsafe_allow_html=True)
+
+    # Show LLM status honestly — transparency is the moat
+    try:
+        import rag  # type: ignore
+        n_docs = len(rag.get_retriever().docs)
+        if rag.is_llm_available():
+            st.success(
+                f"🧠 **IA conversacional activa** ({rag.llm_label()}). RAG sobre {n_docs} fuentes "
+                "(papers peer-reviewed + consorcios + bases de datos). Las respuestas citan las fuentes utilizadas."
+            )
+        else:
+            st.info(
+                f"⚙️ **Modo recuperación offline (TF-IDF).** El chat recupera fuentes relevantes de {n_docs} "
+                "documentos y responde con un resumen. Para IA conversacional completa, configure "
+                "`ANTHROPIC_API_KEY` u `OPENROUTER_API_KEY` en `.env`."
+            )
+    except Exception:
+        st.info(
+            "⚙️ **Modo respuestas pre-cargadas.** El RAG con fuentes citadas llega la próxima semana."
+        )
 
     if "chat_messages" not in st.session_state:
         st.session_state["chat_messages"] = [
@@ -298,21 +348,69 @@ def render():
     st.markdown('<p class="suggestion-label">💡 Preguntas frecuentes — haga clic para consultar:</p>', unsafe_allow_html=True)
     row1 = st.columns(3)
     row2 = st.columns(3)
+
+    def _enqueue_query(q: str) -> None:
+        """Append user turn + a 'pending' assistant placeholder.
+        The next render shows the skeleton loader and runs the LLM."""
+        st.session_state["chat_messages"].append({"role": "user", "content": q})
+        st.session_state["chat_messages"].append(
+            {"role": "assistant", "content": "", "pending": True, "query": q}
+        )
+
     for i, (col, q) in enumerate(zip(list(row1) + list(row2), SUGGESTED)):
         with col:
             if st.button(q, key=f"sugg_{i}", use_container_width=True):
-                st.session_state["chat_messages"].append({"role": "user", "content": q})
-                st.session_state["chat_messages"].append({"role": "assistant", "content": get_response(q)})
+                _enqueue_query(q)
                 st.rerun()
 
     st.markdown("---")
 
-    for msg in st.session_state["chat_messages"]:
+    # Render chat — show skeleton for any pending message, then resolve it
+    pending_to_resolve: list[int] = []
+    for idx, msg in enumerate(st.session_state["chat_messages"]):
         with st.chat_message(msg["role"], avatar="🤖" if msg["role"] == "assistant" else "👤"):
-            st.markdown(msg["content"])
+            if msg.get("pending"):
+                # Fase 0 · E2.6 — skeleton loader en lugar del spinner genérico
+                st.markdown(
+                    """
+<div style="padding: 4px 0;">
+  <div class="skeleton-line long"></div>
+  <div class="skeleton-line long"></div>
+  <div class="skeleton-line short"></div>
+  <div style="font-size:11px; color:#6A8A74; margin-top:10px; letter-spacing:1px; text-transform:uppercase;">
+    Consultando fuentes peer-reviewed…
+  </div>
+</div>
+                    """,
+                    unsafe_allow_html=True,
+                )
+                pending_to_resolve.append(idx)
+            else:
+                st.markdown(msg["content"])
+                srcs = msg.get("sources") or []
+                if srcs:
+                    with st.expander(f"📚 Fuentes recuperadas ({len(srcs)})"):
+                        for s in srcs:
+                            line = f"**{s['title']}** — `{s['source']}` (similitud {s['score']:.2f})"
+                            if s.get("url"):
+                                line += f" · [enlace]({s['url']})"
+                            st.markdown(f"- {line}")
 
     prompt = st.chat_input("Escriba su pregunta sobre biorremediación, costos, seguridad...")
     if prompt:
-        st.session_state["chat_messages"].append({"role": "user", "content": prompt})
-        st.session_state["chat_messages"].append({"role": "assistant", "content": get_response(prompt)})
+        _enqueue_query(prompt)
+        st.rerun()
+
+    # Resolve any pending messages — after rendering the skeletons this turn,
+    # fetch the answer and rerun so the next render shows the real content.
+    if pending_to_resolve:
+        for idx in pending_to_resolve:
+            msg = st.session_state["chat_messages"][idx]
+            query = msg.get("query", "")
+            text, sources = get_response(query)
+            st.session_state["chat_messages"][idx] = {
+                "role": "assistant",
+                "content": text,
+                "sources": sources,
+            }
         st.rerun()

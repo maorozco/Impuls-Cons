@@ -1,0 +1,245 @@
+.page-head{padding:40px 0 24px; border-bottom:1px solid var(--line)}
+.page-head h1{font-size:42px; letter-spacing:-.028em}
+.page-head h1 em{font-family:var(--font-serif); font-style:italic; font-weight:400; color:var(--forest-deep)}
+
+.wizard{display:grid; grid-template-columns:280px 1fr; gap:32px; padding:40px 0 64px}
+.steps-rail{position:sticky; top:78px; align-self:start; display:flex; flex-direction:column; gap:8px}
+.rail-step{display:flex; gap:12px; padding:12px 14px; border:1px solid var(--line); border-radius:12px; background:#fff; font-size:13px; color:var(--ink-2); align-items:flex-start}
+.rail-step .n{width:22px;height:22px;border-radius:6px; display:grid;place-items:center; font-family:var(--font-mono); font-size:11px; font-weight:500; background:var(--line); color:var(--ink-2); flex:none}
+.rail-step.active{border-color:var(--forest-deep); box-shadow:var(--shadow-sm)}
+.rail-step.active .n{background:var(--forest-deep); color:#fff}
+.rail-step.done .n{background:var(--green-bright); color:#fff}
+.rail-step .t{font-weight:600; font-size:13px; color:var(--ink)}
+.rail-step .s{font-size:11.5px; color:var(--muted); margin-top:2px; font-family:var(--font-mono); letter-spacing:.02em}
+
+.w-step{padding:24px 28px; border:1px solid var(--line); border-radius:var(--r-lg); background:#fff; margin-bottom:16px}
+.w-step .w-head{display:flex; align-items:center; justify-content:space-between; margin-bottom:18px}
+.w-step .w-head h2{font-size:22px; letter-spacing:-.02em}
+.w-step .w-head .w-badge{font-family:var(--font-mono); font-size:10.5px; color:var(--muted-2); letter-spacing:.12em; text-transform:uppercase}
+
+.cat-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:8px}
+.cat-card{padding:14px; border:1px solid var(--line); border-radius:10px; background:#fff; cursor:pointer; font-size:12.5px; display:flex; flex-direction:column; gap:4px; transition:all .15s; text-align:left; font-family:inherit}
+.cat-card:hover{border-color:var(--line-strong); box-shadow:var(--shadow-sm)}
+.cat-card.selected{border-color:var(--forest-deep); background:linear-gradient(135deg,#F4FBF7 0%,#E8F5E9 100%); box-shadow:0 0 0 3px rgba(0,77,44,.08)}
+.cat-card .ct-icon{width:28px;height:28px; border-radius:8px; background:#F4FBF7; display:grid; place-items:center; color:var(--forest-deep); margin-bottom:4px}
+.cat-card .ct-icon svg{width:14px;height:14px}
+.cat-card .ct-name{font-weight:600; color:var(--ink)}
+.cat-card .ct-count{font-family:var(--font-mono); font-size:10.5px; color:var(--muted)}
+
+.sub-list{margin-top:14px; display:grid; grid-template-columns:repeat(3,1fr); gap:6px}
+.sub-pill{padding:6px 10px; border:1px solid var(--line); border-radius:999px; font-size:12px; background:#fff; cursor:pointer; font-family:inherit; color:var(--ink)}
+.sub-pill.selected{background:var(--forest-deep); color:#fff; border-color:var(--forest-deep)}
+
+.mode-row{display:grid; grid-template-columns:repeat(5,1fr); gap:8px; margin-top:6px}
+.mode{padding:14px; border-radius:10px; border:1px solid var(--line); background:#fff; cursor:pointer; font-size:12.5px; display:flex; flex-direction:column; gap:6px; text-align:left; font-family:inherit; color:var(--ink)}
+.mode.selected{border-color:var(--forest-deep); background:#F4FBF7; box-shadow:0 0 0 3px rgba(0,77,44,.08)}
+.mode.disabled{opacity:.45; cursor:not-allowed; background:#FAFAFA}
+.mode b{font-weight:600; font-size:12.5px}
+.mode span{font-family:var(--font-mono); font-size:10.5px; color:var(--muted)}
+
+.alert{display:flex; gap:12px; padding:14px 16px; border-radius:10px; margin-top:14px; font-size:13px; border:1px solid}
+.alert.error{background:#FFF2EE; border-color:#FFD0B8; color:#6B2400}
+.alert svg{flex:none; color:var(--warning)}
+.alert b{color:#6B2400}
+
+.cond-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-top:4px}
+.cond{border:1px solid var(--line); border-radius:10px; padding:14px; background:#FAFCF9}
+.cond label{font-family:var(--font-mono); font-size:10.5px; letter-spacing:.1em; color:var(--muted); text-transform:uppercase}
+.cond .val{font-family:var(--font-mono); font-size:22px; font-weight:500; letter-spacing:-.03em; margin-top:6px}
+.cond input[type="range"]{width:100%; -webkit-appearance:none; appearance:none; background:transparent; margin-top:10px}
+.cond input[type="range"]::-webkit-slider-runnable-track{height:6px; border-radius:999px; background:linear-gradient(90deg,var(--green-bright), var(--accent)) 0/var(--f,40%) no-repeat, var(--line); border-radius:999px}
+.cond input[type="range"]::-moz-range-track{height:6px; border-radius:999px; background:var(--line)}
+.cond input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none; width:14px;height:14px; border-radius:99px; background:#fff; border:2px solid var(--forest-deep); margin-top:-4px; cursor:pointer}
+.cond input[type="range"]::-moz-range-thumb{width:14px;height:14px; border-radius:99px; background:#fff; border:2px solid var(--forest-deep); cursor:pointer}
+
+.cta-run{display:flex; gap:12px; align-items:center; margin-top:20px; flex-wrap:wrap}
+.cta-run .meta{font-family:var(--font-mono); font-size:11.5px; color:var(--muted)}
+
+.results{display:flex; flex-direction:column; gap:16px; margin-top:36px}
+.result-card{border:1px solid var(--line); border-radius:var(--r-lg); background:#fff; padding:26px}
+.result-card h3{font-size:17px; letter-spacing:-.015em}
+.result-card .rc-label{font-family:var(--font-mono); font-size:10.5px; color:var(--muted-2); letter-spacing:.12em; text-transform:uppercase; margin-bottom:8px}
+
+.df{width:100%; border-collapse:collapse; margin-top:12px; font-size:13px}
+.df th{font-family:var(--font-mono); font-size:10.5px; letter-spacing:.1em; text-align:left; color:var(--muted); padding:8px 10px; text-transform:uppercase; border-bottom:1px solid var(--line); font-weight:500}
+.df td{padding:12px 10px; border-bottom:1px solid var(--line); vertical-align:middle}
+.df td.species{font-weight:600; color:var(--ink)}
+.df .bar{height:6px; background:var(--line); border-radius:99px; width:80px; position:relative; display:inline-block; vertical-align:middle; margin-right:8px}
+.df .bar::before{content:""; position:absolute; inset:0 auto 0 0; border-radius:99px; background:linear-gradient(90deg,var(--green-bright), var(--accent)); width:var(--f)}
+.df .bsl{display:inline-flex;align-items:center;gap:4px;padding:2px 7px;border-radius:99px;background:#E8F5E9;color:#004D2C;font-family:var(--font-mono);font-size:10.5px;font-weight:500}
+
+.gauge-row{display:grid; grid-template-columns:1.3fr 1fr; gap:24px; align-items:center}
+.gauge{position:relative; max-width:260px; margin:0 auto; padding-bottom:26px}
+.gauge svg{width:100%; display:block}
+/* Number sits INSIDE the half-moon arc. Positioned at bottom 32% so the
+ * baseline clears the arc peak (y=30 in viewBox "0 0 200 130"). */
+.gauge .g-num{
+  position:absolute; left:0; right:0; bottom:32%;
+  text-align:center; line-height:1; pointer-events:none;
+  font-family:var(--font-mono); font-size:44px; font-weight:500;
+  letter-spacing:-.04em; color:var(--ink);
+  animation:gaugeNumIn .4s ease-out;
+}
+.gauge .g-pc{font-size:22px; color:var(--muted-2); margin-left:2px; font-weight:400}
+.gauge .g-lbl{
+  position:absolute; left:50%; bottom:0; transform:translateX(-50%);
+  text-align:center; font-family:var(--font-mono); font-size:10.5px;
+  color:var(--muted); letter-spacing:.1em; text-transform:uppercase;
+  padding-top:6px; white-space:nowrap;
+  border-top:1px dashed var(--line); min-width:60%;
+}
+@keyframes gaugeNumIn{from{opacity:0; transform:translateY(6px)} to{opacity:1; transform:none}}
+.gauge-notes{font-size:13px; color:var(--muted); line-height:1.55}
+.gauge-notes .gbadge{display:inline-block; padding:3px 8px; border-radius:99px; background:#FFF4E5; color:#6B3D00; font-family:var(--font-mono); font-size:11px; font-weight:500; margin-bottom:8px}
+
+.mx{display:grid; grid-template-columns:60px repeat(4,1fr); gap:4px; font-size:11.5px}
+.mx .h{font-family:var(--font-mono); font-size:10.5px; color:var(--muted); padding:8px 4px; text-align:center}
+.mx .rh{font-family:var(--font-mono); font-size:10.5px; color:var(--muted); padding:8px 4px; text-align:right}
+.mx .cell{height:44px; border-radius:6px; display:grid; place-items:center; font-family:var(--font-mono); font-weight:500; font-size:12px}
+.mx .c-good{background:#C5EFD0; color:#003820}
+.mx .c-ok{background:#F2F6DD; color:#3D4C0A}
+.mx .c-warn{background:#FFE4CC; color:#6B2B00}
+.mx .c-self{background:#F4F8F5; color:#B8C4BB}
+
+.chart-wrap{position:relative; margin-top:12px}
+.chart-wrap .legend{display:flex; gap:16px; font-size:12px; margin-bottom:12px; flex-wrap:wrap}
+.chart-wrap .legend span{display:inline-flex; align-items:center; gap:6px; color:var(--ink-2)}
+.chart-wrap .legend .sw{width:14px; height:3px; border-radius:2px}
+
+.kpis{display:grid; grid-template-columns:repeat(3,1fr); gap:12px}
+.kpi{padding:20px; border-radius:var(--r-lg); background:linear-gradient(135deg,#F4FBF7,#ECF9EF); border:1px solid var(--line); position:relative}
+.kpi .kl{font-family:var(--font-mono); font-size:10.5px; color:var(--muted); letter-spacing:.1em; text-transform:uppercase}
+.kpi .kv{font-family:var(--font-mono); font-size:40px; font-weight:500; letter-spacing:-.04em; margin-top:8px; color:var(--forest-deep)}
+.kpi .ks{font-size:12px; color:var(--muted); margin-top:4px}
+
+.cost-row{display:flex; align-items:center; gap:12px; padding:10px 0; border-bottom:1px solid var(--line); font-size:13px}
+.cost-row:last-child{border-bottom:0}
+.cost-row .cr-name{width:200px; font-weight:500}
+.cost-row .cr-bar{flex:1; height:22px; border-radius:6px; background:var(--line); position:relative; overflow:hidden}
+.cost-row .cr-bar::before{content:""; position:absolute; inset:0 auto 0 0; width:var(--f); background:linear-gradient(90deg, var(--forest-deep), var(--green-bright));}
+.cost-row.bad .cr-bar::before{background:linear-gradient(90deg, #E53935 0%, var(--warning) 100%)}
+.cost-row .cr-val{width:110px; text-align:right; font-family:var(--font-mono); font-variant-numeric:tabular-nums; font-weight:500}
+
+.savings{margin-top:16px; padding:20px; border-radius:var(--r-lg); background:linear-gradient(135deg, var(--forest-deep) 0%, #1B5E20 100%); color:#fff; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:20px}
+.savings .sv-l{font-family:var(--font-mono); font-size:10.5px; letter-spacing:.12em; color:rgba(255,255,255,.7); text-transform:uppercase}
+.savings .sv-v{font-family:var(--font-mono); font-size:36px; font-weight:500; letter-spacing:-.04em; margin-top:4px}
+
+.proto{display:grid; grid-template-columns:repeat(5,1fr); gap:8px; margin-top:8px}
+.proto-step{padding:12px; border:1px solid var(--line); border-radius:10px; background:#FAFCF9; font-size:12px}
+.proto-step .p-n{font-family:var(--font-mono); font-size:10.5px; color:var(--forest-deep); font-weight:500}
+.proto-step b{display:block; margin:4px 0 2px; font-size:12.5px}
+
+@media (max-width: 960px){
+  .wizard{grid-template-columns:1fr}
+  .cat-grid, .mode-row{grid-template-columns:repeat(2,1fr)}
+  .cond-grid, .kpis{grid-template-columns:1fr}
+  .proto{grid-template-columns:repeat(2,1fr)}
+}
+
+/* Interactive medium pills (replaces the old static "Suelo arcilloso" display) */
+.med-pills{display:flex; flex-wrap:wrap; gap:6px; margin-top:4px}
+.med-pill{padding:6px 11px; border:1px solid var(--line); border-radius:99px; background:#fff; font-size:12px; color:var(--muted-2); cursor:pointer; font-family:inherit; transition:all .15s ease}
+.med-pill:hover{border-color:var(--line-strong); color:var(--ink-2)}
+.med-pill.selected{background:var(--forest-deep); border-color:var(--forest-deep); color:#fff; font-weight:500}
+.field-hint{font-family:var(--font-mono); font-size:10.5px; color:var(--muted); margin-top:8px; letter-spacing:.02em}
+.field-hint i{color:var(--forest-deep); font-style:italic}
+
+/* Help-dot · hover tooltip on any label/KPI label */
+.help-dot{display:inline-grid; place-items:center; width:14px; height:14px; border-radius:99px; background:#F4FBF7; border:1px solid var(--line); color:var(--muted-2); font-size:10px; font-weight:500; margin-left:6px; cursor:help; font-family:var(--font-sans); vertical-align:1px}
+.help-dot:hover{background:var(--forest-deep); color:#fff; border-color:var(--forest-deep)}
+
+/* Design progress stages — shown while backend is running */
+.design-progress{margin-top:18px; padding:14px 16px; background:#FAFCF9; border:1px solid var(--line); border-radius:12px}
+.design-progress .dp-bar{height:4px; background:#E2ECE5; border-radius:99px; overflow:hidden; margin-bottom:12px}
+.design-progress .dp-fill{height:100%; background:linear-gradient(90deg, var(--forest-deep), var(--green-bright)); transition:width .35s ease; box-shadow:0 0 8px rgba(0,200,83,.3)}
+.design-progress .dp-stages{display:flex; flex-direction:column; gap:6px}
+.design-progress .dp-stage{display:flex; align-items:center; gap:10px; font-size:12.5px; color:var(--muted); font-family:var(--font-mono); letter-spacing:.01em; transition:color .2s, opacity .2s; opacity:.55}
+.design-progress .dp-stage .dp-dot{width:8px; height:8px; border-radius:99px; background:#E2ECE5; flex:none; transition:background .2s, box-shadow .2s}
+.design-progress .dp-stage.done{color:var(--ink-2); opacity:1}
+.design-progress .dp-stage.done .dp-dot{background:var(--forest-deep)}
+.design-progress .dp-stage.active{color:var(--forest-deep); opacity:1; font-weight:500}
+.design-progress .dp-stage.active .dp-dot{background:var(--green-bright); box-shadow:0 0 0 4px rgba(143,213,116,.25); animation:dpPulse 1.2s ease-in-out infinite}
+@keyframes dpPulse{0%,100%{box-shadow:0 0 0 4px rgba(143,213,116,.25)} 50%{box-shadow:0 0 0 8px rgba(143,213,116,.12)}}
+
+/* Real-vs-hypothetical badges */
+.rc-label{display:flex; align-items:center; gap:10px}
+.tag-real,
+.tag-hypo{
+  font-family:var(--font-mono); font-size:9.5px; padding:2px 7px; border-radius:99px;
+  letter-spacing:.08em; text-transform:uppercase; cursor:help; white-space:nowrap;
+}
+.tag-real{background:rgba(0,200,83,.12); color:#00733A; border:1px solid rgba(0,200,83,.25)}
+.tag-hypo{background:rgba(244,161,0,.12); color:#A86800; border:1px solid rgba(244,161,0,.3)}
+
+/* Evidence citation under consortium table */
+.evidence-cite{display:flex; align-items:center; gap:8px; margin-top:14px; padding:10px 12px; background:#F4FBF7; border-radius:8px; font-size:12px; color:var(--muted-2); font-family:var(--font-mono); border-left:3px solid var(--green-bright)}
+.evidence-cite svg{color:var(--forest-deep); flex:none}
+
+/* Degradation curve */
+.curve-wrap{margin-top:14px}
+.curve-legend{display:flex; gap:18px; flex-wrap:wrap; font-family:var(--font-mono); font-size:11px; color:var(--muted-2); margin-top:10px}
+.curve-legend .dot{display:inline-block; width:10px; height:3px; border-radius:99px; vertical-align:middle; margin-right:4px}
+.curve-legend .dot-bio{background:linear-gradient(90deg, #00C853, #00D9F5)}
+.curve-legend .dot-nat{background:#BFD3C6}
+
+/* ── Scientific validation visuals — W10 ────────────────────────── */
+
+/* Unsupported tag (e.g. AMD) — clear rejection */
+.tag-unsupported{
+  font-family:var(--font-mono); font-size:9.5px; padding:2px 7px; border-radius:99px;
+  letter-spacing:.08em; text-transform:uppercase; cursor:help; white-space:nowrap;
+  background:rgba(198,40,40,.1); color:#B71C1C; border:1px solid rgba(198,40,40,.3);
+}
+
+/* Operational regime banner — appears under consortium heading */
+.regime-banner{
+  display:flex; align-items:flex-start; gap:10px;
+  margin:14px 0 4px; padding:10px 14px;
+  background:linear-gradient(135deg, rgba(0,77,44,.04), rgba(143,213,116,.04));
+  border:1px solid rgba(0,77,44,.12); border-radius:8px;
+  font-size:12.5px; line-height:1.5;
+}
+.regime-banner .rb-tag{
+  font-family:var(--font-mono); font-size:9.5px; padding:3px 7px;
+  border-radius:99px; background:var(--forest-deep); color:#fff;
+  letter-spacing:.08em; text-transform:uppercase; flex:none; margin-top:1px;
+}
+.regime-banner .rb-body{color:var(--ink-2); flex:1}
+
+/* Consortium-level caveat (HIPOTÉTICO / limitations) */
+.consortium-caveat{
+  display:flex; align-items:flex-start; gap:10px;
+  margin-top:10px; padding:10px 14px;
+  background:#FFF8F3; border:1px solid #FFD0B8; border-radius:8px;
+  font-size:12.5px; line-height:1.5; color:#6B3D00;
+}
+.consortium-caveat svg{color:#EF6C00; flex:none; margin-top:1px}
+
+/* Signature species dot — distinguishes species unique to this consortium
+ * from workhorses (Bacillus, Pseudomonas) that appear across many consortia */
+.df .is-signature{background:linear-gradient(90deg, rgba(0,200,83,.04), transparent 60%)}
+.df .is-support{opacity:.88}
+.df .sig-dot{
+  display:inline-block; width:7px; height:7px; border-radius:99px;
+  background:linear-gradient(135deg, var(--forest-deep), var(--green-bright));
+  margin-right:6px; vertical-align:3px;
+  box-shadow:0 0 0 2px rgba(143,213,116,.2);
+}
+.df .sp-cite{
+  font-family:var(--font-mono); font-size:10.5px; color:var(--muted);
+  margin-left:6px; font-style:normal; display:inline-block;
+}
+.df .is-signature td{font-weight:500}
+
+/* Legend under consortium table — explains signature vs workhorse */
+.consortium-legend{
+  display:flex; flex-wrap:wrap; gap:10px; align-items:center;
+  margin:12px 0 2px; padding:8px 12px;
+  background:#FAFCF9; border-radius:6px;
+  font-family:var(--font-mono); font-size:10.5px; color:var(--muted); line-height:1.55;
+}
+.consortium-legend .sig-dot{
+  display:inline-block; width:7px; height:7px; border-radius:99px;
+  background:linear-gradient(135deg, var(--forest-deep), var(--green-bright));
+  margin-right:6px; vertical-align:2px;
+}

@@ -1,0 +1,8 @@
+{
+  "id": "portal-refineria",
+  "aspect": "16:9",
+  "model": "gemini-2.5-flash-image",
+  "bytes": 1568026,
+  "generated_at": "2026-04-21T00:08:24.952Z",
+  "prompt": "A cinematic side-long shot of a Colombian Andes refinery at golden hour — not the whole plant, just two cylindrical steel tanks and a service road in the foreground, with faint Andean mountains in muted teal behind. The middle tank has a small retrofitted biorreactor module bolted to its side with visible cyan piping. Photorealistic, documentary tone, no people. Tells the story of retrofitting rather than replacement."
+}
