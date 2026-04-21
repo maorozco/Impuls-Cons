@@ -13,8 +13,16 @@ cd "$REPO_ROOT"
 echo "▸ Impulso BioCycle · Replit build starting"
 echo "  pwd: $REPO_ROOT"
 echo "  node: $(node --version || echo missing)"
-echo "  pnpm: $(pnpm --version || echo missing)"
 echo "  python: $(python --version || echo missing)"
+
+# ── Activate pnpm via corepack (bundled with Node 20 on the Nix env) ─
+# Replit's nixpkgs-24_05 doesn't expose pkgs.pnpm directly, so we rely on
+# Node's corepack to provide a pinned pnpm version at build time.
+echo "▸ corepack enable pnpm"
+corepack enable --install-directory "$HOME/.local/bin" pnpm 2>/dev/null || true
+export PATH="$HOME/.local/bin:$PATH"
+corepack prepare pnpm@10.33.0 --activate
+echo "  pnpm: $(pnpm --version)"
 
 # ── 1. Workspace Node deps (landing + agents + shared libs) ─────────
 echo "▸ pnpm install --frozen-lockfile"
