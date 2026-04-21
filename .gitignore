@@ -54,6 +54,16 @@ Thumbs.db
 .env.local
 .env*.local
 
+# Secrets / env — Python + agents
+.env
+!.env.example
+artifacts/**/.env
+!artifacts/**/.env.example
+
+# RAG local persistence
+.chroma/
+**/.chroma/
+
 # Python compiled
 __pycache__/
 *.pyc

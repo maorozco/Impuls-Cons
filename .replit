@@ -1,36 +1,21 @@
-modules = ["nodejs-24", "python-3.11"]
+# Replit configuration · Impulso BioCycle monorepo
+# One Repl, two services:
+#   • Next.js landing (public port 3000 → external 80)
+#   • FastAPI ml-api  (loopback 127.0.0.1:5001 — internal only)
+# Postgres provisioned via Replit "Database" tab → DATABASE_URL auto-injected.
+# See REPLIT-AGENT-HANDOFF.md for deploy steps.
 
-[deployment]
-router = "application"
-deploymentTarget = "autoscale"
+modules = ["nodejs-20", "python-3.11", "postgresql-16"]
+hidden = [".next", "node_modules", ".venv", ".env.local", ".pnpm-store"]
 
-[deployment.postBuild]
-args = ["pnpm", "store", "prune"]
-env = { "CI" = "true" }
+[nix]
+channel = "stable-24_05"
+packages = ["glibcLocales"]
 
-[workflows]
-runButton = "Project"
-
-[[workflows.workflow]]
-name = "Project"
-mode = "parallel"
-author = "agent"
-
-[[workflows.workflow.tasks]]
-task = "workflow.run"
-args = "Impulso BioCycle"
-
-[[workflows.workflow]]
-name = "Impulso BioCycle"
-author = "agent"
-
-[[workflows.workflow.tasks]]
-task = "shell.exec"
-args = "cd artifacts/impulso-biocycle && streamlit run app.py --server.port 5000 --server.address 0.0.0.0"
-waitForPort = 5000
-
-[workflows.workflow.metadata]
-outputType = "webview"
+[env]
+NEXT_TELEMETRY_DISABLED = "1"
+# ML_API_URL defaults to loopback inside the Repl. Override only for split deploys.
+ML_API_URL = "http://127.0.0.1:5001"
 
 [agent]
 stack = "PNPM_WORKSPACE"
@@ -40,22 +25,40 @@ expertMode = true
 path = "scripts/post-merge.sh"
 timeoutMs = 20000
 
-[[ports]]
-localPort = 5000
-externalPort = 5000
+# ─── Workspace workflow (dev only · "Run" button) ───────────────────
+[workflows]
+runButton = "dev"
 
-[[ports]]
-localPort = 8080
-externalPort = 8080
+[[workflows.workflow]]
+name = "dev"
+mode = "parallel"
+author = "claude"
 
+  [[workflows.workflow.tasks]]
+  task = "shell.exec"
+  args = "cd artifacts/ml-api && python main.py --host 127.0.0.1 --port 5001"
+
+  [[workflows.workflow.tasks]]
+  task = "shell.exec"
+  args = "cd artifacts/landing && pnpm dev"
+  waitForPort = 3000
+
+[workflows.workflow.metadata]
+outputType = "webview"
+
+# ─── Production Deployment (Reserved VM Shared Medium) ──────────────
+[deployment]
+deploymentTarget = "gce"
+build = ["bash", "scripts/replit-build.sh"]
+run = ["bash", "scripts/replit-start.sh"]
+ignorePorts = false
+
+[deployment.postBuild]
+args = ["pnpm", "store", "prune"]
+env = { "CI" = "true" }
+
+# Single public port — Next.js on 3000 → external HTTPS 80.
+# ml-api on 127.0.0.1:5001 is NOT exposed (loopback only).
 [[ports]]
-localPort = 8081
+localPort = 3000
 externalPort = 80
-
-[[ports]]
-localPort = 8082
-externalPort = 3000
-
-[nix]
-channel = "stable-25_05"
-packages = ["glibcLocales"]
