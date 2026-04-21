@@ -56,9 +56,18 @@ Thumbs.db
 
 # Secrets / env — Python + agents
 .env
+.env.*
 !.env.example
+!.env*.example
 artifacts/**/.env
+artifacts/**/.env.*
 !artifacts/**/.env.example
+!artifacts/**/.env*.example
+
+# Never commit secret backups (covers .env.local.bak, .env.bak, creds.bak, etc.)
+*.bak
+*.backup
+*.orig
 
 # RAG local persistence
 .chroma/
