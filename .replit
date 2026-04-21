@@ -1,7 +1,18 @@
 # Replit configuration · Impulso BioCycle monorepo
-# One Repl, two services:
+#
+# ── SINGLE PUBLIC SERVICE ────────────────────────────────────────────
+# This Repl publishes exactly ONE external service:
 #   • Next.js landing (public port 3000 → external 80)
-#   • FastAPI ml-api  (loopback 127.0.0.1:5001 — internal only)
+#
+# Internally, scripts/replit-start.sh also spawns a loopback-only helper:
+#   • FastAPI ml-api  (127.0.0.1:5001 — NOT exposed, not a public service)
+#
+# DO NOT add a second service via [[services]] or .replit-artifact/.
+# The old Streamlit app at artifacts/impulso-biocycle/ is legacy — it must
+# never be deployed to Replit production. If you see Streamlit loading at
+# any path (e.g. /app), a multi-service artifact.toml was reintroduced;
+# delete it.
+#
 # Postgres provisioned via Replit "Database" tab → DATABASE_URL auto-injected.
 # See REPLIT-AGENT-HANDOFF.md for deploy steps.
 
