@@ -47,6 +47,11 @@ Thumbs.db
 # Replit
 .cache/
 .local/
+# Never commit multi-service artifact.toml — our deploy is single-service
+# (Next.js on :3000 only). The legacy Streamlit app must NOT be
+# re-registered as a separate Replit service.
+.replit-artifact/
+**/.replit-artifact/
 
 # Next.js
 .next/
