@@ -68,8 +68,6 @@ ignorePorts = false
 args = ["pnpm", "store", "prune"]
 env = { "CI" = "true" }
 
-# Single public port — Next.js on 3000 → external HTTPS 80.
-# ml-api on 127.0.0.1:5001 is NOT exposed (loopback only).
 [[ports]]
 localPort = 3000
 externalPort = 80
