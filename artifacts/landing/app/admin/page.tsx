@@ -84,12 +84,15 @@ export default async function AdminPage() {
 
   const responseMap = new Map(responses.map((r) => [r.email, r]));
 
+  const TIER_WEIGHT: Record<string, number> = { green: 0, yellow: 1, red: 2 };
+  const tierWeight = (tier: string | null | undefined): number =>
+    (tier && TIER_WEIGHT[tier] !== undefined) ? TIER_WEIGHT[tier] : 3;
+
   const rows = emails
     .map((e) => ({ ...e, survey: responseMap.get(e.email) ?? null }))
     .sort((a, b) => {
-      const tierOrder: Record<string, number> = { green: 0, yellow: 1, red: 2 };
-      const ta = tierOrder[a.survey?.tier ?? ''] ?? 3;
-      const tb = tierOrder[b.survey?.tier ?? ''] ?? 3;
+      const ta = tierWeight(a.survey?.tier);
+      const tb = tierWeight(b.survey?.tier);
       if (ta !== tb) return ta - tb;
       return (b.survey?.score ?? -1) - (a.survey?.score ?? -1);
     });
