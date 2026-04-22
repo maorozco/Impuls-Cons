@@ -88,13 +88,13 @@ export default function InicioPage() {
             <div className="v-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M3 3v18h18M7 14l4-4 3 3 5-6"/></svg></div>
             <div className="v-num">02 / Predicción</div>
             <h3>Curva de degradación</h3>
-            <p>Predicción a 12 semanas vs. método convencional y atenuación natural, con citaciones a papers y tooltips cuantitativos.</p>
+            <p>Predicción de degradación de consorcio vs. método convencional y atenuación natural, con citaciones a papers y tooltips cuantitativos.</p>
           </article>
           <article className="value-cell">
             <div className="v-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M12 2v6m0 8v6M2 12h6m8 0h6M5 5l4 4m6 6l4 4M5 19l4-4m6-6l4-4"/></svg></div>
             <div className="v-num">03 / Protocolo</div>
             <h3>Cápsula + despliegue</h3>
-            <p>Formulación de cápsula alginato, pasos de preparación, proveedor local y cronograma de monitoreo para el piloto de 90 días.</p>
+            <p>Formulación de cápsula, pasos de preparación, proveedor local y cronograma de monitoreo para el piloto.</p>
           </article>
         </div>
       </section>
@@ -161,7 +161,7 @@ export default function InicioPage() {
               Cotiza por tipo de operación, país y volumen. Obtén plan, inversión mensual, ROI, CO₂ evitado y mapeo a ANLA · EPA · Res. 631/2015.
             </p>
             <ul className="p-list">
-              {['Escucha Activa: 4,797 posts clasificados','Caso ilustrativo: Refinería Andina S.A.','Piloto 90 días — $3K USD con lab aliado'].map((i) => (
+              {['Escucha Activa: 4,797 posts clasificados','Caso ilustrativo: Refinería Andina S.A.','Piloto 90 días — costo sujeto a alianza con laboratorio o industria productora de biológicos'].map((i) => (
                 <li key={i}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M5 12l4 4L19 7"/></svg>{i}</li>
               ))}
             </ul>
@@ -320,6 +320,10 @@ export default function InicioPage() {
             BioCycle diseña recetas microbianas — no fabrica ni comercializa los microorganismos.
             Todo trabajo se realiza dentro de biorreactores contenidos o cápsulas de alginato in‑situ,
             con microorganismos BSL‑1/GRAS. TRL del sistema integrado: 3–4. Estimaciones basadas en literatura peer‑reviewed.
+            <br /><br />
+            Estamos abiertos a alianzas con laboratorios e industrias que fabriquen el mix biológico como estrategia win-win.
+            Esta plataforma también recibe retroalimentación técnica — si detectas una inconsistencia o quieres contribuir
+            evidencia, escríbenos a <a href="mailto:hola@biocycle.ai" style={{ color: 'var(--forest-deep)', textDecoration: 'underline' }}>hola@biocycle.ai</a>.
           </div>
           <div>© 2026 Impulso BioCycle · Bogotá, Colombia</div>
         </div>
@@ -334,7 +338,7 @@ function HeroViz() {
       <div className="bc-img-wrap">
         <BiocycleImage
           id="hero-inicio"
-          alt="Biorreactor contenido con un consorcio microbiano teal iluminado por luz matutina"
+          alt="Cápsula de alginato translúcida con un consorcio de bacterias y hongos en su interior, iluminada por luz cálida"
           width={1920}
           height={1080}
           priority

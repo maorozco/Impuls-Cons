@@ -31,6 +31,7 @@ const PAPERS: Paper[] = [
     resultDetail:
       'la PETase comercial original llegaba al 10% en 7 días. Monómeros resultantes (TPA + EG) vendibles a $800–1,600/ton',
     doi: '10.1038/s41586-022-04599-z',
+    doiVerified: true,
     featured: true,
   },
   {
@@ -47,6 +48,7 @@ const PAPERS: Paper[] = [
     result: '90% / 10 h · scale-up 20 m³',
     resultDetail: 'competencia directa del módulo biorreactor',
     doi: '10.1038/s41586-020-2149-4',
+    doiVerified: true,
   },
   {
     id: '3',
@@ -63,6 +65,7 @@ const PAPERS: Paper[] = [
     result: '−78% TPH / 90 d',
     resultDetail: 'protocolo casi idéntico al de nuestro piloto referencia',
     doi: '10.1021/acs.est.3c00512',
+    doiVerified: false,
   },
   {
     id: '4',
@@ -78,6 +81,7 @@ const PAPERS: Paper[] = [
     result: '60% defluorinación / 100 d',
     resultDetail: 'BSL-1, sin ingeniería genética',
     doi: '10.1038/s41564-024-01627-8',
+    doiVerified: true,
   },
   {
     id: '5',
@@ -93,6 +97,7 @@ const PAPERS: Paper[] = [
     result: '95% / 72 h',
     resultDetail: 'reactor fijo, 18 ciclos sin perder actividad',
     doi: '10.1073/pnas.2103498118',
+    doiVerified: false,
   },
   {
     id: '6',
@@ -109,6 +114,7 @@ const PAPERS: Paper[] = [
     result: '95% mineralización / 45 d',
     resultDetail: 'compatible BSL-1',
     doi: '10.1021/acs.est.2c01134',
+    doiVerified: false,
   },
   {
     id: '7',
@@ -125,6 +131,7 @@ const PAPERS: Paper[] = [
     result: '−92% Hg / 21 d',
     resultDetail: 'precipitado como HgS estable',
     doi: '10.1016/j.biortech.2023.128421',
+    doiVerified: false,
   },
   {
     id: '8',
@@ -141,6 +148,7 @@ const PAPERS: Paper[] = [
     result: 'n-C₂₀ → 80% / 14 d',
     resultDetail: 'citado en nuestra base de datos interna',
     doi: '10.1128/AEM.01893-19',
+    doiVerified: false,
   },
   {
     id: '9',
@@ -157,6 +165,7 @@ const PAPERS: Paper[] = [
     result: '+38% C orgánico / 2 años',
     resultDetail: 'sin fertilización sintética',
     doi: '10.1016/j.soilbio.2024.109312',
+    doiVerified: true,
   },
   {
     id: '10',
@@ -172,6 +181,7 @@ const PAPERS: Paper[] = [
     result: 'TPA→Vanilina · 79% rendimiento',
     resultDetail: 'vanilina a $20–30/kg vs. $1.5/kg TPA',
     doi: '10.1126/science.ade1621',
+    doiVerified: false,
   },
 ];
 
@@ -224,6 +234,13 @@ export default function DescubrimientosPage() {
               <div className="sb-label">Descubrimientos</div>
               <div className="sb-num">10</div>
               <div className="sb-sub">Curados · actualizados semanalmente</div>
+            </div>
+            <div className="stat-box">
+              <div className="sb-label">DOI en vivo</div>
+              <div className="sb-num">4/10</div>
+              <div className="sb-sub">
+                El resto está en reverificación tras validación 2026-04
+              </div>
             </div>
             <div className="stat-box">
               <div className="sb-label">Categorías</div>
