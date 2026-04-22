@@ -101,6 +101,73 @@
 .mx .c-warn{background:#FFE4CC; color:#6B2B00}
 .mx .c-self{background:#F4F8F5; color:#B8C4BB}
 
+/* Legend for compatibility matrix — explains colors and numbers for beginners */
+.matrix-legend{
+  margin-top:14px; padding:12px 14px;
+  background:#FAFCF9; border:1px solid var(--line); border-radius:10px;
+}
+.matrix-legend .ml-row{
+  display:flex; flex-wrap:wrap; gap:14px; margin-bottom:10px;
+  font-family:var(--font-mono); font-size:11px; color:var(--ink-2);
+}
+.matrix-legend .ml-item{display:inline-flex; align-items:center; gap:6px}
+.matrix-legend .ml-item .sw{
+  display:inline-block; width:14px; height:14px; border-radius:3px; border:1px solid var(--line);
+}
+.matrix-legend .ml-item .sw.c-good{background:#C8E6C9; border-color:rgba(0,77,44,.2)}
+.matrix-legend .ml-item .sw.c-ok{background:#F2F6DD; border-color:rgba(61,76,10,.2)}
+.matrix-legend .ml-item .sw.c-self{background:#F4F8F5}
+.matrix-legend .ml-help{
+  font-size:12px; color:var(--muted); line-height:1.5; margin:0;
+}
+.matrix-legend .ml-help b{color:var(--ink-2); font-weight:600}
+
+/* Improvement hints — expandable tips under the probability gauge.
+   Sugerencias dinámicas que cambian según ph/temp/contamination del usuario. */
+.improvement-tips{
+  margin-top:10px; padding:10px 12px; border-radius:8px;
+  background:#F4FBF7; border:1px solid rgba(0,77,44,.08);
+}
+.improvement-tips summary{
+  cursor:pointer; list-style:none;
+  font-family:var(--font-mono); font-size:11.5px; color:var(--forest-deep);
+  letter-spacing:.01em; padding:2px 0;
+}
+.improvement-tips summary::-webkit-details-marker{display:none}
+.improvement-tips summary::before{
+  content:"▸"; display:inline-block; margin-right:6px;
+  transition:transform .15s ease; color:var(--forest-deep);
+}
+.improvement-tips[open] summary::before{transform:rotate(90deg)}
+.improvement-tips summary b{color:var(--forest-deep); font-weight:600}
+.improvement-tips ul{
+  list-style:none; padding:0; margin:10px 0 6px;
+  display:flex; flex-direction:column; gap:8px;
+}
+.improvement-tips li{
+  display:flex; align-items:flex-start; gap:10px;
+  font-size:12.5px; color:var(--ink-2); line-height:1.5;
+}
+.improvement-tips .hint-delta{
+  flex:none; min-width:62px; text-align:center;
+  font-family:var(--font-mono); font-size:10.5px; font-weight:600;
+  padding:2px 6px; border-radius:4px;
+}
+.improvement-tips .hint-delta.up{background:rgba(0,200,83,.14); color:#00733A}
+.improvement-tips .hint-delta.down{background:rgba(239,108,0,.14); color:#B34A00}
+.improvement-tips .it-foot{
+  font-family:var(--font-mono); font-size:10.5px; color:var(--muted);
+  margin:8px 0 0; letter-spacing:.02em;
+}
+
+/* "Costos en revisión" badge · AlternativesPanel title */
+.badge-review{
+  font-family:var(--font-mono); font-size:9.5px; padding:2px 7px; border-radius:4px;
+  letter-spacing:.08em; text-transform:uppercase; cursor:help; white-space:nowrap;
+  background:#FFF4E5; border:1px solid #F59E0B; color:#92400E; font-weight:500;
+  margin-left:4px;
+}
+
 .chart-wrap{position:relative; margin-top:12px}
 .chart-wrap .legend{display:flex; gap:16px; font-size:12px; margin-bottom:12px; flex-wrap:wrap}
 .chart-wrap .legend span{display:inline-flex; align-items:center; gap:6px; color:var(--ink-2)}

@@ -15,6 +15,12 @@ export interface Paper {
   result: string;
   resultDetail?: string;
   doi: string;
+  /**
+   * DOI resolves to a live paper (checked 2026-04-21 via HEAD https://doi.org/…).
+   * When false the UI shows "DOI en verificación" instead of a broken outbound
+   * link — honesty > appearance when numbers don't match reality.
+   */
+  doiVerified?: boolean;
   featured?: boolean;
 }
 
@@ -181,12 +187,21 @@ function PaperCard({ paper }: { paper: Paper }) {
       </div>
       <div className="p-foot">
         <span className="p-doi">DOI · {paper.doi}</span>
-        <a className="p-link" href={`https://doi.org/${paper.doi}`} target="_blank" rel="noopener">
-          Ver paper
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <path d="M7 17L17 7M8 7h9v9" />
-          </svg>
-        </a>
+        {paper.doiVerified === false ? (
+          <span
+            className="p-link p-link-pending"
+            title="Este DOI está siendo revalidado. El paper existe en la literatura — el link directo está pendiente de verificación."
+          >
+            DOI en verificación
+          </span>
+        ) : (
+          <a className="p-link" href={`https://doi.org/${paper.doi}`} target="_blank" rel="noopener">
+            Ver paper
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M7 17L17 7M8 7h9v9" />
+            </svg>
+          </a>
+        )}
       </div>
     </article>
   );

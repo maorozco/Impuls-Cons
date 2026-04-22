@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import './portal.css';
 import { BiocycleImage } from '@/components/biocycle/biocycle-image';
 import {
@@ -54,15 +54,14 @@ const COUNTRY_OPTIONS: { code: CountryCode; label: string }[] = [
 ];
 
 export default function PortalPage() {
-  // Honor ?tab=<id> from the URL so the hero NUEVO link (/biocycle/portal?tab=escucha)
-  // lands directly in the Escucha Activa tab.
-  const initialTab: TabId = (() => {
-    if (typeof window === 'undefined') return 'cotiza';
+  // Server and client must render the same initial tab to avoid hydration
+  // mismatch. We default to 'cotiza' on both, then the effect below reads
+  // ?tab=<id> after mount to honor the deep link.
+  const [tab, setTab] = useState<TabId>('cotiza');
+  useEffect(() => {
     const q = new URLSearchParams(window.location.search).get('tab');
-    if (q === 'escucha' || q === 'caso' || q === 'cotiza') return q;
-    return 'cotiza';
-  })();
-  const [tab, setTab] = useState<TabId>(initialTab);
+    if (q === 'escucha' || q === 'caso' || q === 'cotiza') setTab(q);
+  }, []);
   // Operation is now the slug so it maps 1:1 to COTIZA_RULES.
   const [opSlug, setOpSlug] = useState<OpSlug>('refineria');
   const activeRule = COTIZA_RULES[opSlug];
@@ -167,6 +166,15 @@ export default function PortalPage() {
         {tab === 'cotiza' && (
           <div className="quote-grid" data-testid="tab-content-cotiza">
             <div>
+              <div className="banner-hypo" role="note" data-testid="cotiza-hypo-banner">
+                <span className="bh-icon" aria-hidden="true">⚠</span>
+                <span>
+                  <b>Valores hipotéticos · referenciales.</b> Los costos finales del piloto dependen
+                  del laboratorio o industria aliada que fabrique el mix biológico. Pasa el cursor
+                  o toca el <span className="bh-dot">?</span> de cada métrica para ver cómo se
+                  calcula.
+                </span>
+              </div>
               <div className="form-card">
                 <h3>Describe tu operación</h3>
                 <div className="field">
@@ -269,7 +277,7 @@ export default function PortalPage() {
                   </a>
                 )}
                 <p className="field-note" style={{ marginTop: 10 }}>
-                  Estimación referencial basada en <code>CONSORTIA_DATA</code> + literatura peer-reviewed.
+                  Estimación referencial basada en nuestra base de consorcios validados + literatura peer-reviewed.
                   Caracterización real del sitio puede modificar resultados ±20%.
                 </p>
               </div>
@@ -295,7 +303,7 @@ export default function PortalPage() {
                     </p>
                   </div>
                   <p className="qe-foot">
-                    Los números provienen de <code>CONSORTIA_DATA</code> + literatura peer-reviewed.
+                    Los números provienen de nuestra base de consorcios validados + literatura peer-reviewed.
                   </p>
                 </div>
               ) : (
@@ -334,7 +342,8 @@ export default function PortalPage() {
                     <div className="mx-card">
                       <div className="ml">
                         Costo total piloto
-                        <span className="help-dot" title="Lo que pagas en total al cerrar el piloto de 90 días: diseño + despliegue + monitoreo + reporte final. NO incluye obra civil ni caracterización de laboratorio fuera del alcance.">?</span>
+                        <HelpDot text="Lo que pagas en total al cerrar el piloto de 90 días: diseño + despliegue + monitoreo + reporte final. NO incluye obra civil ni caracterización de laboratorio fuera del alcance." />
+
                       </div>
                       <div className="mv" data-testid="quote-total">
                         ${quoteResult.pilotCostTotal.toLocaleString()}
@@ -347,7 +356,8 @@ export default function PortalPage() {
                     <div className="mx-card">
                       <div className="ml">
                         ROI proyectado
-                        <span className="help-dot" title="Retorno sobre inversión a 12 meses: (ahorro vs método convencional ÷ costo piloto) × 100. Conservador — no incluye co-beneficios (CO₂, reputación, continuidad operativa).">?</span>
+                        <HelpDot text="Retorno sobre inversión a 12 meses: (ahorro vs método convencional ÷ costo piloto) × 100. Conservador — no incluye co-beneficios (CO₂, reputación, continuidad operativa)." />
+
                       </div>
                       <div className="mv">+{quoteResult.roiYear1Pct}%</div>
                       <div className="ms">year-1 conservador · {quoteResult.urgencyNote}</div>
@@ -355,7 +365,8 @@ export default function PortalPage() {
                     <div className="mx-card">
                       <div className="ml">
                         Degradación esperada
-                        <span className="help-dot" title="Reducción del contaminante (%) al final del piloto. Intervalo de confianza basado en literatura peer-reviewed. Resultado real puede variar ±15% según caracterización del sitio.">?</span>
+                        <HelpDot text="Reducción del contaminante (%) al final del piloto. Intervalo de confianza basado en literatura peer-reviewed. Resultado real puede variar ±15% según caracterización del sitio." />
+
                       </div>
                       <div className="mv" data-testid="quote-degradation">
                         −{quoteResult.expectedReductionPct}%
@@ -368,7 +379,8 @@ export default function PortalPage() {
                     <div className="mx-card">
                       <div className="ml">
                         CO₂ evitado
-                        <span className="help-dot" title="Toneladas de CO₂ equivalentes que NO se emiten al elegir BioCycle vs la alternativa convencional. Calculado sobre transporte, disposición y energía del método convencional (datasets GHG Protocol 2024).">?</span>
+                        <HelpDot text="Toneladas de CO₂ equivalentes que NO se emiten al elegir BioCycle vs la alternativa convencional. Calculado sobre transporte, disposición y energía del método convencional (datasets GHG Protocol 2024)." />
+
                       </div>
                       <div className="mv">{quoteResult.co2SavedTons} t</div>
                       <div className="ms">vs. {quoteResult.conventionalMethod.toLowerCase()}</div>
@@ -656,6 +668,57 @@ export default function PortalPage() {
         )}
       </section>
     </>
+  );
+}
+
+/**
+ * Help tooltip that works on both desktop (CSS :hover) and mobile (click).
+ * Two independent visibility paths:
+ *   - Desktop: pure CSS — `.help-dot-wrap:hover .help-bubble { display:block }`.
+ *   - Mobile: React state toggles the `.open` class on click/tap.
+ * Keeping them decoupled avoids the race where hover+click on desktop
+ * immediately closes the bubble via onMouseLeave after state toggle.
+ */
+function HelpDot({ text }: { text: string }) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLSpanElement | null>(null);
+
+  useEffect(() => {
+    if (!open) return;
+    const onDown = (e: MouseEvent | TouchEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+    };
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setOpen(false);
+    };
+    document.addEventListener('mousedown', onDown);
+    document.addEventListener('touchstart', onDown);
+    document.addEventListener('keydown', onKey);
+    return () => {
+      document.removeEventListener('mousedown', onDown);
+      document.removeEventListener('touchstart', onDown);
+      document.removeEventListener('keydown', onKey);
+    };
+  }, [open]);
+
+  return (
+    <span className="help-dot-wrap" ref={ref}>
+      <button
+        type="button"
+        className="help-dot"
+        aria-label="Ver ayuda"
+        aria-expanded={open}
+        onClick={(e) => {
+          e.stopPropagation();
+          setOpen((v) => !v);
+        }}
+      >
+        ?
+      </button>
+      <span className={`help-bubble ${open ? 'open' : ''}`} role="tooltip">
+        {text}
+      </span>
+    </span>
   );
 }
 

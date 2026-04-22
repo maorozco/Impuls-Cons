@@ -63,7 +63,7 @@ const SPECS: Spec[] = [
   {
     id: 'hero-inicio',
     aspect: '16:9',
-    prompt: `A wide cinematic overhead view of a clear glass bioreactor filled with a glowing teal-green microbial consortium, suspended in a clean scientific laboratory lit by soft morning light. Iridescent biofilm textures, rising bubble columns rendered with photographic clarity. The lime-green LED readout panel on the reactor is out of focus. Evokes the feeling of life at the boundary of biology and engineering — alive but controlled.`,
+    prompt: `Editorial macro photograph of a single translucent spherical alginate capsule about 3mm in diameter, suspended at the center of the frame against a deep forest-green out-of-focus background. Inside the capsule, visible microscopic bacterial clusters and fungal hyphae rendered as elegant organic patterns — small teal-green dots and lime-tinted filaments arranged as a micro-ecosystem. The capsule catches a single warm rim-light from the upper right creating a soft bioluminescent glow, with golden bokeh behind it. Shot with shallow depth of field, scientific-journal cover aesthetic (think Nature or Cell), Kinfolk editorial warmth. No text, no labels, no UI, no hands. The capsule is the only subject — small, precise, alive.`,
   },
   {
     id: 'path-lab',

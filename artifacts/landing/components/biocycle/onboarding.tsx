@@ -457,8 +457,10 @@ const css = `
   border:1px solid var(--line);
   border-radius:16px;
   box-shadow: 0 24px 56px -16px rgba(8,18,12,0.35), 0 4px 12px -4px rgba(8,18,12,0.18);
-  padding:24px 26px 20px;
+  padding:24px 26px calc(20px + env(safe-area-inset-bottom));
   animation: ob-pop .28s cubic-bezier(.2,.9,.3,1) both;
+  display:flex;
+  flex-direction:column;
 }
 .ob-modal{
   position:fixed; top:50%; left:50%;
@@ -470,6 +472,8 @@ const css = `
 }
 .ob-tooltip{
   position:fixed;
+  max-height:calc(100vh - 32px);
+  overflow-y:auto;
 }
 .ob-head{
   display:flex; align-items:center; justify-content:space-between;
@@ -533,11 +537,15 @@ const css = `
 .ob-foot{
   display:flex; justify-content:space-between; align-items:center;
   gap:12px;
+  position:sticky; bottom:0;
+  padding-top:14px;
+  margin-top:auto;
+  background:linear-gradient(180deg, rgba(255,255,255,0) 0%, #fff 25%);
 }
 .ob-foot-right{ display:flex; align-items:center; gap:10px; }
 .ob-btn{
-  display:inline-flex; align-items:center; gap:8px;
-  height:36px; padding:0 14px; border-radius:9px;
+  display:inline-flex; align-items:center; justify-content:center; gap:8px;
+  min-height:44px; padding:0 16px; border-radius:9px;
   font-family:inherit; font-size:13px; font-weight:600;
   border:1px solid transparent; cursor:pointer;
   transition: transform .12s ease, background .2s ease;
@@ -561,14 +569,30 @@ const css = `
   padding:3px 7px; border-radius:6px; background:#fff;
 }
 @media (max-width:640px){
-  .ob-modal{ width:92vw; padding:20px; }
+  .ob-modal{
+    top:50% !important; left:50% !important;
+    transform:translate(-50%, -50%) !important;
+    width:min(92vw, 420px);
+    max-width:min(92vw, 420px);
+    max-height:min(82vh, 620px);
+    padding:20px 18px calc(20px + env(safe-area-inset-bottom));
+  }
   .ob-tooltip{
     position:fixed !important;
     left:16px !important; right:16px !important;
-    top:auto !important; bottom:16px !important;
+    top:auto !important;
+    bottom:calc(16px + env(safe-area-inset-bottom)) !important;
     width:calc(100vw - 32px) !important;
     max-width:calc(100vw - 32px);
+    max-height:min(78vh, 560px);
+    padding:18px 16px calc(16px + env(safe-area-inset-bottom));
   }
+  .ob-title{ font-size:19px; }
+  .ob-body{ font-size:13.5px; }
+  .ob-bullets li{ font-size:13px; }
+  .ob-foot{ gap:8px; }
+  .ob-btn{ font-size:13.5px; padding:0 14px; }
+  .ob-kbd{ display:none; }
 }
 @media (prefers-reduced-motion: reduce){
   .ob-backdrop, .ob-mask, .ob-card { animation: none !important; }

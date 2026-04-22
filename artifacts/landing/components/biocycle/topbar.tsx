@@ -1,7 +1,14 @@
 'use client';
 
+import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { launchOnboarding } from './onboarding';
+
+// NEXT_PUBLIC_CALENDLY_URL is sometimes defined as empty string in .env.local
+// (unset but committed), so use `||` to treat "" as missing and fall back to mailto.
+const CALENDLY_URL =
+  process.env.NEXT_PUBLIC_CALENDLY_URL ||
+  'mailto:hola@biocycle.ai?subject=Piloto%2090%20d%C3%ADas%20%C2%B7%20Reservar';
 
 const CRUMBS: Record<string, string> = {
   inicio: 'Inicio',
@@ -55,18 +62,30 @@ export function BiocycleTopbar() {
         </svg>
         Tour
       </button>
-      <button className="tb-btn">
+      <Link
+        className="tb-btn"
+        href="/biocycle/descubrimientos"
+        aria-label="Ver novedades y papers"
+        data-testid="topbar-novedades-btn"
+      >
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
           <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13 21a2 2 0 01-4 0" />
         </svg>
-        Novedades
-      </button>
-      <button className="tb-btn primary">
+        <span className="tb-btn-label">Novedades</span>
+      </Link>
+      <a
+        className="tb-btn primary"
+        href={CALENDLY_URL}
+        target={CALENDLY_URL.startsWith('http') ? '_blank' : undefined}
+        rel={CALENDLY_URL.startsWith('http') ? 'noopener noreferrer' : undefined}
+        aria-label="Reservar piloto 90 días"
+        data-testid="topbar-reservar-btn"
+      >
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
           <path d="M5 12h14M13 6l6 6-6 6" />
         </svg>
-        Reservar piloto
-      </button>
+        <span className="tb-btn-label">Reservar piloto</span>
+      </a>
     </div>
   );
 }

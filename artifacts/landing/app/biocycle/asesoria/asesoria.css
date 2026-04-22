@@ -312,3 +312,14 @@
   .chat-layout{grid-template-columns:1fr}
   .side{border-top:1px solid var(--line); position:static}
 }
+
+@media (max-width: 640px){
+  .chat-main{padding:20px 16px 120px}
+  .composer{padding:14px 12px}
+  .composer textarea{min-height:52px}
+  .composer .send-btn{min-width:52px; min-height:44px}
+  .side{padding:18px 14px}
+  .msg.u .bubble, .msg.a .bubble{max-width:100%}
+  .suggestions{grid-template-columns:1fr}
+  .biocycle-prose{font-size:14px}
+}

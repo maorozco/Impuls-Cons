@@ -611,6 +611,43 @@ body[data-hero="dark"] .hero-meta .sep{color:rgba(255,255,255,.15)}
 .paper .p-doi{font-family:var(--font-mono); font-size:11px; color:var(--muted-2)}
 .paper .p-link{display:inline-flex; align-items:center; gap:6px; font-size:12.5px; font-weight:600; color:var(--forest-deep); text-decoration:none}
 .paper .p-link svg{width:12px; height:12px}
+.paper .p-link-pending{
+  color:#92400E; font-family:var(--font-mono); font-size:11px;
+  letter-spacing:.08em; text-transform:uppercase; font-weight:500;
+  padding:3px 8px; border-radius:4px;
+  background:#FFF4E5; border:1px solid #F59E0B;
+}
+
+/* Descubrimientos · stats-row */
+.stats-row{
+  display:grid; grid-template-columns:repeat(4, 1fr); gap:0;
+  margin:28px 0 36px;
+  border:1px solid var(--line); border-radius:var(--r-lg);
+  background:#fff; overflow:hidden;
+}
+.stat-box{
+  padding:22px 20px; border-right:1px solid var(--line); min-height:120px;
+}
+.stat-box:last-child{border-right:0}
+.stat-box .sb-label{
+  font-family:var(--font-mono); font-size:10.5px; letter-spacing:.12em;
+  color:var(--muted-2); text-transform:uppercase;
+}
+.stat-box .sb-num{
+  font-family:var(--font-mono); font-size:34px; font-weight:500;
+  letter-spacing:-.035em; color:var(--ink); margin:10px 0 4px;
+}
+.stat-box .sb-sub{font-size:12px; color:var(--muted); line-height:1.5}
+@media (max-width:960px){
+  .stats-row{grid-template-columns:repeat(2,1fr)}
+  .stat-box{border-right:0; border-bottom:1px solid var(--line)}
+  .stat-box:nth-child(even){border-right:0}
+  .stat-box:nth-child(odd){border-right:1px solid var(--line)}
+}
+@media (max-width:640px){
+  .stats-row{grid-template-columns:1fr}
+  .stat-box{border-right:0 !important}
+}
 .paper.featured{grid-column:span 2; background:linear-gradient(135deg,#FFFFFF 0%, #F4FBF7 100%); border-color:var(--line-strong)}
 .paper.featured h3{font-size:26px; letter-spacing:-.025em}
 .paper.featured .p-result{font-size:13px}
@@ -624,6 +661,85 @@ body[data-hero="dark"] .hero-meta .sep{color:rgba(255,255,255,.15)}
   .feed{grid-template-columns:1fr}
   .paper.featured{grid-column:span 1}
   .paper.featured h3{font-size:22px}
+}
+
+/* ───────────────── MOBILE RESPONSIVE ─────────────────
+   Tiered breakpoints for the BioCycle app layout. All rules are additive
+   (max-width only) — they must not alter desktop behavior. Tap targets
+   respect 44px min (Apple HIG / WCAG 2.1 AA). */
+
+/* Tablet + large phone — hide the fixed 240px sidebar; free the content column */
+@media (max-width:960px){
+  .app{grid-template-columns:1fr}
+  .sidebar{display:none}
+  /* Clamp horizontal overflow — any lone element pushing wider than the
+     viewport becomes horizontally scrollable inside its own box instead of
+     blowing out the page. */
+  main{max-width:100vw; overflow-x:hidden}
+  .topbar{overflow-x:auto; scrollbar-width:none}
+  .topbar::-webkit-scrollbar{display:none}
+  .hero{padding:48px 0 56px}
+  .hero-inner{grid-template-columns:1fr; gap:28px}
+  .hero-viz{max-width:100%; margin:0 auto}
+  .hero h1{font-size:52px}
+  .section{padding:56px 0}
+  .section.tight{padding:40px 0}
+  .section-head{flex-direction:column; align-items:flex-start; gap:14px; margin-bottom:28px}
+  .section-head .lede{max-width:100%}
+  .section-head h2{font-size:34px}
+  .paths{grid-template-columns:1fr; gap:16px}
+  .value-grid{grid-template-columns:repeat(2,1fr)}
+  .problems{grid-template-columns:repeat(2,1fr)}
+  .steps{grid-template-columns:1fr; gap:14px}
+  .metrics{grid-template-columns:repeat(2,1fr)}
+  .metric{padding:28px 22px; border-right:0; border-bottom:1px solid rgba(255,255,255,.06)}
+  .metric:nth-last-child(-n+2){border-bottom:0}
+  .footer-grid{grid-template-columns:1fr 1fr; gap:28px}
+}
+
+/* Phone */
+@media (max-width:640px){
+  .container{padding:0 18px}
+  .topbar{height:52px; padding:0 14px; gap:6px}
+  .crumbs{font-size:11px}
+  .crumbs .sep:nth-of-type(1), .crumbs span:not(:last-child){display:none}
+  .tb-search{display:none}
+  .tb-btn{height:36px; min-width:36px; padding:0 10px; font-size:12px}
+  .tb-btn .tb-btn-label{display:none}
+  .tb-btn svg{margin:0}
+  .hero{padding:32px 0 44px}
+  .hero h1{font-size:38px; line-height:1.12}
+  .hero-lede{font-size:15.5px; margin-top:16px}
+  .hero-tag{font-size:11.5px}
+  .cta-row{flex-direction:column; gap:10px; margin-top:20px}
+  .cta-row .btn{width:100%; justify-content:center}
+  .hero-meta{flex-direction:column; align-items:flex-start; gap:6px; margin-top:20px}
+  .hero-meta .sep{display:none}
+  .section{padding:40px 0}
+  .section.tight{padding:32px 0}
+  .section-head h2{font-size:26px}
+  .value-grid{grid-template-columns:1fr}
+  .value-cell{padding:22px}
+  .problems{grid-template-columns:1fr}
+  .prob{padding:22px 20px 40px}
+  .prob .p-stat{font-size:36px}
+  .metrics{grid-template-columns:1fr}
+  .metric{padding:22px 20px; border-bottom:1px solid rgba(255,255,255,.06)}
+  .metric:last-child{border-bottom:0}
+  .metric .m-num{font-size:42px}
+  .path{padding:24px 22px}
+  .path h3{font-size:24px}
+  .path .p-desc{max-width:100%}
+  .footer-grid{grid-template-columns:1fr; gap:24px}
+  .legal{flex-direction:column; align-items:flex-start; gap:12px}
+  .legal .disclaimer{max-width:100%}
+}
+
+/* Small phone (iPhone SE · 375px) */
+@media (max-width:400px){
+  .container{padding:0 14px}
+  .hero h1{font-size:32px}
+  .section-head h2{font-size:22px}
 }
 
 /* Focus */

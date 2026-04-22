@@ -156,6 +156,26 @@
 @media (max-width: 960px){
   .quote-grid, .ea-grid, .case-flow, .case-compare{grid-template-columns:1fr !important}
   .metric-grid{grid-template-columns:1fr 1fr}
+  .tabs{overflow-x:auto; flex-wrap:nowrap; -webkit-overflow-scrolling:touch}
+  .tab{white-space:nowrap; flex-shrink:0}
+}
+
+@media (max-width: 640px){
+  .page-head h1{font-size:30px}
+  .tabs{overflow-x:auto; flex-wrap:nowrap; padding:20px 0 0; -webkit-overflow-scrolling:touch}
+  .tab{white-space:nowrap; flex-shrink:0; font-size:12.5px; padding:8px 12px}
+  .metric-grid{grid-template-columns:1fr}
+  .qout-top{padding:24px 20px}
+  .qv{font-size:36px}
+  .qmeta{flex-direction:column; gap:8px; align-items:flex-start}
+  .opt-row{grid-template-columns:1fr 1fr; flex-wrap:wrap}
+  .opt-row .opt{min-width:calc(50% - 4px); flex:1 1 auto}
+  .form-card{padding:20px 18px}
+  .mx-card{padding:18px 16px}
+  .help-dot{width:18px; height:18px; font-size:11px; cursor:pointer}
+  .case-hero{flex-direction:column; gap:14px}
+  .case-hero > div[style*="text-align"]{text-align:left !important}
+  .cmp{padding:20px 18px}
 }
 
 /* Explainer inside the empty state — what the user is actually buying */
@@ -182,14 +202,65 @@
 }
 @keyframes qLiveBlink{0%,100%{opacity:1} 50%{opacity:.4}}
 
-/* Help-dot — hover tooltip on quote metric labels */
+/* Help-dot — click-to-show tooltip (works on mobile + hover on desktop) */
+.help-dot-wrap{position:relative; display:inline-block; margin-left:6px}
 .help-dot{
-  display:inline-grid; place-items:center; width:14px; height:14px;
+  display:inline-grid; place-items:center; width:16px; height:16px;
   border-radius:99px; background:#F4FBF7; border:1px solid var(--line);
-  color:var(--muted-2); font-size:10px; font-weight:500; margin-left:6px;
-  cursor:help; font-family:var(--font-sans); vertical-align:1px;
+  color:var(--muted-2); font-size:10.5px; font-weight:600; padding:0;
+  cursor:pointer; font-family:var(--font-sans); vertical-align:1px;
+  transition:background .15s ease, color .15s ease, border-color .15s ease;
 }
-.help-dot:hover{background:var(--forest-deep); color:#fff; border-color:var(--forest-deep)}
+.help-dot:hover, .help-dot[aria-expanded="true"]{
+  background:var(--forest-deep); color:#fff; border-color:var(--forest-deep);
+}
+.help-bubble{
+  display:none;
+  position:absolute; z-index:30;
+  bottom:calc(100% + 8px); left:50%; transform:translateX(-50%);
+  width:240px; max-width:calc(100vw - 32px);
+  padding:10px 12px; border-radius:8px;
+  background:var(--ink); color:#fff;
+  font-family:var(--font-sans); font-size:12px; font-weight:400;
+  line-height:1.5; text-transform:none; letter-spacing:0;
+  box-shadow:0 12px 28px -8px rgba(8,18,12,.4);
+  pointer-events:none;
+  animation:hd-fade .18s ease both;
+}
+.help-bubble.open{display:block}
+@media (hover:hover) and (pointer:fine){
+  .help-dot-wrap:hover .help-bubble{display:block}
+}
+.help-bubble::after{
+  content:""; position:absolute; top:100%; left:50%; transform:translateX(-50%);
+  border:6px solid transparent; border-top-color:var(--ink);
+}
+@keyframes hd-fade{from{opacity:0; transform:translateX(-50%) translateY(4px)} to{opacity:1; transform:translateX(-50%) translateY(0)}}
+@media (max-width:640px){
+  .help-bubble{
+    position:fixed; left:16px; right:16px; bottom:auto;
+    top:auto; transform:none; width:auto; max-width:none;
+    margin-top:8px;
+  }
+  .help-bubble::after{display:none}
+}
+
+/* Hypo banner — orange notice atop Cotiza tab */
+.banner-hypo{
+  display:flex; align-items:flex-start; gap:12px;
+  padding:14px 16px; margin-bottom:16px;
+  background:#FFF4E5; border:1px solid #F59E0B;
+  border-radius:12px; color:#92400E; font-size:13.5px; line-height:1.55;
+}
+.banner-hypo .bh-icon{
+  font-size:16px; line-height:1.2; flex:none;
+}
+.banner-hypo b{color:#78350F; font-weight:600}
+.banner-hypo .bh-dot{
+  display:inline-grid; place-items:center; width:14px; height:14px;
+  border-radius:99px; background:#92400E; color:#FFF4E5;
+  font-size:10px; font-weight:600; vertical-align:1px; margin:0 1px;
+}
 
 /* Escucha Activa · Competidores explainer */
 .ea-explainer{

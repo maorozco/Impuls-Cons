@@ -557,11 +557,23 @@ export default function DisenadorPage() {
                             ? 'Condiciones óptimas. El consorcio tiene un amplio margen a los factores del sitio.'
                             : 'Viable con optimización. El pH, temperatura o contaminación mixta están fuera de la ventana ideal.'}
                         </p>
-                        <div style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--muted)', lineHeight: 1.55 }}>
-                          <div>• +8pp con precalentamiento</div>
-                          <div>• +12pp con nutrientes N:P 10:1</div>
-                          <div>• −5pp si pH cae &lt;6</div>
-                        </div>
+                        <details className="improvement-tips">
+                          <summary>
+                            Cómo subir esta probabilidad ·{' '}
+                            <b>{buildImprovementHints({ ph, temp, contamination, prob }).length}</b> sugerencias
+                          </summary>
+                          <ul>
+                            {buildImprovementHints({ ph, temp, contamination, prob }).map((h, i) => (
+                              <li key={i}>
+                                <span className={`hint-delta ${h.direction}`}>{h.delta}</span>
+                                {h.text}
+                              </li>
+                            ))}
+                          </ul>
+                          <p className="it-foot">
+                            Sugerencias dinámicas — cambian según los valores que ajustes arriba.
+                          </p>
+                        </details>
                       </div>
                     </div>
                   </div>
@@ -714,8 +726,102 @@ function CompatibilityMatrix({ members }: { members: ConsortiumMember[] }) {
           </>
         ))}
       </div>
+      <div className="matrix-legend" role="note">
+        <div className="ml-row">
+          <span className="ml-item"><i className="sw c-good" /> 0.85 – 1.00 · Sinergia documentada</span>
+          <span className="ml-item"><i className="sw c-ok" /> 0.72 – 0.84 · Compatible, sin antagonismo</span>
+          <span className="ml-item"><i className="sw c-self" /> — · Casilla propia</span>
+        </div>
+        <p className="ml-help">
+          Cada número es un índice <b>0.00 – 1.00</b> que resume la compatibilidad
+          entre dos especies: sintrofía metabólica, tolerancia compartida a pH/temp,
+          y ausencia de antagonismo reportado en literatura peer-reviewed.{' '}
+          <b>No es un porcentaje de eficiencia de degradación.</b>
+        </p>
+      </div>
     </div>
   );
+}
+
+// Dynamic improvement hints: derived from current user inputs so tips
+// change as the user adjusts sliders. Only returns hints that are
+// currently applicable.
+interface ImprovementHint {
+  delta: string;
+  text: string;
+  direction: 'up' | 'down';
+}
+function buildImprovementHints({
+  ph,
+  temp,
+  contamination,
+  prob,
+}: {
+  ph: number;
+  temp: number;
+  contamination: number;
+  prob: number;
+}): ImprovementHint[] {
+  const hints: ImprovementHint[] = [];
+  if (temp < 22) {
+    hints.push({
+      delta: '+8 a +12 pp',
+      direction: 'up',
+      text: 'Sube la temperatura de operación a 26–28 °C (manta térmica o pretratamiento solar) para acelerar el metabolismo del consorcio.',
+    });
+  }
+  if (temp > 35) {
+    hints.push({
+      delta: '−6 pp',
+      direction: 'down',
+      text: 'Temperatura > 35 °C estresa a los hongos del consorcio. Si no puedes bajarla, considera un modo de bioreactor refrigerado.',
+    });
+  }
+  if (ph < 6) {
+    hints.push({
+      delta: '+5 pp',
+      direction: 'up',
+      text: 'Ajusta pH a 6.8–7.2 con CaCO₃ agrícola antes de inocular — la ventana ácida inhibe la mayoría de las bacterias BSL-1.',
+    });
+  }
+  if (ph > 8) {
+    hints.push({
+      delta: '+4 pp',
+      direction: 'up',
+      text: 'Baja pH a 7.0–7.4 con ácido cítrico grado-técnico; pH alcalino reduce la biodisponibilidad del contaminante.',
+    });
+  }
+  if (contamination > 15) {
+    hints.push({
+      delta: '+10 pp',
+      direction: 'up',
+      text: 'Aplica pretratamiento físico (biopila + aireación 5 días) para reducir la carga inicial antes de la inoculación.',
+    });
+  }
+  // Universal hints always shown, but phrased with upward delta only if prob < 80
+  if (prob < 80) {
+    hints.push({
+      delta: '+12 pp',
+      direction: 'up',
+      text: 'Suplementa con nutrientes N:P en proporción 10:1 (urea + KH₂PO₄) durante las primeras 4 semanas.',
+    });
+  }
+  if (prob < 70) {
+    hints.push({
+      delta: '+6 pp',
+      direction: 'up',
+      text: 'Dobla la dosis de inóculo en las semanas 2 y 4 — cinética de primer orden responde a densidad celular.',
+    });
+  }
+  // Fallback: if no specific hints apply (conditions already good), reassure the user
+  if (hints.length === 0) {
+    hints.push({
+      delta: 'mantén',
+      direction: 'up',
+      text: 'Condiciones ya están dentro de la ventana óptima. Monitorea semanalmente DO, pH y densidad celular.',
+    });
+  }
+  return hints;
 }
 
 // ── Degradation curve: biocycle vs natural attenuation over 12 weeks ───
@@ -787,6 +893,9 @@ function AlternativesPanel({ alternatives, expectedMetric }: { alternatives: Alt
         08 · Comparación de costos — métodos aplicables
         <span className="tag-real" title="Costos convencionales: benchmarks 2024 (Ecopetrol/Veolia/ANLA). Los de BioCycle son referenciales.">
           benchmarks reales
+        </span>
+        <span className="badge-review" title="Costos de BioCycle en revisión — dependen del laboratorio aliado. Valores mostrados son de prototipo.">
+          COSTOS EN REVISIÓN · prototipo
         </span>
       </div>
       <h3>BioCycle vs. {alternatives.length - 1} alternativas que aplican a este contaminante+medio.</h3>
