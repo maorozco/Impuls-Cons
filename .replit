@@ -68,18 +68,13 @@ ignorePorts = false
 args = ["pnpm", "store", "prune"]
 env = { "CI" = "true" }
 
+# Single public port — Next.js on 3000 → external HTTPS 80.
+# ml-api on 127.0.0.1:5001 is NOT exposed (loopback only).
+#
+# DO NOT add extra [[ports]] blocks here. Replit GCE interprets multiple
+# public ports as a multi-service deployment and routes paths non-deterministically,
+# which breaks /biocycle/* routes (only / reaches Next). Ports 5000/8080/8081
+# have no service listening in production — exposing them is pure footgun.
 [[ports]]
 localPort = 3000
 externalPort = 80
-
-[[ports]]
-localPort = 5000
-externalPort = 5000
-
-[[ports]]
-localPort = 8080
-externalPort = 8080
-
-[[ports]]
-localPort = 8081
-externalPort = 8081
